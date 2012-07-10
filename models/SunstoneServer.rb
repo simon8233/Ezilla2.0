@@ -224,7 +224,6 @@ class SunstoneServer < CloudServer
             return [200, {:vm_log => log}.to_json]
         end
     end
-
     ########################################################################
     # VNC
     ########################################################################
@@ -251,6 +250,29 @@ class SunstoneServer < CloudServer
         end
 
         return [200, nil]
+    end
+
+    ############################################################################
+    # Snapshot
+    ############################################################################
+    def snapshot(id)
+        resource = retrieve_resource("vm", id)
+        if OpenNebula.is_error?(resource)
+            return [404, nil]
+        else
+            host     = resource['/VM/HISTORY_RECORDS/HISTORY[last()]/HOSTNAME']
+            vnc_port = resource['TEMPLATE/GRAPHICS/PORT']
+            vnc_pw = resource['TEMPLATE/GRAPHICS/PASSWD']
+
+            cmd = ONE_LOCATION+ "/lib/sunstone/public/images/vncsnapshot/vncsnapshot.sh #{host} #{vnc_port} #{id} #{vnc_pw}"
+
+            begin
+                pipe = IO.popen(cmd)
+                return [200, "images/#{id}.jpg".to_json]
+            rescue Exception => e
+                return [500, OpenNebula::Error.new(e.message).to_json]
+            end
+        end
     end
 
     ############################################################################

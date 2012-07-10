@@ -407,6 +407,13 @@ post '/vm/:id/startvnc' do
         rc
     end
 end
+################################################################################
+### Start a VNC Snapshot for a target VM
+################################################################################
+
+get '/vm/:id/snapshot' do
+    @SunstoneServer.snapshot(params[:id])
+end
 
 ##############################################################################
 # Perform an action on a Resource

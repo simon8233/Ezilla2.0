@@ -402,7 +402,34 @@ var vm_actions = {
             onError(request,error_json);
         }
     },
-
+    "VM.snapshot" : {
+        type: "single",
+        call:  function(params){
+            var id = params.data.id;
+            var method = "snapshot";
+            $.ajax({
+                url: "vm/" + id + "/" + method,
+                type: "GET",
+                dataType: "json",
+                success: function(response){
+                    return null;
+                },
+                error: function(response){
+                    return null;
+                }
+            });
+        },
+        callback: function(req,res) {
+            //after calling VM.log we process the answer
+            //update the tab and pop it up again
+            res = res['vm_log'];
+        },
+        error: function(request,error_json){
+        //$("#vm_log pre").html('');
+        onError(request,error_json);
+        },
+        notify: false
+    },
     "VM.startvnc" : {
         type: "single",
         call: OpenNebula.VM.startvnc,
@@ -941,6 +968,9 @@ function updateVMInfo(request,vm){
     var vm_info = vm.VM;
     var vm_state = OpenNebula.Helper.resource_state("vm",vm_info.STATE);
     var hostname = "--"
+	
+    Sunstone.runAction("VM.snapshot",vm_info.ID);
+
     if (vm_state == tr("ACTIVE") || vm_state == tr("SUSPENDED")) {
         if (vm_info.HISTORY_RECORDS.HISTORY.constructor == Array){
             hostname = vm_info.HISTORY_RECORDS.HISTORY[vm_info.HISTORY_RECORDS.HISTORY.length-1].HOSTNAME
@@ -1013,6 +1043,10 @@ function updateVMInfo(request,vm){
                      <tr><th colspan="2">'+tr("Monitoring information")+'</th></tr>\
                    </thead>\
                    <tbody>\
+		       <tr>\
+                        <td class="key_td">'+tr("Snapshot")+'</td>\
+                        <td class="value_td">'+SnapshotIcon(vm_info)+'</td>\
+                      </tr>\
                       <tr>\
                         <td class="key_td">'+tr("Net_TX")+'</td>\
                         <td class="value_td">'+vm_info.NET_TX+'</td>\
@@ -1590,6 +1624,19 @@ function vncIcon(vm){
     return gr_icon;
 }
 
+
+function SnapshotIcon(vm){
+    var graphics = vm.TEMPLATE.GRAPHICS;
+    var state = OpenNebula.Helper.resource_state("vm_lcm",vm.LCM_STATE);
+    var gr_icon;
+    if (graphics && graphics.TYPE == "vnc" && state == "RUNNING"){
+        gr_icon = '<img src="images/'+vm.ID+'.jpg" />';
+    }
+    else {
+        gr_icon = '<img src="images/vncsnapshot/no_signal_m.jpg" />';
+    }
+    return gr_icon;
+}
 
 // Special error callback in case historical monitoring of VM fails
 function vmMonitorError(req,error_json){
