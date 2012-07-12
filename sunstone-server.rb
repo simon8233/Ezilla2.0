@@ -407,6 +407,20 @@ post '/vm/:id/startvnc' do
         rc
     end
 end
+##############################################################################
+##Start a Redirect Port for a target VM
+###############################################################################
+post '/vm/:id/redirect/:port' do
+
+        vm_id = params[:id]
+	port = params[:port]
+	logger.error {port}
+        rc = @SunstoneServer.redirect(vm_id,port)
+        info = rc[1]
+        rc = [ 200 , info.to_json]
+        return rc
+
+end
 ################################################################################
 ### Start a VNC Snapshot for a target VM
 ################################################################################
