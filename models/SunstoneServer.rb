@@ -224,7 +224,6 @@ class SunstoneServer < CloudServer
             return [200, {:vm_log => log}.to_json]
         end
     end
-
     ########################################################################
     # VNC
     ########################################################################
@@ -252,7 +251,75 @@ class SunstoneServer < CloudServer
 
         return [200, nil]
     end
+    ############################################################################
+    # Redirect Port 
+    ############################################################################
+    def redirect(id,cport)
+	resource = retrieve_resource("vm", id)
+        if OpenNebula.is_error?(resource)
+                return [404,nil]
+        end
 
+        ip = resource['TEMPLATE/NIC/IP']
+=begin
+        ostype = resource['TEMPLATE/CONTEXT/OSTYPE']
+
+
+        if ostype == "WINDOWS"
+                cport = 3389
+                connecting_tool = "RDP Client to connect"
+        else
+                cport = 22
+                connecting_tool = "SSH Client to connect"
+        end
+=end
+                redir_pid = %x{ps -ef | grep "caddr=#{ip} --cport=#{cport}" |grep -v grep | awk '{print $2}'}
+                redir_pid = Integer(redir_pid) if !redir_pid.empty?
+                file_redir_info = nil
+                if !redir_pid.is_a?(Integer) ## "redirect ip proc" is not exist
+                        File.delete("/tmp/redir/#{ip}:#{cport}") if File.exist?("/tmp/redir/#{ip}:#{cport}")
+                end
+
+                if !File.exist?("/tmp/redir/#{ip}:#{cport}") ##
+                        file_redir_info = File.open("/tmp/redir/#{ip}:#{cport}",'w+')
+                        redir = ONE_LOCATION + "/share/redir/redir"
+                        pipe = open("|#{redir}  --lport=0 --caddr=#{ip} --cport=#{cport} &")
+                        redir_port = pipe.readline
+                        pipe.close
+                        file_redir_info.write(redir_port)
+                        file_redir_info.close
+                        sleep(1)
+                        info = {:info=>redir_port}
+                        return [200, info]
+                end
+                redir_port = File.new("/tmp/redir/#{ip}:#{cport}").read
+                info = {:info=>redir_port}
+            return [200,info]
+    end
+         
+    ############################################################################
+    # Snapshot
+    ############################################################################
+    def snapshot(id)
+        resource = retrieve_resource("vm", id)
+        if OpenNebula.is_error?(resource)
+            return [404, nil]
+        else
+            host     = resource['/VM/HISTORY_RECORDS/HISTORY[last()]/HOSTNAME']
+            vnc_port = resource['TEMPLATE/GRAPHICS/PORT']
+            vnc_pw = resource['TEMPLATE/GRAPHICS/PASSWD']
+
+            cmd = ONE_LOCATION+ "/lib/sunstone/public/images/vncsnapshot/vncsnapshot.sh #{host} #{vnc_port} #{id} #{vnc_pw}"
+
+            begin
+                pipe = IO.popen(cmd)
+                return [200, "images/#{id}.jpg".to_json]
+            rescue Exception => e
+                return [500, OpenNebula::Error.new(e.message).to_json]
+            end
+        end
+    end
+    
     ############################################################################
     #
     ############################################################################

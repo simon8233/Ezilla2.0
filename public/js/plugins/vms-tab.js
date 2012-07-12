@@ -176,6 +176,7 @@ var vmachine_list_json = {};
 var dataTable_vMachines;
 var $create_vm_dialog;
 var $vnc_dialog;
+var $redir_dialog;
 var rfb;
 
 var vm_actions = {
@@ -402,7 +403,34 @@ var vm_actions = {
             onError(request,error_json);
         }
     },
-
+    "VM.snapshot" : {
+        type: "single",
+        call:  function(params){
+            var id = params.data.id;
+            var method = "snapshot";
+            $.ajax({
+                url: "vm/" + id + "/" + method,
+                type: "GET",
+                dataType: "json",
+                success: function(response){
+                    return null;
+                },
+                error: function(response){
+                    return null;
+                }
+            });
+        },
+        callback: function(req,res) {
+            //after calling VM.log we process the answer
+            //update the tab and pop it up again
+            res = res['vm_log'];
+        },
+        error: function(request,error_json){
+        //$("#vm_log pre").html('');
+        onError(request,error_json);
+        },
+        notify: false
+    },
     "VM.startvnc" : {
         type: "single",
         call: OpenNebula.VM.startvnc,
@@ -417,7 +445,13 @@ var vm_actions = {
         error: onError,
         notify: true
     },
-
+    "VM.redirect" : {
+        type: "single",
+	call : OpenNebula.VM.redirect,
+        callback: RedirectPortCallback,
+        error: onError,
+        notify: true
+    },
     "VM.monitor" : {
         type: "monitor",
         call : OpenNebula.VM.monitor,
@@ -941,6 +975,9 @@ function updateVMInfo(request,vm){
     var vm_info = vm.VM;
     var vm_state = OpenNebula.Helper.resource_state("vm",vm_info.STATE);
     var hostname = "--"
+	
+    Sunstone.runAction("VM.snapshot",vm_info.ID);
+
     if (vm_state == tr("ACTIVE") || vm_state == tr("SUSPENDED")) {
         if (vm_info.HISTORY_RECORDS.HISTORY.constructor == Array){
             hostname = vm_info.HISTORY_RECORDS.HISTORY[vm_info.HISTORY_RECORDS.HISTORY.length-1].HOSTNAME
@@ -1013,6 +1050,10 @@ function updateVMInfo(request,vm){
                      <tr><th colspan="2">'+tr("Monitoring information")+'</th></tr>\
                    </thead>\
                    <tbody>\
+		       <tr>\
+                        <td class="key_td">'+tr("Snapshot")+'</td>\
+                        <td class="value_td">'+SnapshotIcon(vm_info)+'</td>\
+                      </tr>\
                       <tr>\
                         <td class="key_td">'+tr("Net_TX")+'</td>\
                         <td class="value_td">'+vm_info.NET_TX+'</td>\
@@ -1032,6 +1073,10 @@ function updateVMInfo(request,vm){
                       <tr>\
                         <td class="key_td">'+tr("VNC Session")+'</td>\
                         <td class="value_td">'+vncIcon(vm_info)+'</td>\
+                      </tr>\
+                      <tr>\
+                        <td class="key_td">'+RedirctPortProtocol(vm_info)+'</td>\
+                        <td class="value_td">'+RedirectPortIcon(vm_info)+'</td>\
                       </tr>\
                     </tbody>\
                 </table>'
@@ -1575,7 +1620,6 @@ function vncCallback(request,response){
     },4000);
 
 }
-
 function vncIcon(vm){
     var graphics = vm.TEMPLATE.GRAPHICS;
     var state = OpenNebula.Helper.resource_state("vm_lcm",vm.LCM_STATE);
@@ -1590,6 +1634,109 @@ function vncIcon(vm){
     return gr_icon;
 }
 
+
+function SnapshotIcon(vm){
+    var graphics = vm.TEMPLATE.GRAPHICS;
+    var state = OpenNebula.Helper.resource_state("vm_lcm",vm.LCM_STATE);
+    var gr_icon;
+    if (graphics && graphics.TYPE == "vnc" && state == "RUNNING"){
+        gr_icon = '<img src="images/vncsnapshot/'+vm.ID+'.jpg" />';
+    }
+    else {
+        gr_icon = '<img src="images/vncsnapshot/no_signal_m.jpg" />';
+    }
+    return gr_icon;
+}
+
+function setupRedirectPort(){
+
+        dialogs_context.append('<div id="redir_dialog" title=\"'+tr("Redirect Port Information")+'\"></div>');
+        $redir_dialog= $('#redir_dialog',dialogs_context);
+        var dialog = $redir_dialog;
+
+        dialog.html('\
+                <div id="RedirectPort_Info" class="RedirectPort_Info" style="margin-top: 0px;">\
+                <table border=0 width="100%"><tr>\
+                 <td width="200"><div id="RedirectPort_Info_image"></div></td>\
+                 </div></td>\
+		 <td><div id="RedirectPort_Info_output">'+tr("Loading")+'</td>\
+		 </div>\
+                </tr></table>\
+                </div>\
+');
+        dialog.dialog({
+                autoOpen:false,
+                width:600,
+                model:true,
+                height:200,
+                resizeable:false,
+                closeOnEscape:true
+        });
+        dialog.bind("dialogclose",function(event, ui){
+
+        });
+        $('.redir').live("click",function(){
+                var id = $(this).attr('vm_id');
+		var ostype = $(this).attr('vm_ostype');
+		var port;
+		if ( ostype == "WINDOWS" ){
+			port = 3389;
+		}
+		else{
+			port = 22;
+		}
+                Sunstone.runAction("VM.redirect",id,port);
+                return false;
+        });
+}
+
+function RedirectPortCallback(request,response){
+   setTimeout(function(){
+        var srv_hostname = window.location.host;
+        srv_hostname = srv_hostname.substring(0,srv_hostname.indexOf(":"));
+	var ostype = $('.redir').attr("vm_ostype");
+	var connecting_tool_image ='<a class="connecting_info">';
+	var connecting_tool;
+	if ( ostype == "WINDOWS" ){
+		connecting_tool = tr("To connect to the Virtual Machine , you can use RDP tools to connect. copy above connect information,and paste to your RDP tools");
+		connecting_tool_image += '<img src="images/rdp_icon_big.png" alt=\"'+tr("RDP TOOLS")+'\" /></a>';
+	}
+	else{
+		connecting_tool = tr("To connect to the Virtual Machine , you can use SSH tools to connect. copy above connect information,and paste to your SSH tools");
+		connecting_tool_image += '<img src="images/ssh_icon_big.png" alt=\"'+tr("SSH TOOLS")+'\" /></a>';
+	}
+	$('#RedirectPort_Info_image').html(connecting_tool_image);
+	$('#RedirectPort_Info_output').html(tr("Connecting information")+'</br></br><input type=text readonly=false id=\'connecting_textarea\' value=\"\" style=\'width:250px;height:15px;\'/></br></br>'+connecting_tool);
+	$('#connecting_textarea').attr("value",function(){	
+	return	srv_hostname+":"+response["info"];
+	});
+        $redir_dialog.dialog('open');
+   },3000);
+};
+
+function RedirctPortProtocol(vm){
+   var ostype = vm.TEMPLATE.CONTEXT.OSTYPE;
+   if (ostype == "WINDOWS"){
+		return tr("RDP Session");
+	}
+   else{
+		return tr("SSH Session");
+    }
+
+}
+function RedirectPortIcon(vm){
+   var ostype = vm.TEMPLATE.CONTEXT.OSTYPE;
+   var redir_icon;
+   redir_icon = '<a class="redir" href="#" vm_id="'+vm.ID+'" vm_ostype="'+ostype+'">';
+ 
+	if (ostype == "WINDOWS"){
+		 redir_icon += '<img src="images/rdp_icon.png" alt=\"'+tr("RDP Port")+'\" /></a>';
+	}
+	else {	
+		 redir_icon += '<img src="images/ssh_icon.png" alt=\"'+tr("SSH Port")+'\" /></a>';
+	}
+   return redir_icon;
+}
 
 // Special error callback in case historical monitoring of VM fails
 function vmMonitorError(req,error_json){
@@ -1637,6 +1784,7 @@ $(document).ready(function(){
     setupVMTemplateUpdateDialog();
     setVMAutorefresh();
     setupVNC();
+    setupRedirectPort();
     hotpluggingOps();
 
     initCheckAllBoxes(dataTable_vMachines);
