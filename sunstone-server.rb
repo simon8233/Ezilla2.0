@@ -414,7 +414,6 @@ post '/vm/:id/redirect/:port' do
 
         vm_id = params[:id]
 	port = params[:port]
-	logger.error {port}
         rc = @SunstoneServer.redirect(vm_id,port)
         info = rc[1]
         rc = [ 200 , info.to_json]

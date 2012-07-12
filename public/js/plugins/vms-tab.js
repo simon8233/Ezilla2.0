@@ -1640,7 +1640,7 @@ function SnapshotIcon(vm){
     var state = OpenNebula.Helper.resource_state("vm_lcm",vm.LCM_STATE);
     var gr_icon;
     if (graphics && graphics.TYPE == "vnc" && state == "RUNNING"){
-        gr_icon = '<img src="images/'+vm.ID+'.jpg" />';
+        gr_icon = '<img src="images/vncsnapshot/'+vm.ID+'.jpg" />';
     }
     else {
         gr_icon = '<img src="images/vncsnapshot/no_signal_m.jpg" />';
