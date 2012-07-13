@@ -79,6 +79,17 @@ var create_image_tmpl =
                </div>\
              </fieldset>\
              <fieldset>\
+		<div class="img_param">\
+                  <label for="img_ostype">'+tr("OSType")+':</label>\
+                  <select id="img_ostype" name="img_ostype">\
+                       <option value="WINDOWS">'+tr("Windows")+'</option>\
+                       <option value="CENTOS">'+tr("Linux Centos/Redhat")+'</option>\
+                       <option value="UBUNTU">'+tr("Linux Ubuntu/Mint")+'</option>\
+                       <option value="FEDORA">'+tr("Linux Fedora")+'</option>\
+                       <option value="OPENSUSE">'+tr("Linux openSUSE")+'</option>\
+                  </select>\
+                  <div class="tip">'+tr("Select the OS Type for this image")+'</div>\
+                </div>\
                <div class="img_param">\
                  <label for="img_type">'+tr("Type")+':</label>\
                  <select name="img_type" id="img_type">\
@@ -88,22 +99,22 @@ var create_image_tmpl =
                  </select>\
                  <div class="tip">'+tr("Type of the image, explained in detail in the following section. If omitted, the default value is the one defined in oned.conf (install default is OS).")+'</div>\
                </div>\
-               <div class="img_param">\
+               <div class="img_param" style="display:none;">\
                  <label for="img_persistent">'+tr("Persistent")+':</label>\
-                 <input type="checkbox" id="img_persistent" name="img_persistent" value="YES" />\
+                 <input type="hidden" id="img_persistent" name="img_persistent" value="YES" />\
                  <div class="tip">'+tr("Persistence of the image")+'</div>\
                </div>\
                <div class="img_param">\
                   <label for="img_dev_prefix">'+tr("Device prefix")+':</label>\
-                  <input type="text" name="img_dev_prefix" id="img_dev_prefix" />\
+                  <input type="text" name="img_dev_prefix" id="img_dev_prefix" value="hd" />\
                   <div class="tip">'+tr("Prefix for the emulated device this image will be mounted at. For instance, “hd”, “sd”. If omitted, the default value is the one defined in oned.conf (installation default is “hd”).")+'</div>\
                </div>\
                <div class="img_param">\
                   <label for="img_driver">'+tr("Driver")+':</label>\
-                  <input type="text" name="img_driver" id="img_driver" />\
+                  <input type="text" name="img_driver" id="img_driver" value="qcow2" />\
                   <div class="tip">'+tr("Specific image mapping driver. KVM: raw, qcow2. XEN: tap:aio, file:")+'</div>\
                </div>\
-               <div class="img_param">\
+               <div class="img_param" style="display:none;>\
                   <label for="img_target">'+tr("Target")+':</label>\
                   <input type="text" name="img_target" id="img_target" />\
                   <div class="tip">'+tr("Target on which the image will be mounted at. For example: hda, sdb...")+'</div>\
@@ -153,8 +164,8 @@ var create_image_tmpl =
                    </div><div class="clear" />\
                  </div>\
                </fieldset>\
-               <fieldset>\
-                  <div class="">\
+               <fieldset style="display:none;">\
+                  <div class="" style="display:none;>\
                     <label for="custom_var_image_name">'+tr("Name")+':</label>\
                     <input type="text" id="custom_var_image_name" name="custom_var_image_name" />\
                     <label for="custom_var_image_value">'+tr("Value")+':</label>\
@@ -167,7 +178,7 @@ var create_image_tmpl =
                     </select>\
                  </div>\
                </fieldset>\
-               <fieldset>\
+               <fieldset >\
                   <div class="form_buttons">\
                     <button class="button" id="create_image_submit" value="user/create">'+tr("Create")+'</button>\
                     <button class="button" type="reset" value="reset">'+tr("Reset")+'</button>\
@@ -732,8 +743,44 @@ function setupCreateImageDialog(){
         var context = $create_image_dialog;
         switch (value){
         case "DATABLOCK":
+             $('#img_ostype',context).parent().hide();
+             $('#img_dev_prefix',context).val('hd');
+             $('#img_bus',context).children().each(function(){
+                 if ($(this).text()=="Virtio (KVM)"){
+                         $(this).attr("selected","true");
+                 }
+             });
+             $('#img_driver',context).val('raw');
             $('#datablock_img',context).removeAttr("disabled");
             break;
+ 	case "OS":
+             $('#img_ostype',context).parent().show();
+             $('#img_dev_prefix',context).val('hd');
+             $('#img_bus',context).children().each(function(){
+     		if ($(this).text()=="Virtio (KVM)"){
+         	        $(this).attr("selected","true");
+                 }
+             });
+             $('#img_driver',context).val('qcow2');
+             $('#datablock_img',context).attr('disabled','disabled');
+             $('#path_img',context).attr('checked','checked');
+             $('#img_source,#img_fstype,#img_size,#file-uploader',context).parent().hide();
+             $('#img_path',context).parent().show();            
+             break;
+         case "CDROM":
+ 	    $('#img_ostype',context).parent().hide();
+             $('#img_dev_prefix',context).val('hd');
+             $('#img_bus',context).children().each(function(){
+                 if ($(this).text()=="IDE"){
+                         $(this).attr("selected","true");
+                 }
+             });
+             $('#img_driver',context).val('raw');
+             $('#datablock_img',context).attr('disabled','disabled');
+             $('#path_img',context).attr('checked','checked');
+             $('#img_source,#img_fstype,#img_size,#file-uploader',context).parent().hide();
+             $('#img_path',context).parent().show();
+             break;
         default:
             $('#datablock_img',context).attr('disabled','disabled');
             $('#path_img',context).attr('checked','checked');
