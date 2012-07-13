@@ -5,13 +5,16 @@
 ## $3 VM id
 ## $4 vnc's password
 ## jpg name
-URRENT_PATH=`pwd`
-JPGTMPNAME=`echo "$URRENT_PATH/$3-big.jpg"`
-JPGNAME=`echo "$URRENT_PATH/$3.jpg"`
-if [ ! -f $JPGNAME ]; then
-	cp $URRENT_PATH/no_signal_m.jpg $JPGNAME
+CURRENT_PATH=`pwd`
+if [ ! -f $CURRENT_PATH/vncpwd.sh ]; then
+      CURRENT_PATH=`echo "$CURRENT_PATH/pubilc/images/vncsnapshot"`
 fi
-$URRENT_PATH/vncpwd.sh "$URRENT_PATH"  $1 $2 $JPGTMPNAME "$4"
+JPGTMPNAME=`echo "$CURRENT_PATH/$3-big.jpg"`
+JPGNAME=`echo "$CURRENT_PATH/$3.jpg"`
+if [ ! -f $JPGNAME ]; then
+	cp $CURRENT_PATH/no_signal_m.jpg $JPGNAME
+fi
+$CURRENT_PATH/vncpwd.sh "$CURRENT_PATH"  $1 $2 $JPGTMPNAME "$4"
 sleep 1
 if [ -f $JPGTMPNAME ]; then
 	/usr/bin/convert $JPGTMPNAME -resize 160x120 $JPGNAME
