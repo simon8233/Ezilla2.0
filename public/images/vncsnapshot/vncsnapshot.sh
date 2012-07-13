@@ -5,12 +5,15 @@
 ## $3 VM id
 ## $4 vnc's password
 ## jpg name
-JPGTMPNAME=`echo "$ONE_LOCATION/lib/sunstone/public/images/vncsnapshot/$3-big.jpg"`
-JPGNAME=`echo "$ONE_LOCATION/lib/sunstone/public/images/vncsnapshot/$3.jpg"`
+URRENT_PATH=`pwd`
+JPGTMPNAME=`echo "$URRENT_PATH/$3-big.jpg"`
+JPGNAME=`echo "$URRENT_PATH/$3.jpg"`
 if [ ! -f $JPGNAME ]; then
-	cp $ONE_LOCATION/lib/sunstone/public/images/vncsnapshot/no_signal_m.jpg $JPGNAME
+	cp $URRENT_PATH/no_signal_m.jpg $JPGNAME
 fi
-$ONE_LOCATION/lib/sunstone/public/images/vncsnapshot/vncpwd.sh "$ONE_LOCATION/lib/sunstone/public/images/vncsnapshot"  $1 $2 $JPGTMPNAME "$4"
+$URRENT_PATH/vncpwd.sh "$URRENT_PATH"  $1 $2 $JPGTMPNAME "$4"
 sleep 1
-/usr/bin/convert $JPGTMPNAME -resize 160x120 $JPGNAME
-rm -rf $JPGTMPNAME 
+if [ -f $JPGTMPNAME ]; then
+	/usr/bin/convert $JPGTMPNAME -resize 160x120 $JPGNAME
+	rm -rf $JPGTMPNAME 
+fi

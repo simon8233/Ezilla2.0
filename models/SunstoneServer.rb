@@ -276,13 +276,20 @@ class SunstoneServer < CloudServer
                 redir_pid = %x{ps -ef | grep "caddr=#{ip} --cport=#{cport}" |grep -v grep | awk '{print $2}'}
                 redir_pid = Integer(redir_pid) if !redir_pid.empty?
                 file_redir_info = nil
+		if !File.directory?("/tmp/redir")
+			Dir.mkdir("/tmp/redir")
+                end
                 if !redir_pid.is_a?(Integer) ## "redirect ip proc" is not exist
                         File.delete("/tmp/redir/#{ip}:#{cport}") if File.exist?("/tmp/redir/#{ip}:#{cport}")
                 end
 
                 if !File.exist?("/tmp/redir/#{ip}:#{cport}") ##
                         file_redir_info = File.open("/tmp/redir/#{ip}:#{cport}",'w+')
-                        redir = ONE_LOCATION + "/share/redir/redir"
+			if ONE_LOCATION.nil?
+				redir = "/usr/share/one/redir/redir"
+			else
+                        	redir = ONE_LOCATION + "/share/redir/redir"
+			end
                         pipe = open("|#{redir}  --lport=0 --caddr=#{ip} --cport=#{cport} &")
                         redir_port = pipe.readline
                         pipe.close
@@ -309,8 +316,12 @@ class SunstoneServer < CloudServer
             vnc_port = resource['TEMPLATE/GRAPHICS/PORT']
             vnc_pw = resource['TEMPLATE/GRAPHICS/PASSWD']
 
-            cmd = ONE_LOCATION+ "/lib/sunstone/public/images/vncsnapshot/vncsnapshot.sh #{host} #{vnc_port} #{id} #{vnc_pw}"
-
+	    if ONE_LOCATION.nil?
+               cmd = "/usr/lib/one/sunstone/public/images/vncsnapshot/vncsnapshot.sh #{host} #{vnc_port} #{id} #{vnc_pw}"
+	    else
+               cmd = ONE_LOCATION + "/lib/sunstone/public/images/vncsnapshot/vncsnapshot.sh #{host} #{vnc_port} #{id} #{vnc_pw}"
+            end
+	    
             begin
                 pipe = IO.popen(cmd)
                 return [200, "images/#{id}.jpg".to_json]
