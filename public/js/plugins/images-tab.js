@@ -178,7 +178,7 @@ var create_image_tmpl =
                     </select>\
                  </div>\
                </fieldset>\
-               <fieldset >\
+               <fieldset>\
                   <div class="form_buttons">\
                     <button class="button" id="create_image_submit" value="user/create">'+tr("Create")+'</button>\
                     <button class="button" type="reset" value="reset">'+tr("Reset")+'</button>\

@@ -49,8 +49,10 @@ var templates_tab_content = '\
 var create_template_tmpl = '<div id="template_create_tabs">\
         <ul>\
                 <li><a href="#easy">'+tr("Wizard KVM")+'</a></li>\
-                <li><a href="#easy">'+tr("Wizard XEN")+'</a></li>\
+ 		<!--\
+		<li><a href="#easy">'+tr("Wizard XEN")+'</a></li>\
                 <li><a href="#easy">'+tr("Wizard VMware")+'</a></li>\
+ 		-->\
                 <li><a href="#manual">'+tr("Advanced mode")+'</a></li>\
         </ul>\
         <div id="easy">\
@@ -82,17 +84,22 @@ var create_template_tmpl = '<div id="template_create_tabs">\
                                 </div>\
                             <div class="vm_param kvm xen vmware_opt">\
                                   <label for="MEMORY">'+tr("Memory")+':</label>\
-                                  <input type="text" id="MEMORY" name="memory" size="4" />\
+				  <select id="MEMORY" name="memory">\
+                                        <option value="1024">1G</option>\
+                                        <option value="2048">2G</option>\
+                                        <option value="4096">4G</option>\
+                                        <option value="8192">8G</option>\
+                                  </select>\
                                   <div class="tip">'+tr("Amount of RAM required for the VM, in Megabytes.")+'</div>\
                             </div>\
                     <div class="vm_param kvm xen vmware">\
                                 <label for="CPU">'+tr("CPU")+':</label>\
-                                  <input type="text" id="CPU" name="cpu" size="2"/>\
+                                  <input type="text" id="CPU" name="cpu" value="1" size="2"/>\
                                   <div class="tip">'+tr("Percentage of CPU divided by 100 required for the Virtual Machine. Half a processor is written 0.5.")+'</div>\
                             </div>\
                             <div class="vm_param kvm_opt xen_opt vmware_opt">\
                                   <label for="VCPU">'+tr("VCPU")+':</label>\
-                                  <input type="text" id="VCPU" name="vcpu" size="3" />\
+                                  <input type="text" id="VCPU" name="vcpu" value="1" size="3" />\
                                   <div class="tip">'+tr("Number of virtual cpus. This value is optional, the default hypervisor behavior is used, usually one virtual CPU.")+'</div>\
                             </div>\
                           </fieldset>\
@@ -108,8 +115,8 @@ var create_template_tmpl = '<div id="template_create_tabs">\
                                 <div class="vm_param kvm vmware">\
                                   <label for="ARCH">'+tr("Architecture")+':</label>\
                                   <select id="ARCH" name="arch">\
-                                        <option value="i686">i686</option>\
                                         <option value="x86_64">x86_64</option>\
+					<option value="i686">i686</option>\
                                   </select>\
                                   <div class="tip">'+tr("CPU architecture to virtualization")+'</div>\
                                 </div>\
@@ -174,11 +181,11 @@ var create_template_tmpl = '<div id="template_create_tabs">\
                     </select>\
                     <div class="tip">'+tr("Physical address extension mode allows 32-bit guests to address more than 4 GB of memory")+'</div>\
                 </div>\
-                <div class="vm_param kvm_opt xen_opt vmware_opt">\
+                <div class="vm_param kvm_opt xen_opt vmware_opt" style="display:none;">\
                     <label for="ACPI">'+tr("ACPI")+':</label>\
                     <select id="ACPI" name="ACPI">\
                         <option value="">'+tr("Default")+'</option>\
-                        <option value="yes">'+tr("Enable")+'</option>\
+                        <option value="yes" selected >'+tr("Enable")+'</option>\
                         <option value="no">'+tr("Disable")+'</option>\
                     </select>\
                     <div class="tip">'+tr("Useful for power management, for example, normally required for graceful shutdown to work")+'</div>\
@@ -213,12 +220,12 @@ var create_template_tmpl = '<div id="template_create_tabs">\
                             </div>\
                             <div class="vm_param kvm_opt xen_opt vmware_opt">\
                                   <label for="TARGET">'+tr("Target")+':</label>\
-                                  <input type="text" id="TARGET" name="target" />\
+                                  <input type="text" id="TARGET" name="target"/>\
                                   <div class="tip">'+tr("Device to map image disk. If set, it will overwrite the default device mapping")+'</div>\
                             </div>\
                             <div class="vm_param kvm_opt xen_opt vmware_opt">\
                                   <label for="DRIVER">'+tr("Driver")+':</label>\
-                                  <input type="text" id="DRIVER" name="driver" />\
+                                  <input type="text" id="DRIVER" name="driver" value="qcow2"/>\
                                   <div class="tip">'+tr("Specific image mapping driver. KVM: raw, qcow2. Xen:tap:aio:, file:. VMware unsupported")+'</div>\
                             </div>\
                             <div class="vm_param kvm_opt xen_opt vmware_opt add_disk">\
@@ -406,8 +413,8 @@ var create_template_tmpl = '<div id="template_create_tabs">\
                                 <div class="vm_param kvm_opt">\
                                   <label for="TYPE">'+tr("Type")+':</label>\
                                   <select id="TYPE" name="input_type">\
-                                        <option value="mouse">'+tr("Mouse")+'</option>\
                                         <option value="tablet">'+tr("Tablet")+'</option>\
+					 <option value="mouse">'+tr("Mouse")+'</option>\
                                   </select>\
                                   <div class="tip"></div>\
                             </div>\
@@ -444,12 +451,13 @@ var create_template_tmpl = '<div id="template_create_tabs">\
                     <option value="">'+tr("Please select")+'</option>\
                                         <option id="vnc" value="vnc">'+tr("VNC")+'</option>\
                                         <option value="sdl">'+tr("SDL")+'</option>\
+ 					<option id="spice" value="spice">'+tr("SPICE")+'</option>\
                                   </select>\
                                   <div class="tip">'+tr("VMware supports VNC only")+'</div>\
                             </div>\
                             <div class="vm_param kvm_opt xen_opt vmware_opt">\
                                   <label for="LISTEN">'+tr("Listen IP")+':</label>\
-                                  <input type="text" id="LISTEN" name="graphics_ip" />\
+                                  <input type="text" id="LISTEN" name="graphics_ip"/>\
                                   <div class="tip">'+tr("IP to listen on")+'</div>\
                             </div>\
                             <div class="vm_param kvm_opt xen_opt vmware_opt">\
@@ -500,7 +508,7 @@ var create_template_tmpl = '<div id="template_create_tabs">\
 \
 \
                           <!--placement requirements rank -->\
-                          <div class="vm_section" id="placement">\
+                          <div class="vm_section" id="placement" style="display:none;">\
                            <div class="show_hide" id="add_placement_cb">\
                               <h3>'+tr("Add placement options")+' <a id="add_placement" class="icon_left" href="#"><span class="ui-icon ui-icon-plus" /></a></h3>\
                            </div>\
@@ -520,7 +528,7 @@ var create_template_tmpl = '<div id="template_create_tabs">\
 \
 \
                           <!--raw type=> set to current, data -->\
-                          <div class="vm_section" id="raw">\
+                          <div class="vm_section" id="raw" style="display:none;">\
                                 <div class="show_hide" id="add_raw_cb">\
                                 <h3>'+tr("Add Hypervisor raw options")+' <a id="add_raw" class="icon_left" href="#"><span class="ui-icon ui-icon-plus" /></a></h3>\
                             </div>\
@@ -537,7 +545,7 @@ var create_template_tmpl = '<div id="template_create_tabs">\
 \
 \
               <!--custom variables -->\
-                          <div class="vm_section" id="custom_var">\
+                          <div class="vm_section" id="custom_var" style="display:none;">\
                                 <div class="show_hide" id="add_context_cb">\
                                   <h3>'+tr("Add custom variables")+' <a id="add_custom_var" class="icon_left" href="#"><span class="ui-icon ui-icon-plus" /></a></h3>\
                             </div>\
@@ -1688,22 +1696,34 @@ function setupCreateTemplateDialog(){
             g_type = $(this).val();
             switch (g_type) {
             case "vnc":
-                $('#LISTEN',section_graphics).parent().show();
-                $('#PORT',section_graphics).parent().show();
+                $('#LISTEN',section_graphics).parent().hide();
+                $('#LISTEN',section_graphics).val('0.0.0.0');
+                $('#PORT',section_graphics).parent().hide();
                 $('#PASSWD',section_graphics).parent().show();
-                $('#KEYMAP',section_graphics).parent().show();
+                $('#KEYMAP',section_graphics).parent().hide();
                 $('#PORT',section_graphics).parent().removeAttr('disabled');
                 $('#PASSWD',section_graphics).parent().removeAttr('disabled');
                 $('#KEYMAP',section_graphics).parent().removeAttr('disabled');
                 break;
             case "sdl":
-                $('#LISTEN',section_graphics).parent().show();
+                $('#LISTEN',section_graphics).parent().hide();
+                $('#LISTEN',section_graphics).val('0.0.0.0');
                 $('#PORT',section_graphics).parent().hide();
                 $('#PASSWD',section_graphics).parent().hide();
                 $('#KEYMAP',section_graphics).parent().hide();
                 $('#PORT',section_graphics).parent().attr('disabled','disabled');
                 $('#PASSWD',section_graphics).parent().attr('disabled','disabled');
                 $('#KEYMAP',section_graphics).parent().attr('disabled','disabled');
+                break;
+ 	    case "spice":
+                $('#LISTEN',section_graphics).parent().hide();
+                $('#LISTEN',section_graphics).val('0.0.0.0');
+                $('#PORT',section_graphics).parent().hide();
+                $('#PASSWD',section_graphics).parent().show();
+                $('#KEYMAP',section_graphics).parent().hide();
+                $('#PORT',section_graphics).parent().removeAttr('disabled');
+                $('#PASSWD',section_graphics).parent().removeAttr('disabled');
+                $('#KEYMAP',section_graphics).parent().removeAttr('disabled');
                 break;
             default:
                 $('#LISTEN',section_graphics).parent().hide();
@@ -1927,9 +1947,17 @@ function setupCreateTemplateDialog(){
 
         //process graphics -> fetch fields with value
         scope = section_graphics;
+	//for spice => the judgement area
+	g_type = $('select#TYPE option:selected',section_graphics).text();
+	if (g_type == "spice")
+	{
+	addSectionJSON(vm_json["RAW"],scope);
+	}
+	else
+	{
         vm_json["GRAPHICS"] = {};
         addSectionJSON(vm_json["GRAPHICS"],scope);
-
+        }
         //context
         scope = section_context;
         vm_json["CONTEXT"] = {};
