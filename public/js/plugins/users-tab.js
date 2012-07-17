@@ -360,19 +360,24 @@ var user_actions = {
 var user_buttons = {
     "User.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large">',
+        text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
         alwaysActive: true
     },
     "User.create_dialog" : {
         type: "create_dialog",
-        text: tr("+ New"),
+        text: '<i class="icon-plus icon-large"> '+tr("New"),
         condition: mustBeAdmin
     },
     "User.update_dialog" : {
         type: "action",
-        text: tr("Update properties"),
+        text: '<i class="icon-edit icon-large"> '+tr("Update properties"),
         alwaysActive: true
     },
+
+    "action_list" : {
+        type: "select",
+        actions: {
+
     "User.update_password" : {
         type : "action",
         text : tr("Change password"),
@@ -402,6 +407,9 @@ var user_buttons = {
         tip: tr("Please choose the new type of authentication for the selected users")+":",
         condition: mustBeAdmin
     },
+        }
+        },
+
     // "User.addgroup" : {
     //     type: "confirm_with_select",
     //     text: "Add to group",
@@ -418,12 +426,12 @@ var user_buttons = {
     // },
     "User.delete" : {
         type: "confirm",
-        text: tr("Delete"),
+        text: '<i class="icon-remove icon-large"> '+tr("Delete"),
         condition: mustBeAdmin
     },
     "User.help" : {
         type: "action",
-        text: '?',
+        text: '<i class="icon-question-sign icon-large">',
         alwaysActive: true
     }
 
@@ -445,7 +453,7 @@ var users_tab = {
     content: users_tab_content,
     buttons: user_buttons,
     tabClass: 'subTab',
-    parentTab: 'system_tab',
+//    parentTab: 'system_tab',
     condition: mustBeAdmin,
 };
 
@@ -454,7 +462,7 @@ var users_tab_non_admin = {
     content: users_tab_content,
     buttons: user_buttons,
     tabClass: 'subTab',
-    parentTab: 'dashboard_tab',
+//    parentTab: 'dashboard_tab',
     condition: mustNotBeAdmin,
 }
 
@@ -775,7 +783,7 @@ $(document).ready(function(){
         "bAutoWidth":false,
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": ["check"] },
-            { "sWidth": "60px", "aTargets": [0] },
+            { "sWidth": "80px", "aTargets": [0] },
             { "sWidth": "35px", "aTargets": [1,5,6,7,8] },
             { "sWidth": "150px", "aTargets": [4] },
             { "bVisible": false, "aTargets": [8]}

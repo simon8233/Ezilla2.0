@@ -805,22 +805,27 @@ var template_actions = {
 var template_buttons = {
     "Template.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large">',
+        text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
         alwaysActive: true
     },
     "Template.create_dialog" : {
         type: "create_dialog",
-        text: tr("+ New")
+        text: '<i class="icon-plus icon-large"> '+tr("New")
     },
     "Template.update_dialog" : {
         type: "action",
-        text: tr("Update properties"),
+        text: '<i class="icon-edit icon-large"> '+tr("Update properties"),
         alwaysActive: true
     },
     "Template.instantiate_vms" : {
         type: "action",
-        text: tr("Instantiate")
+        text: '<i class="icon-cloud icon-large"> '+tr("Instantiate"),
     },
+
+        "action_list" : {
+        type: "select",
+        actions: {
+
     "Template.chown" : {
         type: "confirm_with_select",
         text: tr("Change owner"),
@@ -839,14 +844,17 @@ var template_buttons = {
         type: "action",
         text: tr("Clone"),
     },
+}
+},
+
     "Template.delete" : {
         type: "confirm",
-        text: tr("Delete")
+        text: '<i class="icon-remove icon-large"> '+tr("Delete"),
     },
 
     "Template.help" : {
         type: "action",
-        text: '?',
+        text: '<i class="icon-question-sign icon-large">',
         alwaysActive: true
     }
 }
@@ -863,7 +871,7 @@ var templates_tab = {
     content: templates_tab_content,
     buttons: template_buttons,
     tabClass: 'subTab',
-    parentTab: 'vres_tab'
+//    parentTab: 'vres_tab'
 }
 
 Sunstone.addActions(template_actions);
@@ -2247,7 +2255,7 @@ $(document).ready(function(){
         "sPaginationType": "full_numbers",
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": ["check"] },
-            { "sWidth": "60px", "aTargets": [0] },
+            { "sWidth": "80px", "aTargets": [0] },
             { "sWidth": "35px", "aTargets": [1] },
             { "sWidth": "150px", "aTargets": [5] },
             { "sWidth": "100px", "aTargets": [2,3] }

@@ -426,20 +426,25 @@ var vnet_actions = {
 var vnet_buttons = {
     "Network.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large">',
+        text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
         alwaysActive: true
     },
 
     "Network.create_dialog" : {
         type: "create_dialog",
-        text: tr("+ New")
+        text: '<i class="icon-plus icon-large"> '+tr("New"),
     },
 
     "Network.update_dialog" : {
         type: "action",
-        text: tr("Update properties"),
+        text: '<i class="icon-edit icon-large"> '+tr("Update properties"),
         alwaysActive: true
     },
+
+    "action_list" : {
+        type: "select",
+        actions: {
+
     "Network.addtocluster" : {
         type: "confirm_with_select",
         text: tr("Select cluster"),
@@ -462,15 +467,17 @@ var vnet_buttons = {
         tip: tr("Select the new group")+":",
         condition: mustBeAdmin,
     },
+        }
+        },
 
     "Network.delete" : {
         type: "confirm",
-        text: tr("Delete")
+        text: '<i class="icon-remove icon-large"> '+tr("Delete"),
     },
 
     "Network.help" : {
         type: "action",
-        text: '?',
+        text: '<i class="icon-question-sign icon-large">',
         alwaysActive: true
     }
 }
@@ -491,7 +498,7 @@ var vnets_tab = {
     content: vnets_tab_content,
     buttons: vnet_buttons,
     tabClass: "subTab",
-    parentTab: "infra_tab",
+//    parentTab: "infra_tab",
     showOnTopMenu: false,
 }
 
@@ -1206,7 +1213,8 @@ $(document).ready(function(){
         "sPaginationType": "full_numbers",
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": ["check"] },
-            { "sWidth": "60px", "aTargets": [0,6,7,8] },
+            { "sWidth": "80px", "aTargets": [0] },
+            { "sWidth": "60px", "aTargets": [6,7,8] },
             { "sWidth": "35px", "aTargets": [1] },
             { "sWidth": "100px", "aTargets": [2,3,5] },
             { "bVisible": false, "aTargets": [7]}

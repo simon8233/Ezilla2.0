@@ -300,20 +300,25 @@ var datastore_actions = {
 var datastore_buttons = {
     "Datastore.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large">',
+	text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
         alwaysActive: true
     },
     "Datastore.create_dialog" : {
         type: "create_dialog",
-        text: tr("+ New"),
+        text: '<i class="icon-plus icon-large"> '+tr("New"),
         condition: mustBeAdmin,
     },
     "Datastore.update_dialog" : {
         type: "action",
-        text: tr("Update properties"),
+        text: '<i class="icon-edit icon-large"> '+tr("Update properties"),
         alwaysActive: true,
         condition: mustBeAdmin,
     },
+
+    "action_list" : {
+        type: "select",
+        actions: {
+
     "Datastore.addtocluster" : {
         type: "confirm_with_select",
         text: tr("Select cluster"),
@@ -335,15 +340,18 @@ var datastore_buttons = {
         tip: tr("Select the new group")+":",
         condition: mustBeAdmin
     },
+        }
+        },
+
     "Datastore.delete" : {
         type: "confirm",
-        text: tr("Delete"),
+        text: '<i class="icon-remove icon-large"> '+tr("Delete"),
         condition: mustBeAdmin
     },
 
     "Datastore.help" : {
         type: "action",
-        text: '?',
+        text: '<i class="icon-question-sign icon-large">',
         alwaysActive: true
     }
 }
@@ -364,7 +372,7 @@ var datastores_tab = {
     content: datastores_tab_content,
     buttons: datastore_buttons,
     tabClass: "subTab",
-    parentTab: "infra_tab",
+//    parentTab: "infra_tab",
     showOnTopMenu: false,
 }
 
@@ -719,7 +727,7 @@ $(document).ready(function(){
         "bAutoWidth":false,
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": ["check"] },
-            { "sWidth": "60px", "aTargets": [0] },
+            { "sWidth": "80px", "aTargets": [0] },
             { "sWidth": "35px", "aTargets": [1,9] },
             { "sWidth": "100px", "aTargets": [2,3,5,7,8] },
             { "bVisible": false, "aTargets": [6,7,8,9] }

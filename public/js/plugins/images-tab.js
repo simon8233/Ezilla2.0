@@ -461,18 +461,23 @@ var image_actions = {
 var image_buttons = {
     "Image.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large">',
+        text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
         alwaysActive: true
     },
     "Image.create_dialog" : {
         type: "create_dialog",
-        text: tr('+ New')
+        text: '<i class="icon-plus icon-large"> '+tr("New"),
     },
     "Image.update_dialog" : {
         type: "action",
-        text: tr("Update properties"),
+        text: '<i class="icon-edit icon-large"> '+tr("Update properties"),
         alwaysActive: true
     },
+
+    "action_list" : {
+        type: "select",
+        actions: {
+
     "Image.chown" : {
         type: "confirm_with_select",
         text: tr("Change owner"),
@@ -487,9 +492,7 @@ var image_buttons = {
         tip: tr("Select the new group")+":",
         condition: mustBeAdmin
     },
-    "action_list" : {
-        type: "select",
-        actions: {
+
             "Image.enable" : {
                 type: "action",
                 text: tr("Enable")
@@ -505,20 +508,24 @@ var image_buttons = {
             "Image.nonpersistent" : {
                 type: "action",
                 text: tr("Make non persistent")
-            }
-        }
-    },
+            },
+
     "Image.clone_dialog" : {
         type: "action",
         text: tr("Clone"),
     },
+
+        }
+    },
+
+
     "Image.delete" : {
         type: "confirm",
-        text: tr("Delete")
+        text: '<i class="icon-remove icon-large"> '+tr("Delete"),
     },
     "Image.help" : {
         type: "action",
-        text: '?',
+        text: '<i class="icon-question-sign icon-large">',
         alwaysActive: true
     }
 }
@@ -541,7 +548,7 @@ var images_tab = {
     content: images_tab_content,
     buttons: image_buttons,
     tabClass: 'subTab',
-    parentTab: 'vres_tab'
+//    parentTab: 'vres_tab'
 }
 
 Sunstone.addActions(image_actions);
@@ -1284,7 +1291,8 @@ $(document).ready(function(){
         "sPaginationType": "full_numbers",
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": ["check"] },
-            { "sWidth": "60px", "aTargets": [0,2,3,9,10] },
+            { "sWidth": "80px", "aTargets": [0] },
+            { "sWidth": "60px", "aTargets": [2,3,9,10] },
             { "sWidth": "35px", "aTargets": [1,6,11,12] },
             { "sWidth": "100px", "aTargets": [5,7] },
             { "sWidth": "150px", "aTargets": [8] },

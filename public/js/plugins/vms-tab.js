@@ -525,15 +525,36 @@ var vm_actions = {
 var vm_buttons = {
     "VM.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large">',
+        text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
         alwaysActive: true
     },
 
     "VM.create_dialog" : {
         type: "action",
-        text: tr("+ New"),
+        text: '<i class="icon-plus icon-large"> '+tr("New"),
         alwaysActive: true
     },
+
+            "VM.suspend" : {
+                type: "confirm",
+                text: '<i class="icon-pause icon-large"> '+tr("Suspend"),
+                tip: tr("This will suspend selected machines")
+            },
+            "VM.resume" : {
+                type: "confirm",
+                text: '<i class="icon-play icon-large"> '+tr("Resume"),
+                tip: tr("This will resume selected stopped or suspended VMs")
+            },
+
+    "VM.shutdown" : {
+        type: "confirm",
+        text: tr("Shutdown"),
+        tip: tr("This will initiate the shutdown process in the selected VMs")
+    },
+
+    "action_list" : {
+        type: "select",
+        actions: {
 
     "VM.update_dialog" : {
         type: "action",
@@ -557,15 +578,6 @@ var vm_buttons = {
         condition: mustBeAdmin
     },
 
-    "VM.shutdown" : {
-        type: "confirm",
-        text: tr("Shutdown"),
-        tip: tr("This will initiate the shutdown process in the selected VMs")
-    },
-
-    "action_list" : {
-        type: "select",
-        actions: {
             "VM.deploy" : {
                 type: "confirm_with_select",
                 text: tr("Deploy"),
@@ -597,16 +609,6 @@ var vm_buttons = {
                 type: "confirm",
                 text: tr("Release"),
                 tip: tr("This will release held machines")
-            },
-            "VM.suspend" : {
-                type: "confirm",
-                text: tr("Suspend"),
-                tip: tr("This will suspend selected machines")
-            },
-            "VM.resume" : {
-                type: "confirm",
-                text: tr("Resume"),
-                tip: tr("This will resume selected stopped or suspended VMs")
             },
             "VM.stop" : {
                 type: "confirm",
@@ -643,13 +645,13 @@ var vm_buttons = {
 
     "VM.delete" : {
         type: "confirm",
-        text: tr("Delete"),
+        text: '<i class="icon-remove icon-large"> '+tr("Delete"),
         tip: tr("This will delete the selected VMs from the database")
     },
 
     "VM.help" : {
         type: "action",
-        text: '?',
+        text: '<i class="icon-question-sign icon-large">',
         alwaysActive: true
     }
 }
@@ -682,7 +684,7 @@ var vms_tab = {
     content: vms_tab_content,
     buttons: vm_buttons,
     tabClass: 'subTab',
-    parentTab: 'vres_tab'
+//    parentTab: 'vres_tab'
 };
 
 SunstoneMonitoringConfig['VM'] = {
@@ -847,13 +849,22 @@ function vMachineElementArray(vm_json){
         state = OpenNebula.Helper.resource_state("vm_lcm",vm.LCM_STATE);
     };
 
+if (state=="RUNNING")
+var icon = '<img src="images/running.png" title="'+state+'"></>';
+else if (state=="SUSPENDED" || state=="SHUTDOWN")
+var icon = '<img src="images/rest.png"> '+state+'</>';
+else if (state=="FAILED" || state=="FAILURE")
+var icon = '<img src="images/failure.png"> '+state+'</>';
+else
+var icon = '<img src="images/unknown.png"> '+state+'</>';
+
     return [
         '<input class="check_item" type="checkbox" id="vm_'+vm.ID+'" name="selected_items" value="'+vm.ID+'"/>',
         vm.ID,
         vm.UNAME,
         vm.GNAME,
         vm.NAME,
-        state,
+        icon, //state,
         vm.CPU,
         humanize_size(vm.MEMORY),
         hostname,
@@ -1762,7 +1773,8 @@ $(document).ready(function(){
         "bAutoWidth":false,
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": ["check"] },
-            { "sWidth": "60px", "aTargets": [0,6,7] },
+            { "sWidth": "80px", "aTargets": [0] },
+            { "sWidth": "60px", "aTargets": [6,7] },
             { "sWidth": "35px", "aTargets": [1,11] },
             { "sWidth": "150px", "aTargets": [5,10] },
             { "sWidth": "100px", "aTargets": [2,3,9] },
