@@ -212,21 +212,21 @@ var cluster_actions = {
 var cluster_buttons = {
     "Cluster.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large">',
+        text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
         alwaysActive: true
     },
     "Cluster.create_dialog" : {
         type: "create_dialog",
-        text: tr("+ New")
+        text: '<i class="icon-plus icon-large"> '+tr("New"),
     },
     "Cluster.update_dialog" : {
         type : "action",
-        text : tr("Update properties"),
+        text: '<i class="icon-edit icon-large"> '+tr("Update properties"),
         alwaysActive: true
     },
     "Cluster.delete" : {
         type: "confirm",
-        text: tr("Delete")
+        text: '<i class="icon-remove icon-large"> '+tr("Delete"),
     }
 };
 
@@ -989,7 +989,7 @@ $(document).ready(function(){
         "sPaginationType": "full_numbers",
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": ["check"] },
-            { "sWidth": "60px", "aTargets": [0] },
+            { "sWidth": "80px", "aTargets": [0] },
             { "sWidth": "35px", "aTargets": [1,3,4,5] },
         ],
         "oLanguage": (datatable_lang != "") ?

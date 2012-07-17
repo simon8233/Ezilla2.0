@@ -156,20 +156,20 @@ var acl_actions = {
 var acl_buttons = {
     "Acl.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large">',
+        text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
         alwaysActive: true
     },
     "Acl.create_dialog" : {
         type: "create_dialog",
-        text: tr("+ New")
+        text: '<i class="icon-plus icon-large"> '+tr("New"),
     },
     "Acl.delete" : {
         type: "confirm",
-        text: tr("Delete")
+        text: '<i class="icon-remove icon-large"> '+tr("Delete"),
     },
     "Acl.help" : {
         type: "action",
-        text: '?',
+        text: '<i class="icon-question-sign icon-large">',
         alwaysActive: true
     }
 
@@ -527,7 +527,7 @@ $(document).ready(function(){
         "bAutoWidth":false,
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": ["check"] },
-            { "sWidth": "60px", "aTargets": [0] },
+            { "sWidth": "80px", "aTargets": [0] },
             { "sWidth": "35px", "aTargets": [1] },
             { "bVisible": false, "aTargets": [6]}
         ],

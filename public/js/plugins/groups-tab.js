@@ -229,12 +229,12 @@ var group_actions = {
 var group_buttons = {
     "Group.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large">',
+        text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
         alwaysActive: true
     },
     "Group.create_dialog" : {
         type: "create_dialog",
-        text: tr("+ New Group"),
+        text: '<i class="icon-plus icon-large"> '+tr("New"),
         condition: mustBeAdmin
     },
     // "Group.chown" : {
@@ -246,17 +246,17 @@ var group_buttons = {
     // },
     "Group.quotas_dialog" : {
         type : "action",
-        text : tr("Update quotas"),
+        text: '<i class="icon-edit icon-large"> '+tr("Update quotas"),
         condition: mustBeAdmin,
     },
     "Group.delete" : {
         type: "confirm",
-        text: tr("Delete"),
+        text: '<i class="icon-remove icon-large"> '+tr("Delete"),
         condition: mustBeAdmin
     },
     "Group.help" : {
         type: "action",
-        text: '?',
+        text: '<i class="icon-question-sign icon-large">',
         alwaysActive: true
     }
 };
@@ -502,7 +502,7 @@ $(document).ready(function(){
         "bAutoWidth":false,
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": ["check"] },
-            { "sWidth": "60px", "aTargets": [0] },
+            { "sWidth": "80px", "aTargets": [0] },
             { "sWidth": "35px", "aTargets": [1,4,5,6] }
         ],
         "oLanguage": (datatable_lang != "") ?

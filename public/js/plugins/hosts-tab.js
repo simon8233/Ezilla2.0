@@ -306,45 +306,45 @@ var host_actions = {
 var host_buttons = {
     "Host.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large">',
+        text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
         alwaysActive: true
     },
     "Host.create_dialog" : {
         type: "create_dialog",
-        text: tr("+ New"),
+        text: '<i class="icon-plus icon-large"> '+tr("New"),
         condition: mustBeAdmin
     },
     "Host.update_dialog" : {
         type: "action",
-        text: tr("Update a template"),
+        text: '<i class="icon-edit icon-large"> '+tr("Update a template"),
         alwaysActive: true,
         condition: mustBeAdmin
     },
     "Host.addtocluster" : {
         type: "confirm_with_select",
-        text: tr("Select cluster"),
+        text: '<i class="icon-copy icon-large"> '+tr("Select cluster"),
         select: clusters_sel,
         tip: tr("Select the destination cluster:"),
         condition: mustBeAdmin
     },
     "Host.enable" : {
         type: "action",
-        text: tr("Enable"),
+        text: '<i class="icon-plus-sign icon-large"> '+tr("Enable"),
         condition: mustBeAdmin
     },
     "Host.disable" : {
         type: "action",
-        text: tr("Disable"),
+        text: '<i class="icon-minus-sign icon-large"> '+tr("Disable"),
         condition: mustBeAdmin
     },
     "Host.delete" : {
         type: "confirm",
-        text: tr("Delete host"),
+        text: '<i class="icon-remove icon-large"> '+tr("Delete host"),
         condition: mustBeAdmin
     },
     "Host.help" : {
         type: "action",
-        text: '?',
+        text: '<i class="icon-question-sign icon-large">' ,
         alwaysActive: true
     }
 };
@@ -907,7 +907,8 @@ $(document).ready(function(){
         "sPaginationType": "full_numbers",
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": ["check"] },
-            { "sWidth": "60px", "aTargets": [0,4] },
+	    { "sWidth": "80px", "aTargets": [0] },
+            { "sWidth": "60px", "aTargets": [4] },
             { "sWidth": "35px", "aTargets": [1] },
             { "sWidth": "100px", "aTargets": [7,3,8,9,10] },
             { "sWidth": "200px", "aTargets": [5,6] },
