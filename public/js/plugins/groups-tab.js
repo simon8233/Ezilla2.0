@@ -273,7 +273,7 @@ var groups_tab = {
     content: groups_tab_content,
     buttons: group_buttons,
     tabClass: 'subTab',
-    parentTab: 'system_tab',
+//    parentTab: 'system_tab',
     condition: mustBeAdmin
 };
 
@@ -282,7 +282,7 @@ var groups_tab_non_admin = {
     content: groups_tab_content,
     buttons: group_buttons,
     tabClass: 'subTab',
-    parentTab: 'dashboard_tab',
+//    parentTab: 'dashboard_tab',
     condition: mustNotBeAdmin
 }
 

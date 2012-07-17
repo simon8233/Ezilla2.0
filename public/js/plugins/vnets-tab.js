@@ -491,7 +491,7 @@ var vnets_tab = {
     content: vnets_tab_content,
     buttons: vnet_buttons,
     tabClass: "subTab",
-    parentTab: "infra_tab",
+//    parentTab: "infra_tab",
     showOnTopMenu: false,
 }
 

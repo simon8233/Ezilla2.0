@@ -180,7 +180,7 @@ var acls_tab = {
     content: acls_tab_content,
     buttons: acl_buttons,
     tabClass: 'subTab',
-    parentTab: 'system_tab'
+//    parentTab: 'system_tab'
 }
 
 //Monitoring for ACLs - just count how many

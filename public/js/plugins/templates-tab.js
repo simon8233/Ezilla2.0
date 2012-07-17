@@ -863,7 +863,7 @@ var templates_tab = {
     content: templates_tab_content,
     buttons: template_buttons,
     tabClass: 'subTab',
-    parentTab: 'vres_tab'
+//    parentTab: 'vres_tab'
 }
 
 Sunstone.addActions(template_actions);

@@ -445,7 +445,7 @@ var users_tab = {
     content: users_tab_content,
     buttons: user_buttons,
     tabClass: 'subTab',
-    parentTab: 'system_tab',
+//    parentTab: 'system_tab',
     condition: mustBeAdmin,
 };
 
@@ -454,7 +454,7 @@ var users_tab_non_admin = {
     content: users_tab_content,
     buttons: user_buttons,
     tabClass: 'subTab',
-    parentTab: 'dashboard_tab',
+//    parentTab: 'dashboard_tab',
     condition: mustNotBeAdmin,
 }
 

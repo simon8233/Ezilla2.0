@@ -364,7 +364,7 @@ var datastores_tab = {
     content: datastores_tab_content,
     buttons: datastore_buttons,
     tabClass: "subTab",
-    parentTab: "infra_tab",
+//    parentTab: "infra_tab",
     showOnTopMenu: false,
 }
 

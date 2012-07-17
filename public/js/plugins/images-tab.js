@@ -541,7 +541,7 @@ var images_tab = {
     content: images_tab_content,
     buttons: image_buttons,
     tabClass: 'subTab',
-    parentTab: 'vres_tab'
+//    parentTab: 'vres_tab'
 }
 
 Sunstone.addActions(image_actions);

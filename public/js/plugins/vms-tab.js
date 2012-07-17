@@ -682,7 +682,7 @@ var vms_tab = {
     content: vms_tab_content,
     buttons: vm_buttons,
     tabClass: 'subTab',
-    parentTab: 'vres_tab'
+//    parentTab: 'vres_tab'
 };
 
 SunstoneMonitoringConfig['VM'] = {

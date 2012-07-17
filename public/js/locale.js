@@ -91,4 +91,22 @@ $(document).ready(function(){
     $('#community_link').html(tr("Community"));
     $('#welcome').html(tr("Welcome"));
     $('#logout').html(tr("Sign out"));
+
+    $("#lang_zh").text("台灣正體");
+    $("#lang_en").text("English");
+
+    if(lang=="zh_TW")
+    $("#lang_zh").css({color:"#eee183", "font-weight":"bold", "font-size":"1.2em"});
+
+    if(lang=="en_US")
+    $("#lang_en").css({color:"#eee183", "font-weight":"bold", "font-size":"1.2em"});
+
+    $("#lang_zh").click(function(){
+    setLang('zh_TW');
+   });
+
+    $("#lang_en").click(function(){
+    setLang('en_US');
+   });
+
 });

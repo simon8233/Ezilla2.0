@@ -255,7 +255,7 @@ var clusters_tab = {
     buttons: cluster_buttons,
     showOnTopMenu: false,
     tabClass: "topTab subTab",
-    parentTab: "infra_tab",
+//    parentTab: "infra_tab",
 };
 
 
