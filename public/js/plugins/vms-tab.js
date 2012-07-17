@@ -847,13 +847,22 @@ function vMachineElementArray(vm_json){
         state = OpenNebula.Helper.resource_state("vm_lcm",vm.LCM_STATE);
     };
 
+if (state=="RUNNING")
+var icon = '<img src="images/running.png" title="'+state+'"></>';
+else if (state=="SUSPENDED" || state=="SHUTDOWN")
+var icon = '<img src="images/rest.png"> '+state+'</>';
+else if (state=="FAILED" || state=="FAILURE")
+var icon = '<img src="images/failure.png"> '+state+'</>';
+else
+var icon = '<img src="images/unknown.png"> '+state+'</>';
+
     return [
         '<input class="check_item" type="checkbox" id="vm_'+vm.ID+'" name="selected_items" value="'+vm.ID+'"/>',
         vm.ID,
         vm.UNAME,
         vm.GNAME,
         vm.NAME,
-        state,
+        icon, //state,
         vm.CPU,
         humanize_size(vm.MEMORY),
         hostname,

@@ -571,22 +571,41 @@ function hostElementArray(host_json){
         ratio_cpu = Math.round(((total_cpu - used_cpu) / total_cpu) * 100);
     }
 
+if (ratio_cpu<75)
+var cpubar_color="#00FF00";
+else
+var cpubar_color="#FF0066";
+
+if (ratio_mem<75)
+var membar_color="#00FF00";
+else
+var membar_color="#FF0066";
 
     //progressbars html code - hardcoded jquery html result
      var pb_mem =
 '<div style="height:10px" class="ratiobar ui-progressbar ui-widget ui-widget-content ui-corner-all" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+ratio_mem+'">\
-    <div class="ui-progressbar-value ui-widget-header ui-corner-left ui-corner-right" style="width: '+ratio_mem+'%;"/>\
+    <div class="ui-progressbar-value ui-widget-header ui-corner-left ui-corner-right" style="width: '+ratio_mem+'%; background:'+membar_color+';"/>\
     <span style="position:relative;left:90px;top:-4px;font-size:0.6em">'+ratio_mem+'%</span>\
     </div>\
 </div>';
 
     var pb_cpu =
 '<div style="height:10px" class="ratiobar ui-progressbar ui-widget ui-widget-content ui-corner-all" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+ratio_cpu+'">\
-    <div class="ui-progressbar-value ui-widget-header ui-corner-left ui-corner-right" style="width: '+ratio_cpu+'%;"/>\
+    <div class="ui-progressbar-value ui-widget-header ui-corner-left ui-corner-right" style="width: '+ratio_cpu+'%; background:'+cpubar_color+';"/>\
     <span style="position:relative;left:90px;top:-4px;font-size:0.6em">'+ratio_cpu+'%</span>\
     </div>\
 </div>';
 
+var icon_val = OpenNebula.Helper.resource_state("host_simple",host.STATE);
+
+if (icon_val=="ON")
+var icon = '<img src="images/host_on.png" title="ON"/>';
+else if (icon_val=="OFF")
+var icon = '<img src="images/host_off.png" title="OFF"/>';
+else if (icon_val=="ERROR")
+var icon = '<img src="images/host_error.png" title="ERROR"/>';
+else
+var icon = OpenNebula.Helper.resource_state("host_simple",host.STATE);
 
     return [
         '<input class="check_item" type="checkbox" id="host_'+host.ID+'" name="selected_items" value="'+host.ID+'"/>',
@@ -596,7 +615,7 @@ function hostElementArray(host_json){
         host.HOST_SHARE.RUNNING_VMS, //rvm
         pb_cpu,
         pb_mem,
-        OpenNebula.Helper.resource_state("host_simple",host.STATE),
+        icon, //OpenNebula.Helper.resource_state("host_simple",host.STATE),
         host.IM_MAD,
         host.VM_MAD,
         pretty_time(host.LAST_MON_TIME)
