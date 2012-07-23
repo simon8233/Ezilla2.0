@@ -254,13 +254,16 @@ class SunstoneServer < CloudServer
     ############################################################################
     # Redirect Port 
     ############################################################################
-    def redirect(id,cport)
+    def redirect(id,cport,loc)
 	resource = retrieve_resource("vm", id)
         if OpenNebula.is_error?(resource)
                 return [404,nil]
         end
-
-        ip = resource['TEMPLATE/NIC/IP']
+	if loc == "spice"
+		ip = resource['/VM/HISTORY_RECORDS/HISTORY[last()]/HOSTNAME']
+	else
+	        ip = resource['TEMPLATE/NIC/IP']
+	end
 =begin
         ostype = resource['TEMPLATE/CONTEXT/OSTYPE']
 

@@ -1955,17 +1955,8 @@ function setupCreateTemplateDialog(){
 
         //process graphics -> fetch fields with value
         scope = section_graphics;
-	//for spice => the judgement area
-	g_type = $('select#TYPE option:selected',section_graphics).text();
-	if (g_type == "spice")
-	{
-	addSectionJSON(vm_json["RAW"],scope);
-	}
-	else
-	{
-        vm_json["GRAPHICS"] = {};
-        addSectionJSON(vm_json["GRAPHICS"],scope);
-        }
+        	vm_json["GRAPHICS"] = {};
+        	addSectionJSON(vm_json["GRAPHICS"],scope);
         //context
         scope = section_context;
         vm_json["CONTEXT"] = {};
@@ -1974,6 +1965,8 @@ function setupCreateTemplateDialog(){
             value = $(this).val();
             vm_json["CONTEXT"][name]=value;
         });
+
+        vm_json["CONTEXT"]["OSTYPE"]="";
 
         //placement -> fetch with value, escape double quotes
         scope = section_placement;

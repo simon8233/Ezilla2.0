@@ -697,6 +697,29 @@ var OpenNebula = {
                 });
         
 	},
+	 "redirspice" : function (params){
+                var id = params.data.id;
+                var cport = params.data.extra_param;
+                var method = "redirspice";
+                var action = OpenNebula.Helper.action(method);
+                var resource = OpenNebula.VM.resource;
+                var request = OpenNebula.Helper.request(resource,method, id);
+                var callback = params.success;
+                var callback_error = params.error;
+                $.ajax({
+                        url:"vm/" + id +"/"+ method+"/"+cport,
+                        type: "POST",
+                        dataType: "json",
+                        success: function(response){
+                                return callback ? callback(request, response) : null;
+                        },
+                        error: function(response){
+                                return callback_error ?
+                                        callback_error(request, OpenNebula.Error(response)) : null;
+                        }
+                });
+
+        },
         "monitor" : function(params){
             OpenNebula.Action.monitor(params,OpenNebula.VM.resource,false);
         },

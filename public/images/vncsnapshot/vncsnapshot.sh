@@ -20,3 +20,4 @@ if [ -f $JPGTMPNAME ]; then
 	/usr/bin/convert $JPGTMPNAME -resize 160x120 $JPGNAME
 	rm -rf $JPGTMPNAME 
 fi
+exit
