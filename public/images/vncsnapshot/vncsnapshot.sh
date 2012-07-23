@@ -8,6 +8,9 @@
 CURRENT_PATH=`pwd`
 if [ ! -f $CURRENT_PATH/vncpwd.sh ]; then
       CURRENT_PATH=`echo "$CURRENT_PATH/pubilc/images/vncsnapshot"`
+      if [ ! -f $CURRENT_PATH/vncpwd.sh ]; then
+		CURRENT_PATH=`echo "/usr/lib/one/sunstone/public/images/vncsnapshot"`
+      fi
 fi
 JPGTMPNAME=`echo "$CURRENT_PATH/$3-big.jpg"`
 JPGNAME=`echo "$CURRENT_PATH/$3.jpg"`

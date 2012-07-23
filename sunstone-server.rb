@@ -414,7 +414,7 @@ post '/vm/:id/redirect/:port' do
 
 	vm_id = params[:id]
 	port = params[:port]
-        spice_hash = session['redir']
+        redir_hash = session['redir']
 
         if !redir_hash  || !redir_hash[vm_id]
                 session['redir']= {}
