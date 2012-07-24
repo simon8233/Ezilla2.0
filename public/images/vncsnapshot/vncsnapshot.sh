@@ -1,23 +1,18 @@
 #!/bin/bash
-#  #{host} #{vnc_port} #{id} #{vnc_pw}
-## $1 host
-## $2 vnc port
-## $3 VM id
-## $4 vnc's password
+# #{sh_path} #{host} #{vnc_port} #{id} #{vnc_pw}
+## $1 sh_path
+## $2 host
+## $3 vnc port
+## $4 VM id
+## $5 vnc's password
 ## jpg name
-CURRENT_PATH=`pwd`
-if [ ! -f $CURRENT_PATH/vncpwd.sh ]; then
-      CURRENT_PATH=`echo "$CURRENT_PATH/pubilc/images/vncsnapshot"`
-      if [ ! -f $CURRENT_PATH/vncpwd.sh ]; then
-		CURRENT_PATH=`echo "/usr/lib/one/sunstone/public/images/vncsnapshot"`
-      fi
-fi
-JPGTMPNAME=`echo "$CURRENT_PATH/$3-big.jpg"`
-JPGNAME=`echo "$CURRENT_PATH/$3.jpg"`
+CURRENT_PATH=$1
+JPGTMPNAME=`echo "$CURRENT_PATH/$4-big.jpg"`
+JPGNAME=`echo "$CURRENT_PATH/$4.jpg"`
 if [ ! -f $JPGNAME ]; then
 	cp $CURRENT_PATH/no_signal_m.jpg $JPGNAME
 fi
-$CURRENT_PATH/vncpwd.sh "$CURRENT_PATH"  $1 $2 $JPGTMPNAME "$4"
+$CURRENT_PATH/vncpwd.sh "$CURRENT_PATH"  $2 $3 $JPGTMPNAME "$5"
 sleep 1
 if [ -f $JPGTMPNAME ]; then
 	/usr/bin/convert $JPGTMPNAME -resize 160x120 $JPGNAME

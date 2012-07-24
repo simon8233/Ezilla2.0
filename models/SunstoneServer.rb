@@ -320,9 +320,11 @@ class SunstoneServer < CloudServer
             vnc_pw = resource['TEMPLATE/GRAPHICS/PASSWD']
 
 	    if ONE_LOCATION.nil?
-               cmd = "/usr/lib/one/sunstone/public/images/vncsnapshot/vncsnapshot.sh #{host} #{vnc_port} #{id} #{vnc_pw}"
+	       sh_path = "/usr/lib/one/sunstone/public/images/vncsnapshot/"
+               cmd = "/usr/lib/one/sunstone/public/images/vncsnapshot/vncsnapshot.sh #{sh_path} #{host} #{vnc_port} #{id} #{vnc_pw}"
 	    else
-               cmd = ONE_LOCATION + "/lib/sunstone/public/images/vncsnapshot/vncsnapshot.sh #{host} #{vnc_port} #{id} #{vnc_pw}"
+	       sh_path =  ONE_LOCATION + "/lib/sunstone/public/images/vncsnapshot/"
+               cmd = ONE_LOCATION + "/lib/sunstone/public/images/vncsnapshot/vncsnapshot.sh #{sh_path} #{host} #{vnc_port} #{id} #{vnc_pw}"
             end
 	    
             begin
