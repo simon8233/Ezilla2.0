@@ -20,6 +20,9 @@ var users_select="";
 var $create_user_dialog;
 var $user_quotas_dialog;
 var $update_pw_dialog;
+var create_username="";
+var create_userid="";
+var create_vnetid="";
 
 var users_tab_content = '\
 <h2><i class="icon-user"></i> '+tr("Users")+'</h2>\
@@ -355,6 +358,67 @@ var user_actions = {
         }
     },
 
+// Ezilla Auto Add VNet For User
+    "User.NetworkCreate" : {
+        type: "create",
+        call: OpenNebula.Network.create,
+        callback:function(request,vn_json){
+	    var network = vn_json.VNET;
+            create_vnetid = network.ID;
+	    var vnet_json = {"id":create_vnetid };
+	    var userid;
+	    userid=create_userid;
+	    Sunstone.runAction("User.NetworkChown", vnet_json ,userid );
+        },
+        error: onError,
+        notify: false
+     },
+ 
+    "User.NetworkChown" : {
+        type: "multiple",
+        call: OpenNebula.Network.chown,
+        callback : function(req,res){
+            //notifyMessage("Network Create");
+        },
+	elements: function() {
+	},
+        error:onError,
+        notify: false
+    },
+
+    "User.NetworkList" : {
+        type: "list",
+        call: OpenNebula.Network.list,
+        callback:function(request, network_list){
+     	    var network_list_array = [];
+
+     	    $.each(network_list,function(){
+                network_list_array.push({ "ID" : this.VNET.ID , "IP" : this.VNET.RANGE.IP_START });
+            });
+     	    var LastVNET = network_list_array.pop();
+            var partIPArray=LastVNET.IP.split(".");
+            if (partIPArray[2] == "254"){
+                partIPArray[1]++;
+                partIPArray[2]="1";
+            }else{
+                partIPArray[2]++;
+            }
+
+            var network_json = {"name" : create_username};
+            network_json['bridge']="br0";
+            network_json['type']="ranged";
+            network_json["network_address"]=partIPArray[0]+"."+partIPArray[1]+"."+partIPArray[2]+".0";
+            network_json["network_mask"]="255.255.255.0";
+
+            network_json = {
+                "vnet" : network_json,
+            };
+
+            Sunstone.runAction("User.NetworkCreate",network_json);
+        },
+        error: onError,
+        notify: false
+    }
 }
 
 var user_buttons = {
@@ -532,7 +596,7 @@ function userElementArray(user_json){
         cpu = user.VM_QUOTA.VM.CPU_USED;
     }
 
-
+    create_userid=user.ID;
     return [
         '<input class="check_item" type="checkbox" id="user_'+user.ID+'" name="selected_items" value="'+user.ID+'"/>',
         user.ID,
@@ -698,6 +762,8 @@ function setupCreateUserDialog(){
                           }
                         };
         Sunstone.runAction("User.create",user_json);
+        create_username=user_name;
+        Sunstone.runAction("User.NetworkList");
         $create_user_dialog.dialog('close');
         return false;
     });
