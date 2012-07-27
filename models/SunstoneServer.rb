@@ -299,11 +299,11 @@ class SunstoneServer < CloudServer
                         file_redir_info.write(redir_port)
                         file_redir_info.close
                         sleep(1)
-                        info = {:info=>redir_port}
+                        info = {:info=>redir_port,:loc=>loc}
                         return [200, info]
                 end
                 redir_port = File.new("/tmp/redir/#{ip}:#{cport}").read
-                info = {:info=>redir_port}
+                info = {:info=>redir_port,:loc=>loc}
             return [200,info]
     end
          
