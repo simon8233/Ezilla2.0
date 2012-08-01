@@ -17,6 +17,7 @@
 /*Virtual Machines tab plugin*/
 var INCLUDE_URI = "vendor/noVNC/include/";
 var VM_HISTORY_LENGTH = 40;
+var image_select;
 
 function loadVNC(){
     var script = '<script src="vendor/noVNC/include/vnc.js"></script>';
@@ -183,7 +184,7 @@ var vm_actions = {
     "VM.create" : {
         type: "custom",
         call: function(id,name) {
-            Sunstone.runAction("Template.instantiate",id,name);
+            Sunstone.runAction("VM.TemplateInstantiate",id,name);
             Sunstone.runAction("VM.list");
         },
         callback: addVMachineElement,
@@ -524,6 +525,37 @@ var vm_actions = {
             hideDialog();
             $('div#vms_tab div.legend_div').slideToggle();
         }
+    },
+    "VM.TemplateList" : {
+        type: "list",
+        call: OpenNebula.Template.list,
+        callback: function(request, templates_list) {
+		var select="";
+    		$.each(templates_list,function(){
+			var template = this.VMTEMPLATE;
+			select +='<option elem_id="'+template.ID+'" value="'+template.ID+'">'+template.NAME+' (id:'+template.ID+')</option>';	
+   		});  
+		$('#template_id', $create_vm_dialog).html(select);          
+        },
+        error: onError
+    },
+    "VM.TemplateInstantiate" : {
+        type: "single",
+        call: OpenNebula.Template.instantiate,
+        error: onError,
+        notify: true
+    },
+    "VM.ImageList" : {
+        type: "list",
+        call: OpenNebula.Image.list,
+        callback:function(request, images_list) {
+	    image_select="";
+	    $.each(images_list,function(){
+		  var image = this.IMAGE;
+		  image_select +='<option elem_id="'+image.ID+'" value="'+image.ID+'">'+image.NAME+' (id:'+image.ID+')</option>';
+            });            
+        },
+        error: onError
     },
 };
 
@@ -993,6 +1025,9 @@ function updateVMInfo(request,vm){
     var vm_state = OpenNebula.Helper.resource_state("vm",vm_info.STATE);
     var hostname = "--"
     var graphics = vm_info.TEMPLATE.GRAPHICS;
+
+    Sunstone.runAction("VM.TemplateList");
+    Sunstone.runAction("VM.ImageList");
  
     if (graphics && graphics.TYPE == "vnc" && vm_state == tr("RUNNING"))
     {
@@ -1156,12 +1191,6 @@ function updateVMInfo(request,vm){
 // This is a list of disks with the save_as, detach options.
 // And a form to attach a new disk to the VM, if it is running.
 function printDisks(vm_info){
-    var im_sel = makeSelectOptions(dataTable_images,
-                                   1, //id col - trick -> reference by name!
-                                   4, //name col
-                                   [10,10,10],
-                                   [tr("DISABLED"),tr("LOCKED"),tr("ERROR")]
-                                  );
    var html ='\
    <form style="display:inline-block;width:100%" id="hotplugging_form" vmid="'+vm_info.ID+'">\
      <table class="info_table">\
@@ -1228,7 +1257,7 @@ function printDisks(vm_info){
          <tr class="at_image"><td class="key_td"><label>'+tr("Select image")+':</label></td>\
              <td class="value_td">\
                    <select name="IMAGE_ID" style="width:12em;">\
-                   '+im_sel+'\
+                   '+image_select+'\
                    </select>\
              </td>\
          </tr>\
@@ -1405,13 +1434,13 @@ function setupCreateVMDialog(){
 
         if (vm_name.indexOf("%i") == -1){ //no wildcard
             for (var i=0; i< n_times_int; i++){
-                Sunstone.runAction("Template.instantiate",template_id,vm_name);
+                Sunstone.runAction("VM.TemplateInstantiate",template_id,vm_name);
             };
         } else { //wildcard present: replace wildcard
             var name = "";
             for (var i=0; i< n_times_int; i++){
                 name = vm_name.replace(/%i/gi,i);
-                Sunstone.runAction("Template.instantiate",template_id,name);
+                Sunstone.runAction("VM.TemplateInstantiate",template_id,name);
             };
         };
 
@@ -1854,6 +1883,9 @@ $(document).ready(function(){
     setupVNC();
     setupRedirectPort();
     hotpluggingOps();
+
+    Sunstone.runAction("VM.TemplateList");
+    Sunstone.runAction("VM.ImageList");
 
     initCheckAllBoxes(dataTable_vMachines);
     tableCheckboxesListener(dataTable_vMachines);
