@@ -111,6 +111,14 @@ var create_vm_tmpl ='<form id="create_vm_form" action="">\
              </select>\
            </div>\
            <div>\
+             <label for="user_passwd">'+tr("Password for VM")+':</label>\
+             <input type="password" name="user_passwd" id="user_passwd" value="">\
+           </div>\
+           <div>\
+             <label for="user_passwd_verify">'+tr("Password Verify")+':</label>\
+             <input type="password" name="user_passwd_verify" id="user_passwd_verify" value="">\
+           </div>\
+           <div>\
              <label for="vm_n_times">'+tr("Deploy # VMs")+':</label>\
              <input type="text" name="vm_n_times" id="vm_n_times" value="1">\
              <div class="tip">'+tr("You can use the wildcard &#37;. When creating several VMs, %i will be replaced with a different number starting from 0 in each of them")+'.</div>\
@@ -555,6 +563,55 @@ var vm_actions = {
 		  image_select +='<option elem_id="'+image.ID+'" value="'+image.ID+'">'+image.NAME+' (id:'+image.ID+')</option>';
             });            
         },
+        error: onError
+    },
+    "VM.Fetch_template" : {
+        type: "single",
+        call: OpenNebula.Template.fetch_template,
+        callback: function (request,response) {
+		var template_org="";
+		var template_context="";
+		var files_list="/srv/one/share/script/init";
+		var create_vm_dialog = $('#create_vm_dialog')
+                var vm_name = $('#vm_name',$create_vm_dialog).val();
+                var user_passwd = $('#user_passwd',$create_vm_dialog).val();
+		var template_array=response.template.split("\n");
+		for (var i=0; i < template_array.length; i++){
+			if (template_array[i].match(/^CONTEXT/)){
+				template_context+="CONTEXT=[\n";
+				template_context+="  USERNAME=\""+username+"\",\n";
+				template_context+="  HOSTNAME=\""+vm_name+"\",\n";
+				template_context+="  USER_PASSWD=\""+user_passwd+"\",\n";
+				template_context+="  ROOT_PASSWD=\""+user_passwd+"\",\n";
+			}else if (template_array[i].match(/\s+OSTYPE/)){
+				if (template_array[i].match(/\s+OSTYPE=\"WINDOWS/)){
+					template_org+="  FILES=\""+files_list+".ps1\",\n";
+				}else{
+					template_org+="  FILES=\""+files_list+".sh\",\n";
+				}
+				template_org+=template_array[i].replace(/"/g, "\"")+"\n";
+			}else if (template_array[i].match(/^NAME/)){
+				template_org+="NAME=\""+vm_name+"\"\n";
+			}else if (template_array[i].match(/\s+PASSWD/)){
+				var d = new Date();
+				template_org+="  PASSWD=\""+d.getTime()+"\",\n";
+			}else{
+				template_org+=template_array[i].replace(/"/g, "\"")+"\n";
+			}
+		}
+		template_org = template_context + template_org + "\"";
+                var vm_temp = { "vm_raw" : template_org };
+		var vm_json = { "vm" : vm_temp };
+		Sunstone.runAction("VM.create_raw",vm_json);
+        },
+        error: onError
+    },    
+    "VM.create_raw" : {
+        type: "create",
+        call: OpenNebula.VM.create,
+        callback: function (){
+
+	},
         error: onError
     },
 };
@@ -1416,11 +1473,18 @@ function setupCreateVMDialog(){
     $('#create_vm_form',dialog).submit(function(){
         var vm_name = $('#vm_name',this).val();
         var template_id = $('#template_id',this).val();
+        var user_passwd = $('#user_passwd',this).val();
+        var user_passwd_verify = $('#user_passwd_verify',this).val();
         var n_times = $('#vm_n_times',this).val();
         var n_times_int=1;
 
         if (!template_id.length){
             notifyError(tr("You have not selected a template"));
+            return false;
+        };
+
+	if (user_passwd != user_passwd_verify){
+            notifyError(tr("Password Verify Failed!"));
             return false;
         };
 
@@ -1434,13 +1498,15 @@ function setupCreateVMDialog(){
 
         if (vm_name.indexOf("%i") == -1){ //no wildcard
             for (var i=0; i< n_times_int; i++){
-                Sunstone.runAction("VM.TemplateInstantiate",template_id,vm_name);
+                //Sunstone.runAction("VM.TemplateInstantiate",template_id,vm_name);
+                Sunstone.runAction("VM.Fetch_template",template_id);
             };
         } else { //wildcard present: replace wildcard
             var name = "";
             for (var i=0; i< n_times_int; i++){
                 name = vm_name.replace(/%i/gi,i);
-                Sunstone.runAction("VM.TemplateInstantiate",template_id,name);
+                //Sunstone.runAction("VM.TemplateInstantiate",template_id,vm_name);
+                Sunstone.runAction("VM.Fetch_template",template_id);
             };
         };
 
