@@ -18,6 +18,7 @@
 var INCLUDE_URI = "vendor/noVNC/include/";
 var VM_HISTORY_LENGTH = 40;
 var image_select;
+var owner_network="";
 
 function loadVNC(){
     var script = '<script src="vendor/noVNC/include/vnc.js"></script>';
@@ -565,6 +566,18 @@ var vm_actions = {
         },
         error: onError
     },
+    "VM.NetworkList" : {
+        type: "list",
+        call: OpenNebula.Network.list,
+        callback: function(request, network_list) {
+		$.each(network_list,function(){
+			if (this.VNET.UNAME == username){
+				owner_network = this.VNET.NAME;
+			}
+		});
+        },
+        error: onError
+    },
     "VM.Fetch_template" : {
         type: "single",
         call: OpenNebula.Template.fetch_template,
@@ -592,6 +605,18 @@ var vm_actions = {
 				template_org+=template_array[i].replace(/"/g, "\"")+"\n";
 			}else if (template_array[i].match(/^NAME/)){
 				template_org+="NAME=\""+vm_name+"\"\n";
+			}else if (template_array[i].match(/\s+NETWORK=/)){
+				if (owner_network.length){
+					template_org+="  NETWORK=\""+owner_network+"\",\n";
+				}else{
+					template_org+=template_array[i].replace(/"/g, "\"")+"\n";
+				}
+			}else if (template_array[i].match(/\s+NETWORK_UNAME=/)){
+                                if (owner_network.length){
+                                        template_org+="  NETWORK_UNAME=\""+username+"\" ]\n";
+                                }else{
+                                        template_org+=template_array[i].replace(/"/g, "\"")+"\n";
+                                }
 			}else if (template_array[i].match(/\s+PASSWD/)){
 				var d = new Date();
 				template_org+="  PASSWD=\""+d.getTime()+"\",\n";
@@ -1952,6 +1977,7 @@ $(document).ready(function(){
 
     Sunstone.runAction("VM.TemplateList");
     Sunstone.runAction("VM.ImageList");
+    Sunstone.runAction("VM.NetworkList");
 
     initCheckAllBoxes(dataTable_vMachines);
     tableCheckboxesListener(dataTable_vMachines);
