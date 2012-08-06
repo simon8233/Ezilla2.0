@@ -1105,13 +1105,15 @@ function generateHistoryTable(vm){
 function updateVMInfo(request,vm){
     var vm_info = vm.VM;
     var vm_state = OpenNebula.Helper.resource_state("vm",vm_info.STATE);
+    var vm_lcm_state = OpenNebula.Helper.resource_state("vm_lcm",vm_info.LCM_STATE);
+
     var hostname = "--"
     var graphics = vm_info.TEMPLATE.GRAPHICS;
 
     Sunstone.runAction("VM.TemplateList");
     Sunstone.runAction("VM.ImageList");
  
-    if (graphics && graphics.TYPE == "vnc" && vm_state == tr("RUNNING"))
+    if (graphics && graphics.TYPE == "vnc" && vm_lcm_state ==  tr("RUNNING"))
     {
     	Sunstone.runAction("VM.snapshot",vm_info.ID);
     }
@@ -1154,7 +1156,7 @@ function updateVMInfo(request,vm){
               </tr>\
               <tr>\
                  <td class="key_td">'+tr("LCM State")+'</td>\
-                 <td class="value_td">'+tr(OpenNebula.Helper.resource_state("vm_lcm",vm_info.LCM_STATE))+'</td>\
+                 <td class="value_td">'+tr(vm_lcm_state)+'</td>\
               </tr>\
               <tr>\
                  <td class="key_td">'+tr("Hostname")+'</td>\
