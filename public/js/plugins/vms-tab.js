@@ -1713,9 +1713,9 @@ function setupVNC(){
 
     dialog.dialog({
         autoOpen:false,
-        width:750,
+        width:1050,
         modal:true,
-        height:500,
+        height:770,
         resizable:true,
         closeOnEscape: false
     });
