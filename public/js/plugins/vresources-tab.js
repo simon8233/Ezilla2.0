@@ -26,10 +26,12 @@ var vres_tab_content =
         <div class="panel_info">\
 \
           <table class="info_table">\
+<!--           \
             <tr>\
               <td class="key_td">' + tr("VM Templates") + '</td>\
               <td class="value_td"><span id="vres_total_templates"></span></td>\
             </tr>\
+-->            \
             <tr>\
               <td class="key_td">' +
     tr("VM Instances")+ ' (' + 
@@ -43,19 +45,22 @@ var vres_tab_content =
               <td class="key_td">' + tr("Virtual Networks") + '</td>\
               <td class="value_td"><span id="vres_total_vnets"></span></td>\
             </tr>-->\
+<!--           \
             <tr>\
               <td class="key_td">' + tr("Images") + '</td>\
               <td class="value_td"><span id="vres_total_images"></span></td>\
             </tr>\
+-->            \
           </table>\
 \
         </div>\
       </div>\
     </td>\
   </tr>\
-  <tr>\
+<!--     \
+<tr> \
     <td>\
-      <div class="panel">\
+	 <div class="panel">\
         <h3>' + tr("Quickstart") + '</h3>\
         <div class="panel_info dashboard_p">\
              <ul>\
@@ -67,6 +72,7 @@ var vres_tab_content =
       </div>\
     </td>\
   </tr>\
+--> \
 </table>\
 </td>\
 <td style="width:50%">\

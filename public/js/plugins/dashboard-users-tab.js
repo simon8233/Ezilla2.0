@@ -37,6 +37,18 @@ var dashboard_tab_content =
 </td>\
 <td>\
 <table style="width:100%">\
+<tr> \
+    <td>\
+         <div class="panel">\
+        <h3>' + tr("Quickstart") + '</h3>\
+        <div class="panel_info dashboard_p">\
+             <ul>\
+                <li><a class="action_button" href="#vms_tab" value="VM.create_dialog">'+tr("Create new Virtual Machine")+'</a></li>\
+             </ul>\
+        </div>\
+      </div>\
+    </td>\
+  </tr>\
   <tr>\
     <td>\
       <div class="panel">\

@@ -19,6 +19,7 @@ var INCLUDE_URI = "vendor/noVNC/include/";
 var VM_HISTORY_LENGTH = 40;
 var image_select;
 var owner_network="";
+var vmname=""
 
 function loadVNC(){
     var script = '<script src="vendor/noVNC/include/vnc.js"></script>';
@@ -586,7 +587,7 @@ var vm_actions = {
 		var template_context="";
 		var files_list="/srv/one/share/script/init";
 		var create_vm_dialog = $('#create_vm_dialog')
-                var vm_name = $('#vm_name',$create_vm_dialog).val();
+                var vm_name = vmname;
                 var user_passwd = $('#user_passwd',$create_vm_dialog).val();
 		var template_array=response.template.split("\n");
 		for (var i=0; i < template_array.length; i++){
@@ -1498,12 +1499,13 @@ function setupCreateVMDialog(){
     setupTips(dialog);
 
     $('#create_vm_form',dialog).submit(function(){
-        var vm_name = $('#vm_name',this).val();
+        var vm_name = $('#vm_name',$create_vm_dialog).val();
         var template_id = $('#template_id',this).val();
         var user_passwd = $('#user_passwd',this).val();
         var user_passwd_verify = $('#user_passwd_verify',this).val();
         var n_times = $('#vm_n_times',this).val();
         var n_times_int=1;
+	var CheckData = /[|]|{|}|<|>|'|;|&|#|"|'|!/;
 
         if (!template_id.length){
             notifyError(tr("You have not selected a template"));
@@ -1515,6 +1517,16 @@ function setupCreateVMDialog(){
             return false;
         };
 
+        if (user_passwd.length < 7){
+            notifyError(tr("password must be at least 6 characters"));
+            return false;
+        };
+
+        if (CheckData.test(user_passwd)){
+            notifyError(tr("Don't allow special characters in your password !"));
+            return false;
+        };
+
         if (n_times.length){
             n_times_int=parseInt(n_times,10);
         };
@@ -1523,15 +1535,20 @@ function setupCreateVMDialog(){
             vm_name = getTemplateName(template_id);
         };
 
+	if (CheckData.test(vm_name)){
+            notifyError(tr("Don't allow special characters in your VM name !"));
+            return false;
+	};
+
         if (vm_name.indexOf("%i") == -1){ //no wildcard
             for (var i=0; i< n_times_int; i++){
                 //Sunstone.runAction("VM.TemplateInstantiate",template_id,vm_name);
+                vmname = vm_name;
                 Sunstone.runAction("VM.Fetch_template",template_id);
             };
         } else { //wildcard present: replace wildcard
-            var name = "";
             for (var i=0; i< n_times_int; i++){
-                name = vm_name.replace(/%i/gi,i);
+                vmname = vm_name.replace(/%i/gi,i);
                 //Sunstone.runAction("VM.TemplateInstantiate",template_id,vm_name);
                 Sunstone.runAction("VM.Fetch_template",template_id);
             };
