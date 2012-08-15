@@ -80,6 +80,7 @@ var vms_tab_content = '\
       <th>'+tr("IPs")+'</th>\
       <th>'+tr("Start Time")+'</th>\
       <th>'+tr("VNC Access")+'</th>\
+      <th>'+tr("Remote Access")+'</th>\
     </tr>\
   </thead>\
   <tbody id="tbodyvmachines">\
@@ -992,7 +993,8 @@ var icon = '<img src="images/unknown.png"> '+state+'</>';
         hostname,
         ip_str(vm),
         str_start_time(vm),
-        vncIcon(vm)
+        vncIcon(vm),
+        RedirectPortIcon(vm)
     ];
 };
 
@@ -1785,6 +1787,7 @@ function vncIcon(vm){
     var port = vm.TEMPLATE.GRAPHICS.PORT;
     var state = OpenNebula.Helper.resource_state("vm_lcm",vm.LCM_STATE);
     var gr_icon;
+
     if (graphics && graphics.TYPE == "vnc" && state == tr("RUNNING")){
         gr_icon = '<a class="vnc" href="#" vm_id="'+vm.ID+'">';
         gr_icon += '<img src="images/vnc_on.png" alt=\"'+tr("Open VNC Session")+'\" /></a>';
@@ -1822,8 +1825,11 @@ function SnapshotIcon(vm){
     var graphics = vm.TEMPLATE.GRAPHICS;
     var state = OpenNebula.Helper.resource_state("vm_lcm",vm.LCM_STATE);
     var gr_icon;
+    var rand1 =  Math.floor((Math.random()*1000+1));
+    var rand2 =  Math.floor((Math.random(2)*1000+1));
+
     if (graphics && graphics.TYPE == "vnc" && state == "RUNNING"){
-        gr_icon = '<img src="images/vncsnapshot/'+vm.ID+'.jpg" />';
+        gr_icon = '<img src="images/vncsnapshot/'+vm.ID+'.jpg?'+rand1+'.'+rand2+'" />';
     }
     else {
         gr_icon = '<img src="images/vncsnapshot/no_signal_m.jpg" />';
@@ -1970,7 +1976,7 @@ $(document).ready(function(){
             { "bSortable": false, "aTargets": ["check"] },
             { "sWidth": "80px", "aTargets": [0] },
             { "sWidth": "60px", "aTargets": [6,7] },
-            { "sWidth": "35px", "aTargets": [1,11] },
+            { "sWidth": "35px", "aTargets": [1,11,12] },
             { "sWidth": "150px", "aTargets": [5,10] },
             { "sWidth": "100px", "aTargets": [2,3,9] },
             { "bVisible": false, "aTargets": [6,7,10]}
@@ -1984,7 +1990,7 @@ $(document).ready(function(){
     dataTable_vMachines.fnClearTable();
     addElement([
         spinner,
-        '','','','','','','','','','',''],dataTable_vMachines);
+        '','','','','','','','','','','',''],dataTable_vMachines);
     Sunstone.runAction("VM.list");
 
     setupCreateVMDialog();

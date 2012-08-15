@@ -329,6 +329,7 @@ class SunstoneServer < CloudServer
 	    
             begin
                 pipe = IO.popen(cmd)
+		pipe.close
                 return [200, "images/#{id}.jpg".to_json]
             rescue Exception => e
                 return [500, OpenNebula::Error.new(e.message).to_json]
