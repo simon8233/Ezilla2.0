@@ -586,6 +586,7 @@ var vm_actions = {
         callback: function (request,response) {
 		var template_org="";
 		var template_context="";
+		var context="true";
 		var files_list="/srv/one/share/script/init";
 		var create_vm_dialog = $('#create_vm_dialog')
                 var vm_name = vmname;
@@ -593,38 +594,51 @@ var vm_actions = {
 		var template_array=response.template.split("\n");
 		for (var i=0; i < template_array.length; i++){
 			if (template_array[i].match(/^CONTEXT/)){
-				template_context+="CONTEXT=[\n";
-				template_context+="  USERNAME=\""+username+"\",\n";
-				template_context+="  HOSTNAME=\""+vm_name+"\",\n";
-				template_context+="  USER_PASSWD=\""+user_passwd+"\",\n";
-				template_context+="  ROOT_PASSWD=\""+user_passwd+"\",\n";
-			}else if (template_array[i].match(/\s+OSTYPE/)){
-				if (template_array[i].match(/\s+OSTYPE=\"WINDOWS/)){
-					template_org+="  FILES=\""+files_list+".ps1\",\n";
-				}else{
-					template_org+="  FILES=\""+files_list+".sh\",\n";
+                                template_context+="CONTEXT=[\n";
+                                template_context+="  USERNAME=\""+username+"\",\n";
+                                template_context+="  HOSTNAME=\""+vm_name+"\",\n";
+                                template_context+="  USER_PASSWD=\""+user_passwd+"\",\n";
+                                template_context+="  ROOT_PASSWD=\""+user_passwd+"\",\n";
+				if (!template_array[i].match(/^CONTEXT=\[/)){
+					context="false";
 				}
-				template_org+=template_array[i].replace(/"/g, "\"")+"\n";
+                        }else if (template_array[i].match(/\s+OSTYPE/)){
+                                if (template_array[i].match(/\s+OSTYPE=\"WINDOWS/)){
+                                        template_context+="  FILES=\""+files_list+".ps1\", \n";
+                                }else{
+                                        template_context+="  FILES=\""+files_list+".sh\", \n";
+                                }
+                                template_org+=template_array[i].replace(/"/g, "\"")+"\n";
 			}else if (template_array[i].match(/^NAME/)){
 				template_org+="NAME=\""+vm_name+"\"\n";
 			}else if (template_array[i].match(/\s+NETWORK=/)){
-				if (owner_network.length){
-					template_org+="  NETWORK=\""+owner_network+"\",\n";
-				}else{
-					template_org+=template_array[i].replace(/"/g, "\"")+"\n";
+			    	if (template_array[i+1].match(/\s+NETWORK_UNAME=/)){
+                                	if (owner_network.length){
+						template_org+="  NETWORK=\""+owner_network+"\",\n";
+                                        	template_org+="  NETWORK_UNAME=\""+username+"\" ]\n";
+						i+=1
+                                	}else{
+                                        	template_org+=template_array[i].replace(/"/g, "\"")+" \n";
+                                        	template_org+=template_array[i+1].replace(/"/g, "\"")+" \n";
+						i+=1
+                                	}
+			    	}else{
+                                        if (owner_network.length){
+                                                template_org+="  NETWORK=\""+owner_network+"\",\n";
+                                                template_org+="  NETWORK_UNAME=\""+username+"\" ]\n";
+                                        }else{
+                                        	template_org+=template_array[i].replace(/"/g, "\"")+" \n";
+					}					
 				}
-			}else if (template_array[i].match(/\s+NETWORK_UNAME=/)){
-                                if (owner_network.length){
-                                        template_org+="  NETWORK_UNAME=\""+username+"\" ]\n";
-                                }else{
-                                        template_org+=template_array[i].replace(/"/g, "\"")+"\n";
-                                }
 			}else if (template_array[i].match(/\s+PASSWD/)){
 				var d = new Date();
 				template_org+="  PASSWD=\""+d.getTime()+"\",\n";
 			}else{
 				template_org+=template_array[i].replace(/"/g, "\"")+"\n";
 			}
+		}
+		if ( context == "false" ){
+			template_context += " ]\n";
 		}
 		template_org = template_context + template_org + "\"";
                 var vm_temp = { "vm_raw" : template_org };

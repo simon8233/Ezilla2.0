@@ -70,13 +70,23 @@ var create_template_tmpl = '<div id="template_create_tabs">\
     tr("are mandatory")+'</i><br />\
                                 <a href="#" id="fold_unfold_vm_params"><u>'+tr("Fold / Unfold all sections")+'</u></a></p>\
                         </div>\
-\
                           <!-- capacity section name, memory, cpu vcpu -->\
                           <div class="vm_section" id="capacity">\
                             <div class="show_hide" id="add_capacity_cb">\
                                   <h3>'+tr("Capacity options")+'</h3>\
                             </div>\
                           <fieldset><legend>'+tr("Capacity")+'</legend>\
+                            <div class="vm_param kvm_opt xen_opt vmware_opt">\
+                            <label for="ostype">'+tr("OSType")+':</label>\
+                            <select id="ostype" name="ostype">\
+                                <option value="WINDOWS">'+tr("Windows")+'</option>\
+                                <option value="CENTOS">'+tr("Linux Centos/Redhat")+'</option>\
+                                <option value="UBUNTU">'+tr("Linux Ubuntu/Mint")+'</option>\
+                                <option value="FEDORA">'+tr("Linux Fedora")+'</option>\
+                                <option value="OPENSUSE">'+tr("Linux openSUSE")+'</option>\
+                            </select>\
+                            <div class="tip">'+tr("Select the OS Type for this image")+'</div>\
+                            </div>\
                                 <div class="vm_param kvm_opt xen_opt vmware_opt">\
                                   <label for="NAME">'+tr("Name")+':</label>\
                                   <input type="text" id="NAME" name="name"/>\
@@ -1966,7 +1976,8 @@ function setupCreateTemplateDialog(){
             vm_json["CONTEXT"][name]=value;
         });
 
-        vm_json["CONTEXT"]["OSTYPE"]="";
+        scope = section_capacity;
+        vm_json["CONTEXT"]["OSTYPE"]=$('#ostype option:selected',scope).val();
 
         //placement -> fetch with value, escape double quotes
         scope = section_placement;
