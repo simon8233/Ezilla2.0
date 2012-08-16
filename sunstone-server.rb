@@ -368,7 +368,7 @@ post '/vm/:id/stopvnc' do
         return [403, OpenNebula::Error.new(msg).to_json]
     end
 
-    rc = @SunstoneServer.stopvnc(vnc_hash[vm_id][:pipe])
+    rc = @SunstoneServer.stopvnc(vnc_hash[vm_id][:pipe],vnc_hash[vm_id][:port])
 
     if rc[0] == 200
         session['vnc'].delete(vm_id)

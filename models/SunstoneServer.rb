@@ -240,9 +240,9 @@ class SunstoneServer < CloudServer
     ############################################################################
     #
     ############################################################################
-    def stopvnc(pipe)
+    def stopvnc(pipe,port)
         begin
-            OpenNebulaVNC.stop(pipe)
+            OpenNebulaVNC.stop(pipe,port)
         rescue Exception => e
             logger.error {e.message}
             error = Error.new("Error stopping VNC. Please check server logs.")
@@ -264,18 +264,6 @@ class SunstoneServer < CloudServer
 	else
 	        ip = resource['TEMPLATE/NIC/IP']
 	end
-=begin
-        ostype = resource['TEMPLATE/CONTEXT/OSTYPE']
-
-
-        if ostype == "WINDOWS"
-                cport = 3389
-                connecting_tool = "RDP Client to connect"
-        else
-                cport = 22
-                connecting_tool = "SSH Client to connect"
-        end
-=end
                 redir_pid = %x{ps -ef | grep "caddr=#{ip} --cport=#{cport}" |grep -v grep | awk '{print $2}'}
                 redir_pid = Integer(redir_pid) if !redir_pid.empty?
                 file_redir_info = nil

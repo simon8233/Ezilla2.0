@@ -988,7 +988,7 @@ var icon = '<img src="images/unknown.png"> '+state+'</>';
         vm.GNAME,
         vm.NAME,
         icon, //state,
-        vm.CPU,
+        vm.TEMPLATE.VCPU,
         humanize_size(vm.MEMORY),
         hostname,
         ip_str(vm),
@@ -1211,7 +1211,7 @@ function updateVMInfo(request,vm){
                       </tr>\
                       <tr>\
                         <td class="key_td">'+tr("Used CPU")+'</td>\
-                        <td class="value_td">'+vm_info.CPU+'</td>\
+                        <td class="value_td">'+vm_info.TEMPLATE.VCPU+'</td>\
                       </tr>\
                       <tr>\
                         <td class="key_td">'+vncLabel(vm_info)+'</td>\

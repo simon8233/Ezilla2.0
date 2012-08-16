@@ -79,15 +79,25 @@ class OpenNebulaVNC
         end
 
         vnc_pw = vm_resource['TEMPLATE/GRAPHICS/PASSWD']
-        info   = {:pipe => pipe, :port => proxy_port, :password => vnc_pw}
+        info   = {:pipe => pipe, :port => proxy_port, :password => vnc_pw }
 
         return [200, info]
     end
 
     # Stop a VNC proxy handle exceptions outside
-    def self.stop(pipe)
-        Process.kill('KILL',pipe.pid)
-        pipe.close
+    def self.stop(pipe,port)
+	puts  "pid = #{pipe.pid}"
+#	puts  port
+	web_socket_num  = %x{ps -ef |grep #{port}|grep python|wc -l}
+#	puts  web_socket_num
+       	web_socket_num = web_socket_num.to_i
+#	puts web_socket_num
+        if web_socket_num <= 2
+        	  %x{/bin/kill `ps -ef |grep python | grep websockify|grep #{port}| grep -v  grep | awk '{print $2}'`}
+#		  puts "killed"
+       end
+#    Process.kill('KILL',pipe.pid)
+#    pipe.close
     end
 
     private
