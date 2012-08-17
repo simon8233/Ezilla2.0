@@ -69,13 +69,14 @@ var vms_tab_content = '\
   <thead>\
     <tr>\
       <th class="check"><input type="checkbox" class="check_all" value="">'+tr("All")+'</input></th>\
+      <th>'+tr("Status")+'</th>\
       <th>'+tr("ID")+'</th>\
       <th>'+tr("Owner")+'</th>\
       <th>'+tr("Group")+'</th>\
       <th>'+tr("Name")+'</th>\
-      <th>'+tr("Status")+'</th>\
       <th>'+tr("CPU")+'</th>\
       <th>'+tr("Memory")+'</th>\
+      <th>'+tr("OStype")+'</th>\
       <th>'+tr("Hostname")+'</th>\
       <th>'+tr("IPs")+'</th>\
       <th>'+tr("Start Time")+'</th>\
@@ -651,9 +652,11 @@ var vm_actions = {
         type: "create",
         call: OpenNebula.VM.create,
         callback: function (){
-
+                Sunstone.runAction("VM.list");
+		addVMachineElement();
 	},
-        error: onError
+        error: onError,
+	notify: true
     },
 };
 
@@ -994,16 +997,27 @@ else if (state=="FAILED" || state=="FAILURE")
 var icon = '<img src="images/failure.png"> '+state+'</>';
 else
 var icon = '<img src="images/unknown.png"> '+state+'</>';
+var ostype;
+if (typeof(vm.TEMPLATE.CONTEXT) != "undefined"){
+        if (typeof(vm.TEMPLATE.CONTEXT.OSTYPE) != "undefined")
+		ostype = vm.TEMPLATE.CONTEXT.OSTYPE;
+	else
+		ostype ="";
+}
+else{
+	ostype="";
+}
 
     return [
         '<input class="check_item" type="checkbox" id="vm_'+vm.ID+'" name="selected_items" value="'+vm.ID+'"/>',
+	icon, //state
         vm.ID,
         vm.UNAME,
         vm.GNAME,
         vm.NAME,
-        icon, //state,
         vm.TEMPLATE.VCPU,
         humanize_size(vm.MEMORY),
+	ostype,
         hostname,
         ip_str(vm),
         str_start_time(vm),
@@ -2013,12 +2027,12 @@ $(document).ready(function(){
         "bAutoWidth":false,
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": ["check"] },
-            { "sWidth": "80px", "aTargets": [0] },
-            { "sWidth": "60px", "aTargets": [6,7] },
-            { "sWidth": "35px", "aTargets": [1,11,12] },
-            { "sWidth": "150px", "aTargets": [5,10] },
-            { "sWidth": "100px", "aTargets": [2,3,9] },
-            { "bVisible": false, "aTargets": [6,7,10]}
+            { "sWidth": "80px", "aTargets": [] },
+            { "sWidth": "60px", "aTargets": [6,7,8] },
+            { "sWidth": "35px", "aTargets": [0,1,2,12,13] },
+            { "sWidth": "150px", "aTargets": [11] },
+            { "sWidth": "100px", "aTargets": [3,4,9,10] },
+            { "bVisible": false, "aTargets": [3,4,9,10]}
         ],
         "oLanguage": (datatable_lang != "") ?
             {
@@ -2029,7 +2043,7 @@ $(document).ready(function(){
     dataTable_vMachines.fnClearTable();
     addElement([
         spinner,
-        '','','','','','','','','','','',''],dataTable_vMachines);
+        '','','','','','','','','','','','',''],dataTable_vMachines);
     Sunstone.runAction("VM.list");
 
     setupCreateVMDialog();
