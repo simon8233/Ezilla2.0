@@ -86,7 +86,7 @@ class OpenNebulaVNC
 
     # Stop a VNC proxy handle exceptions outside
     def self.stop(pipe,port)
-	puts  "pid = #{pipe.pid}"
+#	puts  "pid = #{pipe.pid}"
 #	puts  port
 	web_socket_num  = %x{ps -ef |grep #{port}|grep python|wc -l}
 #	puts  web_socket_num

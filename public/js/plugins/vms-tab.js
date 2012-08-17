@@ -1232,7 +1232,7 @@ function updateVMInfo(request,vm){
                         <td class="value_td">'+vncIcon(vm_info)+'</td>\
                       </tr>\
                       <tr>\
-                        <td class="key_td">'+RedirctPortProtocol(vm_info)+'</td>\
+                        <td class="key_td">'+RedirectPortProtocol(vm_info)+'</td>\
                         <td class="value_td">'+RedirectPortIcon(vm_info)+'</td>\
                       </tr>\
                     </tbody>\
@@ -1940,28 +1940,53 @@ function RedirectPortCallback(request,response){
    },3000);
 };
 
-function RedirctPortProtocol(vm){
-   var ostype = vm.TEMPLATE.CONTEXT.OSTYPE;
-
-   if (ostype == "WINDOWS"){
-		return tr("RDP Session");
-   }else{
-		return tr("SSH Session");
+function RedirectPortProtocol(vm){
+   var ostype;
+   var protocol;
+   if (typeof(vm.TEMPLATE.CONTEXT) != "undefined"){
+	if (typeof(vm.TEMPLATE.CONTEXT.OSTYPE) != "undefined"){
+                     ostype = vm.TEMPLATE.CONTEXT.OSTYPE;
+	             if ( ostype == "WINDOWS" ){
+                     	protocol=tr("RDP Session");
+                     }
+  		     else{
+                        protocol=tr("SSH Session");
+                     }
+	}
+	else{
+		protocol = "";
+	}	
    }
-
+   else{
+	protocol  = "";
+   }    
+   return protocol;
 }
 function RedirectPortIcon(vm){
    var redir_icon;
-   var ostype = vm.TEMPLATE.CONTEXT.OSTYPE;
-	if ( ostype == "WINDOWS" ){
-		 redir_icon = '<a class="redir" href="#" vm_id="'+vm.ID+'" vm_port="3389">';
-		 redir_icon += '<img src="images/rdp_icon.png" alt=\"'+tr("RDP Port")+'\" /></a>';
-	}
-	else {	
-		 redir_icon = '<a class="redir" href="#" vm_id="'+vm.ID+'" vm_port="22">';
-		 redir_icon += '<img src="images/ssh_icon.png" alt=\"'+tr("SSH Port")+'\" /></a>';
-	}
+   var ostype;
+
+   if (typeof(vm.TEMPLATE.CONTEXT) != "undefined"){
+        if (typeof(vm.TEMPLATE.CONTEXT.OSTYPE) != "undefined"){
+                     ostype = vm.TEMPLATE.CONTEXT.OSTYPE;
+                     if ( ostype == "WINDOWS" ){
+                                 redir_icon = '<a class="redir" href="#" vm_id="'+vm.ID+'" vm_port="3389">';
+                                 redir_icon += '<img src="images/rdp_icon.png" alt=\"'+tr("RDP Port")+'\" /></a>';
+                     }
+                     else{
+                                 redir_icon = '<a class="redir" href="#" vm_id="'+vm.ID+'" vm_port="22">';
+                                 redir_icon += '<img src="images/ssh_icon.png" alt=\"'+tr("SSH Port")+'\" /></a>';
+                     }
+        }
+        else{
+                redir_icon = "";
+        }
+   }
+   else{
+        redir_icon  = "";
+   }
    return redir_icon;
+
 }
 
 // Special error callback in case historical monitoring of VM fails
