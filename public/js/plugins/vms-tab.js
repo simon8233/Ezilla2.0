@@ -1922,13 +1922,21 @@ function RedirectPortCallback(request,response){
         var srv_hostname = window.location.host;
         srv_hostname = srv_hostname.substring(0,srv_hostname.indexOf(":"));
 	var port;
+	var id = response["id"];
 	if ( response["loc"]  == "spice" ){
-		port = $('.redir_spice').attr('vm_port');
+		port = $(".redir_spice").attr('vm_port');
 	}
 	else{
-		port = $('.redir').attr("vm_port");
+	 	$(".redir").each(function(i){
+			if ($(this).attr('vm_id') == id){
+				port = $(this).attr('vm_port');
+				return false;
+				//"We can stop the loop from within the callback function by returning false."
+				// each api by Jquery
+				//
+			}
+	        });
 	}
-
 	var connecting_tool_image ='<a class="connecting_info">';
 	var connecting_tool;
 	if ( port == "3389" ){
@@ -1942,7 +1950,7 @@ function RedirectPortCallback(request,response){
 		}
 		else{
 			connecting_tool = tr("To connect to the Virtual Machine , you can use SPICE tools to connect. copy above connect information,and paste to your SPICE tools");
-                        connecting_tool_image += '<img src="images/ssh_icon_big.png" alt=\"'+tr("SSH TOOLS")+'\" /></a>';
+                        connecting_tool_image += '<img src="images/spice_icon_big.png" alt=\"'+tr("SSH TOOLS")+'\" /></a>';
 		}
 	}
 	$('#RedirectPort_Info_image').html(connecting_tool_image);

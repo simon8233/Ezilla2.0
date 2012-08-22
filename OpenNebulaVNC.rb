@@ -88,16 +88,25 @@ class OpenNebulaVNC
     def self.stop(pipe,port)
 #	puts  "pid = #{pipe.pid}"
 #	puts  port
+#
+#	Process.kill('KILL',pipe.pid)
+	pipe.close	
+#	puts "pipe = #{pipe.pid}"
+#	puts "Process =  #{Process.pid}"
 	web_socket_num  = %x{ps -ef |grep #{port}|grep python|wc -l}
 #	puts  web_socket_num
        	web_socket_num = web_socket_num.to_i
-#	puts web_socket_num
+	puts web_socket_num
         if web_socket_num <= 2
-        	  %x{/bin/kill `ps -ef |grep python | grep websockify|grep #{port}| grep -v  grep | awk '{print $2}'`}
-#		  puts "killed"
+	#	  temp = %x{ps -ef |grep python |grep websockify|grep #{port} |grep -v grep |awk '{print $2}'}
+        	  %x{/bin/kill -9 `ps -ef |grep python | grep websockify|grep #{port}| grep -v  grep | awk '{print $2}'`}		  	
+#		  Process.kill('KILL',pipe.pid)
+#		  puts "killed PID=#{temp} port=#{port}"
+#		  puts temp
+#		  puts pipe.pid
+#		  pipe.close
        end
 #    Process.kill('KILL',pipe.pid)
-#    pipe.close
     end
 
     private
