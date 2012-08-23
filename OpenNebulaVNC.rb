@@ -70,6 +70,14 @@ class OpenNebulaVNC
         end
 
         cmd ="#{@proxy_path} #{proxy_options} #{proxy_port} #{host}:#{vnc_port}"
+	# How many websockify process on system 
+	web_socket_num  = %x{ps -ef |grep python |grep websockify| grep #{host} | grep #{vnc_port}|grep -v grep |wc -l}
+	web_socket_num = web_socket_num.to_i
+	# if any websockify process on system , clean it .
+	if  web_socket_num >= 1
+		%x{/bin/kill -9 `ps -ef |grep python | grep websockify| grep #{host} |grep #{vnc_port}| grep -v  grep | awk '{print $2}'`}
+		#puts "Killed"
+	end 
 
         begin
             @logger.info { "Starting vnc proxy: #{cmd}" }
@@ -86,6 +94,7 @@ class OpenNebulaVNC
 
     # Stop a VNC proxy handle exceptions outside
     def self.stop(pipe,port)
+	Process.kill('KILL',pipe.pid)
 #	puts  "pid = #{pipe.pid}"
 #	puts  port
 #
@@ -93,19 +102,18 @@ class OpenNebulaVNC
 	pipe.close	
 #	puts "pipe = #{pipe.pid}"
 #	puts "Process =  #{Process.pid}"
-	web_socket_num  = %x{ps -ef |grep #{port}|grep python|wc -l}
+#	web_socket_num  = %x{ps -ef |grep python |grep websockify |grep #{port}|grep -v grep |wc -l}
 #	puts  web_socket_num
-       	web_socket_num = web_socket_num.to_i
-	puts web_socket_num
-        if web_socket_num <= 2
+#      	web_socket_num = web_socket_num.to_i
+#	puts web_socket_num
+#        if web_socket_num <= 2
 	#	  temp = %x{ps -ef |grep python |grep websockify|grep #{port} |grep -v grep |awk '{print $2}'}
-        	  %x{/bin/kill -9 `ps -ef |grep python | grep websockify|grep #{port}| grep -v  grep | awk '{print $2}'`}		  	
+#        	  %x{/bin/kill -9 `ps -ef |grep python | grep websockify|grep #{port}| grep -v  grep | awk '{print $2}'`}		  	
 #		  Process.kill('KILL',pipe.pid)
 #		  puts "killed PID=#{temp} port=#{port}"
 #		  puts temp
 #		  puts pipe.pid
 #		  pipe.close
-       end
 #    Process.kill('KILL',pipe.pid)
     end
 

@@ -1987,27 +1987,33 @@ function RedirectPortProtocol(vm){
 function RedirectPortIcon(vm){
    var redir_icon;
    var ostype;
-
+   var state = OpenNebula.Helper.resource_state("vm_lcm",vm.LCM_STATE);
    if (typeof(vm.TEMPLATE.CONTEXT) != "undefined"){
-        if (typeof(vm.TEMPLATE.CONTEXT.OSTYPE) != "undefined"){
-                     ostype = vm.TEMPLATE.CONTEXT.OSTYPE;
-                     if ( ostype == "WINDOWS" ){
-                                 redir_icon = '<a class="redir" href="#" vm_id="'+vm.ID+'" vm_port="3389">';
-                                 redir_icon += '<img src="images/rdp_icon.png" alt=\"'+tr("RDP Port")+'\" /></a>';
-                     }
-                     else{
-                                 redir_icon = '<a class="redir" href="#" vm_id="'+vm.ID+'" vm_port="22">';
-                                 redir_icon += '<img src="images/ssh_icon.png" alt=\"'+tr("SSH Port")+'\" /></a>';
-                     }
-        }
+   	if (typeof(vm.TEMPLATE.CONTEXT.OSTYPE) != "undefined"){
+        	ostype = vm.TEMPLATE.CONTEXT.OSTYPE;
+                	if ( ostype == "WINDOWS"  && state == tr("RUNNING") ){
+                        	redir_icon = '<a class="redir" href="#" vm_id="'+vm.ID+'" vm_port="3389">';
+                        	redir_icon += '<img src="images/rdp_icon.png" alt=\"'+tr("RDP Port")+'\" /></a>';
+		        }
+			else if ( ostype == "WINDOWS" && state != tr("RUNNING") ){
+                                redir_icon = '<img src="images/rdp_off.png" alt=\"'+tr("RDP Port")+'\" /></a>';
+			}
+                     	else if ( ostype != "WINDOWS" && state == tr("RUNNING") ) {
+                        	redir_icon = '<a class="redir" href="#" vm_id="'+vm.ID+'" vm_port="22">';
+                               	redir_icon += '<img src="images/ssh_icon.png" alt=\"'+tr("SSH Port")+'\" /></a>';
+                     	}
+			else {
+                                redir_icon = '<img src="images/ssh_off.png" alt=\"'+tr("SSH Port")+'\" /></a>';				
+			}
+	}
         else{
-                redir_icon = "";
+        	redir_icon = "";
         }
    }
    else{
-        redir_icon  = "";
-   }
-   return redir_icon;
+    	redir_icon  = "";
+   }		
+	return redir_icon;
 
 }
 
