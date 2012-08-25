@@ -16,6 +16,8 @@
 
 require 'json'
 require 'OpenNebula'
+require 'web_socket'
+require 'timeout'
 
 #
 # This class provides support for launching and stopping a websockify proxy
@@ -68,20 +70,26 @@ class OpenNebulaVNC
             proxy_options << " --key #{@key}" if @key && @key.size > 0
             proxy_options << " --ssl-only" if @wss == "only"
         end
-
-        cmd ="#{@proxy_path} #{proxy_options} #{proxy_port} #{host}:#{vnc_port}"
-	# How many websockify process on system 
-	web_socket_num  = %x{ps -ef |grep python |grep websockify| grep #{host} | grep #{vnc_port}|grep -v grep |wc -l}
-	web_socket_num = web_socket_num.to_i
-	# if any websockify process on system , clean it .
-	if  web_socket_num >= 1
-		%x{/bin/kill -9 `ps -ef |grep python | grep websockify| grep #{host} |grep #{vnc_port}| grep -v  grep | awk '{print $2}'`}
-		#puts "Killed"
-	end 
+	
+	if is_port_open("127.0.0.1", proxy_port )
+	    # How many websockify process on system 
+            parent_num  = %x{ps xl |grep python | grep websockify | grep #{host} | grep #{vnc_port} | grep -v grep | awk '{print $4}'}
+	    parent_array=parent_num.split("\n")
+	    parent_proc = %x{ps #{parent_array[1]} | grep  websockify | grep -v grep | wc -l}
+	    if parent_proc.to_i != 1
+ 		%x{/bin/kill -9 `ps -ef |grep python | grep websockify| grep #{host} |grep #{vnc_port}| grep -v  grep | awk '{print $2}'`}
+		cmd ="#{@proxy_path} #{proxy_options} #{proxy_port} #{host}:#{vnc_port}"
+	    end
+	else
+	    %x{/bin/kill -9 `ps -ef |grep python | grep websockify| grep #{host} |grep #{vnc_port}| grep -v  grep | awk '{print $2}'`}
+	    cmd ="#{@proxy_path} #{proxy_options} #{proxy_port} #{host}:#{vnc_port}"
+	end
 
         begin
-            @logger.info { "Starting vnc proxy: #{cmd}" }
-            pipe = IO.popen(cmd)
+	    if cmd != nil
+            	@logger.info { "Starting vnc proxy: #{cmd}" }
+            	pipe = IO.popen(cmd)
+	    end
         rescue Exception => e
             return [500, OpenNebula::Error.new(e.message).to_json]
         end
@@ -94,27 +102,13 @@ class OpenNebulaVNC
 
     # Stop a VNC proxy handle exceptions outside
     def self.stop(pipe,port)
-	Process.kill('KILL',pipe.pid)
-#	puts  "pid = #{pipe.pid}"
-#	puts  port
-#
-#	Process.kill('KILL',pipe.pid)
-	pipe.close	
-#	puts "pipe = #{pipe.pid}"
-#	puts "Process =  #{Process.pid}"
-#	web_socket_num  = %x{ps -ef |grep python |grep websockify |grep #{port}|grep -v grep |wc -l}
-#	puts  web_socket_num
-#      	web_socket_num = web_socket_num.to_i
-#	puts web_socket_num
-#        if web_socket_num <= 2
-	#	  temp = %x{ps -ef |grep python |grep websockify|grep #{port} |grep -v grep |awk '{print $2}'}
-#        	  %x{/bin/kill -9 `ps -ef |grep python | grep websockify|grep #{port}| grep -v  grep | awk '{print $2}'`}		  	
-#		  Process.kill('KILL',pipe.pid)
-#		  puts "killed PID=#{temp} port=#{port}"
-#		  puts temp
-#		  puts pipe.pid
-#		  pipe.close
-#    Process.kill('KILL',pipe.pid)
+	web_socket_num  = %x{ps -ef |grep python |grep websockify |grep #{port}|grep -v grep |wc -l}
+      	web_socket_num = web_socket_num.to_i
+	puts "web_socket_num = #{web_socket_num}"
+        if web_socket_num <= 2 && pipe != nil
+		Process.kill('KILL',pipe.pid)
+		pipe.close	
+        end
     end
 
     private
@@ -127,5 +121,22 @@ class OpenNebulaVNC
         end
     end
 
+    def is_port_open(ip, port)
+    begin
+        Timeout::timeout(1) do
+        begin
+            client = WebSocket.new("ws://#{ip}:#{port}")
+	    client.receive()
+            client.close()
+            return true
+        rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH, Errno::ECONNRESET
+            return false
+        end
+    end
+    rescue Timeout::Error
+    end
+
+    return false
+    end
 
 end
