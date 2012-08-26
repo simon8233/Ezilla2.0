@@ -302,7 +302,7 @@ var vnet_actions = {
         call: OpenNebula.Network.addleases,
         callback: vnShow,
         error: onError,
-        notify: false,
+        notify: false
     },
 
     "Network.rmleases" : {
@@ -310,7 +310,7 @@ var vnet_actions = {
         call: OpenNebula.Network.rmleases,
         callback: vnShow,
         error: onError,
-        notify: false,
+        notify: false
     },
 
     "Network.hold" : {
@@ -318,7 +318,7 @@ var vnet_actions = {
         call: OpenNebula.Network.hold,
         callback: vnShow,
         error: onError,
-        notify: false,
+        notify: false
     },
 
     "Network.release" : {
@@ -326,7 +326,7 @@ var vnet_actions = {
         call: OpenNebula.Network.release,
         callback: vnShow,
         error: onError,
-        notify: false,
+        notify: false
     },
 
     "Network.chown" : {
@@ -409,7 +409,7 @@ var vnet_actions = {
         },
         callback: null,
         elements: vnElements,
-        notify:true,
+        notify:true
     },
 
     "Network.help" : {
@@ -418,8 +418,7 @@ var vnet_actions = {
             hideDialog();
             $('div#vnets_tab div.legend_div').slideToggle();
         }
-    },
-
+    }
 };
 
 
@@ -450,7 +449,7 @@ var vnet_buttons = {
         text: tr("Select cluster"),
         select: clusters_sel,
         tip: tr("Select the destination cluster:"),
-        condition: mustBeAdmin,
+        condition: mustBeAdmin
     },
     "Network.chown" : {
         type: "confirm_with_select",
@@ -465,7 +464,7 @@ var vnet_buttons = {
         text: tr("Change group"),
         select: groups_sel,
         tip: tr("Select the new group")+":",
-        condition: mustBeAdmin,
+        condition: mustBeAdmin
     },
         }
         },
@@ -490,7 +489,7 @@ var vnet_info_panel = {
     "vnet_leases_tab" : {
         title: tr("Lease management"),
         content: ""
-    },
+    }
 }
 
 var vnets_tab = {
@@ -499,7 +498,7 @@ var vnets_tab = {
     buttons: vnet_buttons,
     tabClass: "subTab",
 //    parentTab: "infra_tab",
-    showOnTopMenu: false,
+    showOnTopMenu: false
 }
 
 Sunstone.addActions(vnet_actions);
@@ -1004,7 +1003,7 @@ function setupCreateVNetDialog() {
         //Create the VNetwork.
 
         network_json = {
-            "vnet" : network_json,
+            "vnet" : network_json
         };
 
         Sunstone.runAction("Network.create",network_json);
@@ -1042,7 +1041,7 @@ function setupVNetTemplateUpdateDialog(){
         width:700,
         modal:true,
         height:height,
-        resizable:true,
+        resizable:true
     });
 
     $('button',dialog).button();

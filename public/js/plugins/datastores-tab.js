@@ -207,7 +207,7 @@ var datastore_actions = {
 
     "Datastore.update_dialog" : {
         type: "custom",
-        call: popUpDatastoreTemplateUpdateDialog,
+        call: popUpDatastoreTemplateUpdateDialog
     },
 
     "Datastore.update" : {
@@ -284,7 +284,7 @@ var datastore_actions = {
                 Sunstone.runAction("Cluster.adddatastore",cluster,ds);
         },
         elements: datastoreElements,
-        notify:true,
+        notify:true
     },
 
     "Datastore.help" : {
@@ -293,7 +293,7 @@ var datastore_actions = {
             hideDialog();
             $('div#datastores_tab div.legend_div').slideToggle();
         }
-    },
+    }
 
 };
 
@@ -306,13 +306,13 @@ var datastore_buttons = {
     "Datastore.create_dialog" : {
         type: "create_dialog",
         text: '<i class="icon-plus icon-large"> '+tr("New"),
-        condition: mustBeAdmin,
+        condition: mustBeAdmin
     },
     "Datastore.update_dialog" : {
         type: "action",
         text: '<i class="icon-edit icon-large"> '+tr("Update properties"),
         alwaysActive: true,
-        condition: mustBeAdmin,
+        condition: mustBeAdmin
     },
 
     "action_list" : {
@@ -324,7 +324,7 @@ var datastore_buttons = {
         text: tr("Select cluster"),
         select: clusters_sel,
         tip: tr("Select the destination cluster:"),
-        condition: mustBeAdmin,
+        condition: mustBeAdmin
     },
     "Datastore.chown" : {
         type: "confirm_with_select",
@@ -364,7 +364,7 @@ var datastore_info_panel = {
     "datastore_template_tab" : {
         title: tr("Datastore template"),
         content: ""
-    },
+    }
 }
 
 var datastores_tab = {
@@ -373,7 +373,7 @@ var datastores_tab = {
     buttons: datastore_buttons,
     tabClass: "subTab",
 //    parentTab: "infra_tab",
-    showOnTopMenu: false,
+    showOnTopMenu: false
 }
 
 Sunstone.addActions(datastore_actions);
@@ -616,7 +616,7 @@ function setupDatastoreTemplateUpdateDialog(){
         width:500,
         modal:true,
         height:height,
-        resizable:true,
+        resizable:true
     });
 
     $('button',dialog).button();

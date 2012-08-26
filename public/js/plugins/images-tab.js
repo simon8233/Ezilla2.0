@@ -301,7 +301,7 @@ var image_actions = {
         call: function () {
             waitingNodes(dataTable_images);
             Sunstone.runAction("Image.list");
-        },
+        }
     },
 
     "Image.autorefresh" : {
@@ -333,7 +333,7 @@ var image_actions = {
 
     "Image.update_dialog" : {
         type: "custom",
-        call: popUpImageTemplateUpdateDialog,
+        call: popUpImageTemplateUpdateDialog
     },
 
     "Image.update" : {
@@ -512,7 +512,7 @@ var image_buttons = {
 
     "Image.clone_dialog" : {
         type: "action",
-        text: tr("Clone"),
+        text: tr("Clone")
     },
 
         }
@@ -862,7 +862,7 @@ function setupCreateImageDialog(){
         width: "258px",
 //        left: "133px",
         height: "15px",
-        display: "inline-block",
+        display: "inline-block"
     });
     $('#upload-progress div',dialog).css("border","1px solid #AAAAAA");
 
@@ -916,7 +916,7 @@ function setupCreateImageDialog(){
             return false;
         },
         onCancel: function(id, fileName){
-        },
+        }
     });
 
     var file_input = false;
@@ -1026,7 +1026,7 @@ function setupCreateImageDialog(){
             "image" : {
                 "image_raw" : template
             },
-            "ds_id" : ds_id,
+            "ds_id" : ds_id
         };
         Sunstone.runAction("Image.create",img_obj);
         $create_image_dialog.dialog('close');
@@ -1062,7 +1062,7 @@ function setupImageTemplateUpdateDialog(){
         width:700,
         modal:true,
         height:height,
-        resizable:false,
+        resizable:false
     });
 
     $('button',dialog).button();
@@ -1231,7 +1231,7 @@ function setupImageCloneDialog(){
         autoOpen:false,
         width:375,
         modal:true,
-        resizable:false,
+        resizable:false
     });
 
     $('button',dialog).button();

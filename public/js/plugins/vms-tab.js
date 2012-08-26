@@ -205,7 +205,7 @@ var vm_actions = {
 
     "VM.create_dialog" : {
         type: "custom",
-        call: popUpCreateVMDialog,
+        call: popUpCreateVMDialog
     },
 
     "VM.update_dialog" : {
@@ -239,14 +239,14 @@ var vm_actions = {
         call : function (){
             waitingNodes(dataTable_vMachines);
             Sunstone.runAction("VM.list");
-        },
+        }
     },
 
     "VM.autorefresh" : {
         type: "custom",
         call : function() {
             OpenNebula.VM.list({timeout: true, success: updateVMachinesView,error: onError});
-        },
+        }
     },
 
     "VM.deploy" : {
@@ -657,7 +657,7 @@ var vm_actions = {
 	},
         error: onError,
 	notify: true
-    },
+    }
 };
 
 
@@ -753,7 +753,7 @@ var vm_buttons = {
             "VM.stop" : {
                 type: "confirm",
                 text: tr("Stop"),
-                tip: "This will stop selected VMs"
+                tip: tr("This will stop selected VMs")
             },
             "VM.restart" : {
                 type: "confirm",
@@ -815,7 +815,7 @@ var vm_info_panel = {
     },
     "vm_history_tab" : {
         title: tr("History information"),
-        content: "",
+        content: ""
     }
 };
 
@@ -921,7 +921,7 @@ SunstoneMonitoringConfig['VM'] = {
                     min: 0,
                     tickFormatter : function(val,axis) {
                         return humanize_size(val,true);
-                    },
+                    }
                 },
                 legend: {
                     noColumns: 3,
@@ -931,7 +931,7 @@ SunstoneMonitoringConfig['VM'] = {
                     }
                 }
             }
-        },
+        }
     }
 }
 
@@ -1279,7 +1279,7 @@ function updateVMInfo(request,vm){
 
     var history_tab = {
         title: tr("History information"),
-        content: generateHistoryTable(vm_info),
+        content: generateHistoryTable(vm_info)
     };
 
     Sunstone.updateInfoPanelTab("vm_info_panel","vm_info_tab",info_tab);
@@ -1613,7 +1613,7 @@ function setupVMTemplateUpdateDialog(){
         width:500,
         modal:true,
         height:height,
-        resizable:true,
+        resizable:true
     });
 
     $('button',dialog).button();
