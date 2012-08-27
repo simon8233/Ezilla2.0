@@ -67,12 +67,34 @@ var create_user_tmpl =
         <div>\
                 <label for="username">'+tr("Username")+':</label>\
                 <input type="text" name="username" id="username" /><br />\
+		<label for="pass">'+tr("Password")+':</label>\
+		<input type="password" name="pass" id="pass" />\
+		<label for="pass_confirm">'+tr("Confirm password")+':</label>\
+		<input type="password"  name="pass_confirm" id="pass_confirm"  value="">\
+        </div>\
+        </fieldset>\
+        <fieldset>\
+        <div class="form_buttons">\
+                <button class="button" id="create_user_submit" value="user/create">'+tr("Create")+'</button>\
+                <button class="button" type="reset" value="reset">'+tr("Reset")+'</button>\
+        </div>\
+</fieldset>\
+</form>';
+
+/* for  Ezcloud Demo , disable function, recently will open.
+ *
+var create_user_tmpl =
+'<form id="create_user_form" action="">\
+  <fieldset>\
+        <div>\
+                <label for="username">'+tr("Username")+':</label>\
+                <input type="text" name="username" id="username" /><br />\
                 <label for="pass">'+tr("Password")+':</label>\
                 <input type="password" name="pass" id="pass" />\
                 <label for="driver">'+tr("Authentication")+':</label>\
                 <select name="driver" id="driver">\
-                     <option value="core" selected="selected">'+tr("Core")+'</option>\
-                     <option value="ssh">'+tr("SSH")+'</option>\
+                    <option value="core" selected="selected">'+tr("Core")+'</option>\
+                    <option value="ssh">'+tr("SSH")+'</option>\
                      <option value="x509">'+tr("x509")+'</option>\
                      <option value="public">'+tr("Public")+'</option>\
                      <option value="custom">'+tr("Custom")+'</option>\
@@ -89,7 +111,9 @@ var create_user_tmpl =
                 <button class="button" type="reset" value="reset">'+tr("Reset")+'</button>\
         </div>\
 </fieldset>\
-</form>';
+</form>'; */
+
+
 
 var update_pw_tmpl = '<form id="update_user_pw_form" action="">\
   <fieldset>\
@@ -746,12 +770,33 @@ function setupCreateUserDialog(){
     $('#create_user_form',dialog).submit(function(){
         var user_name=$('#username',this).val();
         var user_password=$('#pass',this).val();
-        var driver = $('#driver', this).val();
-        if (driver == 'custom')
-            driver = $('input[name="custom_auth"]').val();
-
+	var user_password_confirm = $('#pass_confirm',this).val();
+        var CheckData = /[|]|{|}|<|>|'|;|&|#|"|'|!| /;
+// for  Ezcloud Demo , disable function, recently will open.
+/*        var driver = $('#driver', this).val();*/
+/*        if (driver == 'custom')
+            driver = $('input[name="custom_auth"]').val();*/
+	var driver = "core";
         if (!user_name.length || !user_password.length){
             notifyError(tr("User name and password must be filled in"));
+            return false;
+        };
+	if (CheckData.test(user_name)){
+            notifyError(tr("Don't allow special characters in your name !"));
+            return false;
+        }
+	if (user_password != user_password_confirm){
+            notifyError(tr("These passwords don't match. Try again"));
+            return false;
+        };
+
+        if (user_password.length < 6){
+            notifyError(tr("password must be at least 6 characters"));
+            return false;
+        };
+
+        if (CheckData.test(user_password)){
+            notifyError(tr("Don't allow special characters in your password !"));
             return false;
         };
 

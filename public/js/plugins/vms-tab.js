@@ -545,7 +545,8 @@ var vm_actions = {
 		var select="";
     		$.each(templates_list,function(){
 			var template = this.VMTEMPLATE;
-			select +='<option elem_id="'+template.ID+'" value="'+template.ID+'">'+template.NAME+' (id:'+template.ID+')</option>';	
+//			select +='<option elem_id="'+template.ID+'" value="'+template.ID+'">'+template.NAME+' (id:'+template.ID+')</option>';	
+			select +='<option elem_id="'+template.ID+'" value="'+template.ID+'">'+template.NAME+'</option>';
    		});  
 		$('#template_id', $create_vm_dialog).html(select);          
         },
@@ -564,7 +565,9 @@ var vm_actions = {
 	    image_select="";
 	    $.each(images_list,function(){
 		  var image = this.IMAGE;
-		  image_select +='<option elem_id="'+image.ID+'" value="'+image.ID+'">'+image.NAME+' (id:'+image.ID+')</option>';
+		  image_select +='<option elem_id="'+image.ID+'" value="'+image.ID+'">'+image.NAME+'(id:'+image.ID+')</option>';
+//		  image_select +='<option elem_id="'+image.ID+'" value="'+image.ID+'">'+image.NAME+'</option>';
+
             });            
         },
         error: onError
@@ -651,17 +654,16 @@ var vm_actions = {
     "VM.create_raw" : {
         type: "create",
         call: OpenNebula.VM.create,
-        callback: function (){
+        callback: function (params,extra_param){
                 Sunstone.runAction("VM.list");
-		addVMachineElement();
+		notifySubmit(tr("Create VM is done"));
 	},
         error: onError,
-	notify: true
     }
 };
 
 
-
+// for Ezcloud Demo , close some button ,  resently will open.
 var vm_buttons = {
     "VM.refresh" : {
         type: "action",
@@ -675,32 +677,36 @@ var vm_buttons = {
         alwaysActive: true
     },
 
-            "VM.suspend" : {
+/*            "VM.suspend" : {
                 type: "confirm",
                 text: '<i class="icon-pause icon-large"> '+tr("Suspend"),
                 tip: tr("This will suspend selected machines")
-            },
+            },*/
             "VM.resume" : {
                 type: "confirm",
                 text: '<i class="icon-play icon-large"> '+tr("Resume"),
                 tip: tr("This will resume selected stopped or suspended VMs")
             },
-
-    "VM.shutdown" : {
+     	    "VM.stop" : {
+                type: "confirm",
+                text: '<i  class="icon-stop icon-large"> '+tr("Stop"),
+                tip: tr("This will stop selected VMs")
+            },
+/*    "VM.shutdown" : {
         type: "confirm",
         text: tr("Shutdown"),
         tip: tr("This will initiate the shutdown process in the selected VMs")
-    },
+    },*/
 
     "action_list" : {
         type: "select",
         actions: {
 
-    "VM.update_dialog" : {
+/*    "VM.update_dialog" : {
         type: "action",
         text: tr("Update properties"),
         alwaysActive: true
-    },
+    },*/
 
     "VM.chown" : {
         type: "confirm_with_select",
@@ -740,31 +746,31 @@ var vm_buttons = {
                 select: hosts_sel,
                 condition: mustBeAdmin
             },
-            "VM.hold" : {
+            /*"VM.hold" : {
                 type: "confirm",
                 text: tr("Hold"),
                 tip: tr("This will hold selected pending VMs from being deployed")
-            },
-            "VM.release" : {
+            },*/
+            /*"VM.release" : {
                 type: "confirm",
                 text: tr("Release"),
                 tip: tr("This will release held machines")
-            },
-            "VM.stop" : {
+            },*/
+            /*"VM.stop" : {
                 type: "confirm",
                 text: tr("Stop"),
                 tip: tr("This will stop selected VMs")
-            },
+            },*/ //move to First layout
             "VM.restart" : {
                 type: "confirm",
                 text: tr("Restart"),
                 tip: tr("This will redeploy selected VMs (in UNKNOWN or BOOT state)")
             },
-            "VM.resubmit" : {
+            /*"VM.resubmit" : {
                 type: "confirm",
                 text: tr("Resubmit"),
                 tip: tr("This will resubmits VMs to PENDING state")
-            },
+            },*/
             "VM.reboot" : {
                 type : "confirm",
                 text: tr("Reboot"),
@@ -801,10 +807,11 @@ var vm_info_panel = {
         title: tr("Virtual Machine information"),
         content: ""
     },
-    "vm_hotplugging_tab" : {
+// // for EzCloud Demo , disable this function  ,recently open.
+/*    "vm_hotplugging_tab" : {
         title: tr("Disks & Hotplugging"),
         content: ""
-    },
+    },*/
     "vm_template_tab" : {
         title: tr("VM template"),
         content: ""
@@ -1283,7 +1290,8 @@ function updateVMInfo(request,vm){
     };
 
     Sunstone.updateInfoPanelTab("vm_info_panel","vm_info_tab",info_tab);
-    Sunstone.updateInfoPanelTab("vm_info_panel","vm_hotplugging_tab",hotplugging_tab);
+// for EzCloud Demo , disable this function  ,recently open.
+//    Sunstone.updateInfoPanelTab("vm_info_panel","vm_hotplugging_tab",hotplugging_tab);
     Sunstone.updateInfoPanelTab("vm_info_panel","vm_template_tab",template_tab);
     Sunstone.updateInfoPanelTab("vm_info_panel","vm_log_tab",log_tab);
     Sunstone.updateInfoPanelTab("vm_info_panel","vm_history_tab",history_tab);
@@ -1535,19 +1543,18 @@ function setupCreateVMDialog(){
         var user_passwd_verify = $('#user_passwd_verify',this).val();
         var n_times = $('#vm_n_times',this).val();
         var n_times_int=1;
-	var CheckData = /[|]|{|}|<|>|'|;|&|#|"|'|!/;
-
+	var CheckData = /[|]|{|}|<|>|'|;|&|#|"|'|!| /;
         if (!template_id.length){
             notifyError(tr("You have not selected a template"));
             return false;
         };
 
 	if (user_passwd != user_passwd_verify){
-            notifyError(tr("Password Verify Failed!"));
+            notifyError(tr("passwords don't match. Try again"));
             return false;
         };
 
-        if (user_passwd.length < 7){
+        if (user_passwd.length < 6){
             notifyError(tr("password must be at least 6 characters"));
             return false;
         };
@@ -1825,6 +1832,9 @@ function vncIcon(vm){
 		gr_icon =  '<a class="redir_spice" href="#" vm_id="'+vm.ID+'" vm_port="'+port+'" vm_loc="spice">';
 	        gr_icon += '<img src="images/spice.png" alt=\"'+tr("Open SPICE Session")+'\" /></a>';	
 	}
+	else if (graphics && graphics.TYPE == "spice" && state != tr("RUNNING")){
+		gr_icon = '<img src="images/spice_off.png" alt=\"'+tr("SPICE Disabled")+'\" />';
+	}
     	else{
         	gr_icon = '<img src="images/vnc_off.png" alt=\"'+tr("VNC Disabled")+'\" />';
 	}
@@ -2042,8 +2052,8 @@ $(document).ready(function(){
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": ["check"] },
             { "sWidth": "80px", "aTargets": [] },
-            { "sWidth": "60px", "aTargets": [6,7,8] },
-            { "sWidth": "35px", "aTargets": [0,1,2,12,13] },
+            { "sWidth": "60px", "aTargets": [7,8] },
+            { "sWidth": "35px", "aTargets": [0,6,1,2,12,13] },
             { "sWidth": "150px", "aTargets": [11] },
             { "sWidth": "100px", "aTargets": [3,4,9,10] },
             { "bVisible": false, "aTargets": [3,4,9,10]}
