@@ -136,17 +136,28 @@ var Sunstone = {
 
     //adds a tab to an info panel.
     "addInfoPanelTab" : function(panel_name, panel_tab_id, panel_tab_obj){
-        SunstoneCfg["info_panels"][panel_name][panel_tab_id] = panel_tab_obj;
+        	SunstoneCfg["info_panels"][panel_name][panel_tab_id] = panel_tab_obj;
     },
 
     //Replaces a tab from an info panel. Refreshes the DOM if wanted.
     "updateInfoPanelTab" : function(panel_name, panel_tab_id,
                                     panel_tab_obj, refresh){
-        SunstoneCfg["info_panels"][panel_name][panel_tab_id] = panel_tab_obj;
-        if (refresh){
-            var tab_content = panel_tab_obj.content;
-            $('div#'+panel_name+' div#'+panel_tab_id,info_panel_context).html(tab_content);
-        }
+	if (typeof(panel_tab_obj.condition) === 'undefined'){
+ 	       SunstoneCfg["info_panels"][panel_name][panel_tab_id] = panel_tab_obj;
+        	if (refresh){
+            		var tab_content = panel_tab_obj.content;
+            		$('div#'+panel_name+' div#'+panel_tab_id,info_panel_context).html(tab_content);
+        	}
+	}else if ( panel_tab_obj.condition()){
+               SunstoneCfg["info_panels"][panel_name][panel_tab_id] = panel_tab_obj;
+                if (refresh){
+                        var tab_content = panel_tab_obj.content;
+                        $('div#'+panel_name+' div#'+panel_tab_id,info_panel_context).html(tab_content);
+                }		
+
+	}else{
+		delete SunstoneCfg["info_panels"][panel_name][panel_tab_id];
+	}
     },
 
     //Removes a tab from an info panel configuration.

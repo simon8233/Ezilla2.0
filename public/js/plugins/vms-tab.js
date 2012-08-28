@@ -1262,7 +1262,8 @@ function updateVMInfo(request,vm){
 
     var hotplugging_tab = {
         title: tr("Disks & Hotplugging"),
-        content: printDisks(vm_info)
+        content: printDisks(vm_info),
+	condition: mustBeAdmin
     };
 
     var template_tab = {
@@ -1271,12 +1272,14 @@ function updateVMInfo(request,vm){
         '<table id="vm_template_table" class="info_table" style="width:80%">\
                <thead><tr><th colspan="2">'+tr("VM template")+'</th></tr></thead>'+
                 prettyPrintJSON(vm_info.TEMPLATE)+
-            '</table>'
+            '</table>',
+	condition: mustBeAdmin
     };
 
     var log_tab = {
         title: tr("VM log"),
-        content: '<div>'+spinner+'</div>'
+        content: '<div>'+spinner+'</div>',
+	condition: mustBeAdmin
     };
 
     var monitoring_tab = {
