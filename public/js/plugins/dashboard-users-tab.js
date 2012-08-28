@@ -117,32 +117,32 @@ function dashboardQuotaRow(quota_json){
     switch (quota_json.TYPE){
     case "VM":
         row += '<tr><td class="padding1">'+tr("VMS")+'</td>';
-	row += '<td class="value_td">'+quota_json.VMS_USED+' / '+modify_zeroToNone(quota_json.VMS)+'</td></tr>';
+	row += '<td class="value_td">'+quota_json.VMS_USED+'</td><td class="value_td">/&nbsp;&nbsp;'+modify_zeroToNone(quota_json.VMS)+'</td></tr>';
 	row += '<tr><td class="padding1">'+tr("Memory")+'</td>';
-	row += '<td class="value_td">'+quota_json.MEMORY_USED+' / '+modify_zeroToNone(quota_json.MEMORY)+' '+tr("MB")+'</td></tr>';
+	row += '<td class="value_td">'+quota_json.MEMORY_USED+'</td><td class="value_td">/&nbsp;&nbsp;'+modify_zeroToNone(quota_json.MEMORY)+'&nbsp;'+tr("MB")+'</td></tr>';
 	row += '<tr><td class="padding1">'+tr("CPU")+'</td>'
-        row += '<td class="value_td">'+quota_json.CPU_USED+' / '+modify_zeroToNone(quota_json.CPU)+'</td></tr>';
+        row += '<td class="value_td">'+quota_json.CPU_USED+'</td><td class="value_td">/&nbsp;&nbsp;'+modify_zeroToNone(quota_json.CPU)+'</td></tr>';
         break;
     case "DATASTORE":
         row += '<tr><td class="padding1">'+tr("Datastore")+' id '+quota_json.ID+':</td><td></td></tr>';
 
         row += '<tr><td class="padding2">'+tr("Size")+'</td>';
-        row += '<td class="value_td">'+quota_json.SIZE_USED+' / '+modify_zeroToNone(quota_json.SIZE)+'</td>';
+        row += '<td class="value_td">'+quota_json.SIZE_USED+'</td><td class="value_td">/&nbsp;&nbsp;'+modify_zeroToNone(quota_json.SIZE)+'</td>';
 
         row += '<tr><td class="padding2">'+tr("Images")+'</td>';
-        row += '<td class="value_td">'+quota_json.IMAGES_USED+' / '+modify_zeroToNone(quota_json.IMAGES)+'</td>';
+        row += '<td class="value_td">'+quota_json.IMAGES_USED+'</td><td class="value_td">/&nbsp;&nbsp;'+modify_zeroToNone(quota_json.IMAGES)+'</td>';
         break;
     case "IMAGE":
-        row += '<tr><td class="padding1">'+tr("Image")+' id '+quota_json.ID+':</td><td></td></tr>';
+        row += '<tr><td class="padding1">'+tr("Image")+' id '+quota_json.ID+':</td><td></td><td class="value_td"></td></tr>';
 
         row += '<tr><td class="padding2">'+tr("RVMs")+'</td>';
-        row += '<td class="value_td">'+quota_json.RVMS_USED+' / '+modify_zeroToNone(quota_json.RVMS)+'</td>';
+        row += '<td class="value_td">'+quota_json.RVMS_USED+'</td><td class="value_td">/&nbsp;&nbsp;'+modify_zeroToNone(quota_json.RVMS)+'</td>';
         break;
     case "NETWORK":
-        row += '<tr><td class="padding1">'+tr("Network")+' id '+quota_json.ID+':</td><td></td></tr>';
+        row += '<tr><td class="padding1">'+tr("Network")+' id '+quota_json.ID+':</td><td></td><td class="value_td"></td></tr>';
 
         row += '<tr><td class="padding2">'+tr("Leases")+'</td>';
-        row += '<td class="value_td">'+quota_json.LEASES_USED+' / '+modify_zeroToNone(quota_json.LEASES)+'</td>';
+        row += '<td class="value_td">'+quota_json.LEASES_USED+'</td><td class="value_td">/&nbsp;&nbsp;'+modify_zeroToNone(quota_json.LEASES)+'</td>';
 	break;
     }
     return row
@@ -151,52 +151,52 @@ function dashboardQuotaRow(quota_json){
 function dashboardQuotasHTML(user){
     var html = '<tr>\
                    <td class="key_td">' + tr("Resource quotas") + '</td>\
-                   <td class="value_td">' + tr("Used&nbsp;/&nbsp;Allowed") + '</td>\
+                   <td class="value_td">' + tr("Used") + '</td><td class="value_td"> '+ "/&nbsp;&nbsp;&nbsp;"+tr("Allowed") + '</td>\
                 </tr>\
                 <tr>\
-                  <td class="key_td"></td><td class="value_td"></td>\
+                  <td class="key_td"></td><td class="value_td"></td><td class="value_td"></td>\
                 </tr>';
 
     var results = parseQuotas(user, dashboardQuotaRow);
 
-    html += '<tr><td class="key_td">'+tr("VM quota")+':</td>\
+    html += '<tr><td class="key_td">'+tr("VM quota")+':</td><td class="value_td"></td>\
                  <td class="value_td">'+
         (results.VM.length ? "" : tr("None"))+'</td></tr>'
 
     html += results.VM;
 
     html += '<tr>\
-                <td class="key_td"></td><td class="value_td"></td>\
+                <td class="key_td"></td><td class="value_td"></td><td class="value_td"></td>\
               </tr>';
 
-    html += '<tr><td class="key_td">'+tr("Datastore quotas")+':</td>\
+    html += '<tr><td class="key_td">'+tr("Datastore quotas")+':</td><td class="value_td"></td>\
                  <td class="value_td">'+
         (results.DATASTORE.length ? "" : tr("None"))+'</td></tr>'
 
     html += results.DATASTORE;
 
     html += '<tr>\
-                <td class="key_td"></td><td class="value_td"></td>\
+                <td class="key_td"></td><td class="value_td"></td><td class="value_td"></td>\
               </tr>';
 
-    html += '<tr><td class="key_td">'+tr("Image quotas")+':</td>\
+    html += '<tr><td class="key_td">'+tr("Image quotas")+':</td><td class="value_td"></td>\
                  <td class="value_td">'+
         (results.IMAGE.length ? "" : tr("None"))+'</td></tr>'
 
     html += results.IMAGE;
 
     html += '<tr>\
-                <td class="key_td"></td><td class="value_td"></td>\
+                <td class="key_td"></td><td class="value_td"></td><td class="value_td"></td>\
               </tr>';
 
-    html += '<tr><td class="key_td">'+tr("Network quotas")+':</td>\
+    html += '<tr><td class="key_td">'+tr("Network quotas")+':</td><td class="value_td"></td>\
                  <td class="value_td">'+
         (results.NETWORK.length ? "" : tr("None"))+'</td></tr>'
 
     html += results.NETWORK;
 
     html += '<tr>\
-                <td class="key_td"></td><td class="value_td"></td>\
+                <td class="key_td"></td><td class="value_td"></td><td class="value_td"></td>\
               </tr>';
 
     $('#dashboard_user_info', $dashboard).html(html);
