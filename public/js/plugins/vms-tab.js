@@ -615,25 +615,26 @@ var vm_actions = {
                                 template_org+=template_array[i].replace(/"/g, "\"")+"\n";
 			}else if (template_array[i].match(/^NAME/)){
 				template_org+="NAME=\""+vm_name+"\"\n";
-			}else if (template_array[i].match(/\s+NETWORK=/)){
-			    	if (template_array[i+1].match(/\s+NETWORK_UNAME=/)){
-                                	if (owner_network.length){
-						template_org+="  NETWORK=\""+owner_network+"\",\n";
-                                        	template_org+="  NETWORK_UNAME=\""+username+"\" ]\n";
-						i+=1
-                                	}else{
-                                        	template_org+=template_array[i].replace(/"/g, "\"")+" \n";
-                                        	template_org+=template_array[i+1].replace(/"/g, "\"")+" \n";
-						i+=1
-                                	}
-			    	}else{
-                                        if (owner_network.length){
-                                                template_org+="  NETWORK=\""+owner_network+"\",\n";
-                                                template_org+="  NETWORK_UNAME=\""+username+"\" ]\n";
-                                        }else{
-                                        	template_org+=template_array[i].replace(/"/g, "\"")+" \n";
-					}					
-				}
+		//Disable Network Auto Selection for EasyCloud 
+		//	}else if (template_array[i].match(/\s+NETWORK=/)){
+		//	    	if (template_array[i+1].match(/\s+NETWORK_UNAME=/)){
+                //                	if (owner_network.length){
+		//				template_org+="  NETWORK=\""+owner_network+"\",\n";
+                //                        	template_org+="  NETWORK_UNAME=\""+username+"\" ]\n";
+		//				i+=1
+                //                	}else{
+                //                        	template_org+=template_array[i].replace(/"/g, "\"")+" \n";
+                //                        	template_org+=template_array[i+1].replace(/"/g, "\"")+" \n";
+		//				i+=1
+                //                	}
+		//	    	}else{
+                //                        if (owner_network.length){
+                //                                template_org+="  NETWORK=\""+owner_network+"\",\n";
+                //                                template_org+="  NETWORK_UNAME=\""+username+"\" ]\n";
+                //                        }else{
+                //                        	template_org+=template_array[i].replace(/"/g, "\"")+" \n";
+		//			}					
+		//		}
 			}else if (template_array[i].match(/\s+PASSWD/)){
 				var d = new Date();
 				template_org+="  PASSWD=\""+d.getTime()+"\",\n";

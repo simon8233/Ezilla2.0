@@ -808,7 +808,8 @@ function setupCreateUserDialog(){
                         };
         Sunstone.runAction("User.create",user_json);
         create_username=user_name;
-        Sunstone.runAction("User.NetworkList");
+	//Disable for EasyCloud
+        //Sunstone.runAction("User.NetworkList");
         $create_user_dialog.dialog('close');
         return false;
     });
