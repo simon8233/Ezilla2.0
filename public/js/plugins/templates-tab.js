@@ -815,21 +815,21 @@ var template_actions = {
 var template_buttons = {
     "Template.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
+        text: '<i class="icon-refresh icon-large"></i> <br/> <font class="top-button-font">' +tr("Refresh")+'</font>',
         alwaysActive: true
     },
     "Template.create_dialog" : {
         type: "create_dialog",
-        text: '<i class="icon-plus icon-large"> '+tr("New")
+        text: '<i class="icon-plus icon-large"></i> <br/> <font class="top-button-font">' +tr("New")+'</font>'
     },
     "Template.update_dialog" : {
         type: "action",
-        text: '<i class="icon-edit icon-large"> '+tr("Update properties"),
+        text: '<i class="icon-edit icon-large"></i> <br/> <font class="top-button-font">' +tr("Update properties")+'</font>',
         alwaysActive: true
     },
     "Template.instantiate_vms" : {
         type: "action",
-        text: '<i class="icon-cloud icon-large"> '+tr("Instantiate"),
+        text: '<i class="icon-cloud icon-large"></i> <br/> <font class="top-button-font">' +tr("Instantiate")+'</font>',
     },
 
         "action_list" : {
@@ -859,12 +859,12 @@ var template_buttons = {
 
     "Template.delete" : {
         type: "confirm",
-        text: '<i class="icon-remove icon-large"> '+tr("Delete"),
+        text: '<i class="icon-trash icon-large"></i> <br/> <font class="top-button-font">' +tr("Delete")+'</font>',
     },
 
     "Template.help" : {
         type: "action",
-        text: '<i class="icon-question-sign icon-large">',
+        text: '<i class="icon-question-sign icon-large"></i> <br/> <font class="top-button-font">'+tr("Help")+'</font>',
         alwaysActive: true
     }
 }

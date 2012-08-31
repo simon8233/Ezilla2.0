@@ -306,45 +306,45 @@ var host_actions = {
 var host_buttons = {
     "Host.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
+        text: '<i class="icon-refresh icon-large"></i> <br/> <font class="top-button-font">' +tr("Refresh")+'</font>',
         alwaysActive: true
     },
     "Host.create_dialog" : {
         type: "create_dialog",
-        text: '<i class="icon-plus icon-large"> '+tr("New"),
+        text: '<i class="icon-plus icon-large"></i> <br/> <font class="top-button-font">' +tr("New")+'</font>',
         condition: mustBeAdmin
     },
     "Host.update_dialog" : {
         type: "action",
-        text: '<i class="icon-edit icon-large"> '+tr("Update a template"),
+        text: '<i class="icon-edit icon-large"></i> <br/> <font class="top-button-font">' +tr("Update a template")+'</font>', 
         alwaysActive: true,
         condition: mustBeAdmin
     },
     "Host.addtocluster" : {
         type: "confirm_with_select",
-        text: '<i class="icon-copy icon-large"> '+tr("Select cluster"),
+        text: '<i class="icon-copy icon-large"></i> <br/> <font class="top-button-font">' +tr("Select cluster")+'</font>',
         select: clusters_sel,
         tip: tr("Select the destination cluster:"),
         condition: mustBeAdmin
     },
     "Host.enable" : {
         type: "action",
-        text: '<i class="icon-plus-sign icon-large"> '+tr("Enable"),
+        text: '<i class="icon-plus-sign icon-large"></i> <br/> <font class="top-button-font">' +tr("Enable")+'</font>',
         condition: mustBeAdmin
     },
     "Host.disable" : {
         type: "action",
-        text: '<i class="icon-minus-sign icon-large"> '+tr("Disable"),
+        text: '<i class="icon-minus-sign icon-large"></i> <br/> <font class="top-button-font">' +tr("Disable")+'</font>',
         condition: mustBeAdmin
     },
     "Host.delete" : {
         type: "confirm",
-        text: '<i class="icon-remove icon-large"> '+tr("Delete host"),
+        text: '<i class="icon-remove icon-large"></i> <br/> <font class="top-button-font">' +tr("Delete host")+'</font>',
         condition: mustBeAdmin
     },
     "Host.help" : {
         type: "action",
-        text: '<i class="icon-question-sign icon-large">' ,
+        text: '<i class="icon-question-sign icon-large"></i> <br/> <font class="top-button-font">' +tr("Help")+'</font>',
         alwaysActive: true
     }
 };

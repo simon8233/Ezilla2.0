@@ -300,17 +300,17 @@ var datastore_actions = {
 var datastore_buttons = {
     "Datastore.refresh" : {
         type: "action",
-	text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
+	text: '<i class="icon-refresh icon-large"></i> <br/> <font class="top-button-font">' +tr("Refresh")+'</font>',
         alwaysActive: true
     },
     "Datastore.create_dialog" : {
         type: "create_dialog",
-        text: '<i class="icon-plus icon-large"> '+tr("New"),
+        text: '<i class="icon-plus icon-large"></i> <br/> <font class="top-button-font">' +tr("New")+'</font>',
         condition: mustBeAdmin
     },
     "Datastore.update_dialog" : {
         type: "action",
-        text: '<i class="icon-edit icon-large"> '+tr("Update properties"),
+        text: '<i class="icon-edit icon-large"></i> <br/> <font class="top-button-font">' +tr("Update properties")+'</font>',
         alwaysActive: true,
         condition: mustBeAdmin
     },
@@ -345,13 +345,13 @@ var datastore_buttons = {
 
     "Datastore.delete" : {
         type: "confirm",
-        text: '<i class="icon-remove icon-large"> '+tr("Delete"),
+        text: '<i class="icon-trash icon-large"></i> <br/> <font class="top-button-font">' +tr("Delete")+'</font>',
         condition: mustBeAdmin
     },
 
     "Datastore.help" : {
         type: "action",
-        text: '<i class="icon-question-sign icon-large">',
+        text: '<i class="icon-question-sign icon-large"></i> <br/> <font class="top-button-font">' +tr("Help")+'</font>',
         alwaysActive: true
     }
 }
