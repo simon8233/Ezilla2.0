@@ -119,8 +119,8 @@ var create_vm_tmpl ='<form id="create_vm_form" action="">\
              <input type="password" name="user_passwd" id="user_passwd" value="">\
            </div>\
            <div>\
-             <label for="user_passwd_verify">'+tr("Password Verify")+':</label>\
-             <input type="password" name="user_passwd_verify" id="user_passwd_verify" value="">\
+             <label for="user_passwd_confirm">'+tr("Confirm password")+':</label>\
+             <input type="password" name="user_passwd_confirm" id="user_passwd_confirm" value="">\
            </div>\
            <div>\
              <label for="vm_n_times">'+tr("Deploy # VMs")+':</label>\
@@ -667,13 +667,13 @@ var vm_actions = {
 var vm_buttons = {
     "VM.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
+        text: '<i class="icon-refresh icon-large"></i> <br/> <font class="top-button-font">'+tr("Refresh")+'</font>',
         alwaysActive: true
     },
 
     "VM.create_dialog" : {
         type: "action",
-        text: '<i class="icon-plus icon-large"> '+tr("New"),
+        text: '<i class="icon-plus icon-large"/></i> <br/> <font class="top-button-font">'+tr("New")+'</font>',
         alwaysActive: true
     },
 
@@ -684,14 +684,35 @@ var vm_buttons = {
             },*/
             "VM.resume" : {
                 type: "confirm",
-                text: '<i class="icon-play icon-large"> '+tr("Resume"),
+                text: '<i class="icon-play icon-large"/></i> <br/> <font class="top-button-font">'+tr("Resume")+'</font>',
                 tip: tr("This will resume selected stopped or suspended VMs")
             },
      	    "VM.stop" : {
                 type: "confirm",
-                text: '<i  class="icon-stop icon-large"> '+tr("Stop"),
+                text: '<i  class="icon-stop icon-large"/></i> <br/> <font class="top-button-font">'+tr("Stop")+'</font>',
                 tip: tr("This will stop selected VMs")
             },
+	    "VM.restart" : {
+                type: "confirm",
+                text: '<i class="icon-share-alt icon-large"></i> <br/> <font class="top-button-font">'+tr("Restart")+'</font>',
+                tip: tr("This will redeploy selected VMs (in UNKNOWN or BOOT state)")
+            },
+	     "VM.reboot" : {
+                type : "confirm",
+                text: '<i class="icon-repeat icon-large"></i> <br/> <font class="top-button-font">'+tr("Reboot")+'</font>',
+                tip: tr("This will send a reboot action to running VMs")
+            },
+            "VM.reset" : {
+                type: "confirm",
+                text: '<i class="icon-off icon-large"></i> <br/> <font class="top-button-font">'+tr("Reset")+'</font>',
+                tip: tr("This will perform a hard reboot on selected VMs")
+            },
+/*            "VM.cancel" : {
+                type: "confirm",
+                text: tr("Cancel"),
+                tip: tr("This will cancel selected VMs")
+            },*/
+
 /*    "VM.shutdown" : {
         type: "confirm",
         text: tr("Shutdown"),
@@ -700,6 +721,7 @@ var vm_buttons = {
 
     "action_list" : {
         type: "select",
+	condition: mustBeAdmin,
         actions: {
 
 /*    "VM.update_dialog" : {
@@ -783,21 +805,22 @@ var vm_buttons = {
             },
             "VM.cancel" : {
                 type: "confirm",
-                text: tr("Cancel"),
+                text: '<i class="icon-trash icon-large"><br/>'+tr("Cancel"),
                 tip: tr("This will cancel selected VMs")
             }
         }
+	
     },
 
     "VM.delete" : {
         type: "confirm",
-        text: '<i class="icon-remove icon-large"> '+tr("Delete"),
+        text: '<i class="icon-trash icon-large"> </i> <br/> <font class="top-button-font"> '+tr("Delete")+'</font>',
         tip: tr("This will delete the selected VMs from the database")
     },
 
     "VM.help" : {
         type: "action",
-        text: '<i class="icon-question-sign icon-large">',
+        text: '<i class="icon-question-sign icon-large"/> <br/>'+tr("Help"),
         alwaysActive: true
     }
 }
@@ -807,11 +830,10 @@ var vm_info_panel = {
         title: tr("Virtual Machine information"),
         content: ""
     },
-// // for EzCloud Demo , disable this function  ,recently open.
-/*    "vm_hotplugging_tab" : {
+    "vm_hotplugging_tab" : {
         title: tr("Disks & Hotplugging"),
         content: ""
-    },*/
+    },
     "vm_template_tab" : {
         title: tr("VM template"),
         content: ""
@@ -995,15 +1017,15 @@ function vMachineElementArray(vm_json){
     if (state == tr("ACTIVE")) {
         state = OpenNebula.Helper.resource_state("vm_lcm",vm.LCM_STATE);
     };
-
-if (state=="RUNNING")
-var icon = '<img src="images/running.png" title="'+state+'"></>';
-else if (state=="SUSPENDED" || state=="SHUTDOWN")
-var icon = '<img src="images/rest.png"> '+state+'</>';
-else if (state=="FAILED" || state=="FAILURE")
-var icon = '<img src="images/failure.png"> '+state+'</>';
-else
-var icon = '<img src="images/unknown.png"> '+state+'</>';
+    var icon = '<img class=vmstate';
+    if (state=="RUNNING")
+	icon += ' id="vmstate'+vm.ID+'" src="images/running.png" vmstate="'+state+'" title="'+state+'"></>';
+    else if (state=="SUSPENDED" || state=="SHUTDOWN")
+	icon += ' id="vmstate'+vm.ID+'" src="images/rest.png" vmstate="'+state+'" > '+state+'</>';
+    else if (state=="FAILED" || state=="FAILURE")
+	icon += ' id="vmstate'+vm.ID+'" src="images/failure.png" vmstate="'+state+'" > '+state+'</>';
+    else
+	icon += ' id="vmstate'+vm.ID+'" src="images/unknown.png" vmstate="'+state+'" > '+state+'</>';
 var ostype;
 if (typeof(vm.TEMPLATE.CONTEXT) != "undefined"){
         if (typeof(vm.TEMPLATE.CONTEXT.OSTYPE) != "undefined")
@@ -1293,8 +1315,7 @@ function updateVMInfo(request,vm){
     };
 
     Sunstone.updateInfoPanelTab("vm_info_panel","vm_info_tab",info_tab);
-// for EzCloud Demo , disable this function  ,recently open.
-//    Sunstone.updateInfoPanelTab("vm_info_panel","vm_hotplugging_tab",hotplugging_tab);
+    Sunstone.updateInfoPanelTab("vm_info_panel","vm_hotplugging_tab",hotplugging_tab);
     Sunstone.updateInfoPanelTab("vm_info_panel","vm_template_tab",template_tab);
     Sunstone.updateInfoPanelTab("vm_info_panel","vm_log_tab",log_tab);
     Sunstone.updateInfoPanelTab("vm_info_panel","vm_history_tab",history_tab);
@@ -1543,7 +1564,7 @@ function setupCreateVMDialog(){
         var vm_name = $('#vm_name',$create_vm_dialog).val();
         var template_id = $('#template_id',this).val();
         var user_passwd = $('#user_passwd',this).val();
-        var user_passwd_verify = $('#user_passwd_verify',this).val();
+        var user_passwd_confirm = $('#user_passwd_confirm',this).val();
         var n_times = $('#vm_n_times',this).val();
         var n_times_int=1;
 	var CheckData = /[|]|{|}|<|>|'|;|&|#|"|'|!| /;
@@ -1552,8 +1573,8 @@ function setupCreateVMDialog(){
             return false;
         };
 
-	if (user_passwd != user_passwd_verify){
-            notifyError(tr("passwords don't match. Try again"));
+	if (user_passwd != user_passwd_confirm){
+            notifyError(tr("These passwords don't match. Try again"));
             return false;
         };
 
@@ -1574,11 +1595,6 @@ function setupCreateVMDialog(){
         if (!vm_name.length){
             vm_name = getTemplateName(template_id);
         };
-
-	if (CheckData.test(vm_name)){
-            notifyError(tr("Don't allow special characters in your VM name !"));
-            return false;
-	};
 
         if (vm_name.indexOf("%i") == -1){ //no wildcard
             for (var i=0; i< n_times_int; i++){
@@ -2039,7 +2055,100 @@ function vmMonitorError(req,error_json){
     var id = '#vm_monitor_'+id_suffix;
     $('#vm_monitoring_tab '+id).html('<div style="padding-left:20px;">'+message+'</div>');
 }
+function setupVMStateChangeButtons(){
 
+    var context = dataTable_vMachines.parents('form');
+
+    $('.last_action_button',context).button("disable");
+    $('.top_button, .list_button',context).button("disable");
+    //These are always enabled
+    $('.create_dialog_button',context).button("enable");
+    $('.alwaysActive',context).button("enable");
+
+
+
+    $('tbody input.check_item',dataTable_vMachines).live("change",function(){
+	
+	var table = $('tbody',dataTable_vMachines);          
+	var nodes = $ ('tr',table);          
+	
+
+	$('input.check_item:not(input.check_item:checked)').removeAttr('ischecked');
+	// check , options is not checked , remove 'custom Attr'.
+
+	var vm_id =   $("input.check_item:checked[ischecked!='true']",nodes).val();
+	// read user check options,id value.
+        $('input.check_item:checked',nodes).attr('ischecked','true');
+	// if click button done. attach attr to is option, 'is checked' custom attr.
+	
+	var vm_state = $("#vmstate"+vm_id+"",nodes).attr('vmstate');
+	//'after option is checked' read this option vmstate, 
+	var checked_length = $('input.check_item:checked',nodes).length;
+	var last_action_b = $('.last_action_button',context);
+        var total_length = nodes.length;
+
+	if (checked_length) {
+	
+		if (last_action_b.length && last_action_b.val().length){
+            		last_action_b.button("enable");
+	         };		
+		 //enable checkall box
+	 	if (total_length == checked_length){
+            		$('.check_all',dataTable_vMachines).attr('checked','checked');
+       		} 
+		else {
+            		$('.check_all',dataTable_vMachines).removeAttr('checked');
+        	};
+		switch (vm_state){
+			case 'RUNNING' :
+			$(".top_button[value='VM.stop']").button("enable");
+			$(".top_button[value='VM.suspend']").button("enable");
+			$(".top_button[value='VM.reboot']").button("enable");
+			$(".top_button[value='VM.reset']").button("enable");
+			$(".top_button[value='VM.migrate']").button("enable");
+			$(".top_button[value='VM.shutdown']").button("enable");
+			
+			break;
+			case  'STOPPED' :
+			case  'SUSPENDED' :
+			$(".top_button[value='VM.resume']").button("enable");
+			break;
+			case  'UNKNOWN' :
+			case  'BOOT' :
+                        $(".top_button[value='VM.restart']").button("enable");
+			break;
+			default :
+	                $('.top_button').button("disable");
+			break;
+                      
+		}
+/*		if( vm_state == "RUNNING" ){
+                        $(".top_button[value='VM.stop']").button("enable");
+                }
+                else if ( vm_state  ==  "STOPPED" ){
+                        $(".top_button[value='VM.resume']").button("enable");
+		}
+		
+		else{
+//			$('.top_button').button("disable");
+		};*/
+
+		// when click anyVM, to do thing.
+		$('.list_button',context).button("enable");
+        	$(".top_button[value='VM.delete']").button("enable");
+
+	}
+	else { //no elements cheked
+        //disable action buttons, uncheck checkAll 
+		$('.check_all',dataTable_vMachines).removeAttr('checked');
+        	$('.top_button, .list_button',context).button("disable");
+        	last_action_b.button("disable");
+	};
+    //any case the create dialog buttons should always be enabled.   
+      $('.create_dialog_button',context).button("enable");
+      $('.alwaysActive',context).button("enable");
+    });
+}
 // At this point the DOM is ready and the sunstone.js ready() has been run.
 $(document).ready(function(){
 
@@ -2078,15 +2187,16 @@ $(document).ready(function(){
     setVMAutorefresh();
     setupVNC();
     setupRedirectPort();
+    setupVMStateChangeButtons();
     hotpluggingOps();
-
     Sunstone.runAction("VM.TemplateList");
     Sunstone.runAction("VM.ImageList");
     Sunstone.runAction("VM.NetworkList");
 
+
     initCheckAllBoxes(dataTable_vMachines);
-    tableCheckboxesListener(dataTable_vMachines);
+//    tableCheckboxesListener(dataTable_vMachines);(Enable SetupVMStateChangeButton() Function);
     infoListener(dataTable_vMachines,'VM.showinfo');
 
     $('div#vms_tab div.legend_div').hide();
-})
+});

@@ -229,12 +229,12 @@ var group_actions = {
 var group_buttons = {
     "Group.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large"> '+tr("Refresh"),
+        text: '<i class="icon-refresh icon-large"></i> <br/> <font class="top-button-font">' +tr("Refresh")+'</font>',
         alwaysActive: true
     },
     "Group.create_dialog" : {
         type: "create_dialog",
-        text: '<i class="icon-plus icon-large"> '+tr("New"),
+        text: '<i class="icon-plus icon-large"></i> <br/> <font class="top-button-font"> '+tr("New")+'</font>',
         condition: mustBeAdmin
     },
     // "Group.chown" : {
@@ -246,17 +246,17 @@ var group_buttons = {
     // },
     "Group.quotas_dialog" : {
         type : "action",
-        text: '<i class="icon-edit icon-large"> '+tr("Update quotas"),
+        text: '<i class="icon-edit icon-large"></i> <br/> <font class="top-button-font">'+tr("Update quotas")+'</font>',
         condition: mustBeAdmin
     },
     "Group.delete" : {
         type: "confirm",
-        text: '<i class="icon-remove icon-large"> '+tr("Delete"),
+        text: '<i class="icon-trash icon-large"></i> <br/> <font class="top-button-font">'+tr("Delete")+'</font>',
         condition: mustBeAdmin
     },
     "Group.help" : {
         type: "action",
-        text: '<i class="icon-question-sign icon-large">',
+        text: '<i class="icon-question-sign icon-large"></i> <br/> <font class="top-button-font">'+tr("Help")+'</font>',
         alwaysActive: true
     }
 };

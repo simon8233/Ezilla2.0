@@ -595,14 +595,21 @@ function initListButtons(){
     //for each multi_action select
     $('.multi_action_slct',main_tabs_context).each(function(){
         //prepare replacement buttons
-        var buttonset = $('<div style="display:inline-block;" class="top_button"></div');
-        var button1 = $('<button class="last_action_button action_button confirm_button confirm_with_select_button" value="">'+tr("Previous action")+'</button>').button();
+	var buttonset = $('<div class="confirm_button top_button ui-button ui-state-default ui-corner-all ui-button-text-only" style="cursor:none;border:none;background:transparent;" ></div>');
+//        var buttonset = $('<div class="top_button action_button confirm_button"></div>');
+                
+//        var buttonset = $('<div style="display:inline-block;" class="top_button"></div'); //  For Ezilla Test
+        var button1 = $('<button class="last_action_button action_button confirm_button confirm_with_select_button" value="" style="height:52px;width:70px"><font class="top-button-font">'+tr("Previous action")+'</font></button>').button();
+	
         button1.attr('disabled','disabled');
-        var button2 = $('<button class="list_button" value="">See more</button>').button({
+        var button2 = $('<button style="border:none;height:10px;width:68px;top:-14px;color=" class="list_button" value="">See more</button>').button({
             text:false,
             icons: { primary: "ui-icon-triangle-1-s" }
         });
+
+
         buttonset.append(button1);
+//	buttonset.append('</br>');
         buttonset.append(button2);
         buttonset.buttonset();
 
@@ -616,11 +623,12 @@ function initListButtons(){
             a.val($(this).val());
             item.html(a);
             list.append(item);
+	//    list.append('<hr style="margin:0">');
         });
         list.css({
             "display":"none"
         });
-
+	//$(this).before(button1);
         $(this).before(buttonset);
         $(this).parents('.action_blocks').append(list);
         $(this).remove();
@@ -645,6 +653,7 @@ function initListButtons(){
     });
 
     //Show the list of actions in place
+    /*
     $('.list_button',main_tabs_context).click(function(){
         $('.action_list',$(this).parents('.action_blocks')).css({
             "left": $(this).prev().position().left,
@@ -654,7 +663,17 @@ function initListButtons(){
         //100ms animation time
         $('.action_list',$(this).parents('.action_blocks')).toggle("blind",100);
         return false;
-    });
+    });*/
+    $('.list_button',main_tabs_context).click(function(){
+        $('.action_list').css({
+            "left": $(this).parents('.ui-buttonset').position().left+4,
+            "top": $(this).parents('.ui-buttonset').position().top+38,
+            "width": $(this).outerWidth()-11
+        });
+        //100ms animation time
+        $('.action_list',$(this).parents('.action_blocks')).toggle("blind",100);
+        return false;
+    });                
 }
 
 //Prepares the standard confirm dialogs

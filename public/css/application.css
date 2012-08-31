@@ -463,11 +463,11 @@ tr.even:hover{
 }
 
 .top_button {
-    font-size: 0.8em!important;
-    height: 25px;
+    font-size: 1.0em!important;    
+    height: 52px;
     margin: 3px 2px;
     vertical-align: middle;
-/*width: 89px;*/
+    width: 70px;
 }
 .top_button button {
     font-size: 0.9em;
@@ -598,6 +598,10 @@ ul.action_list li a:hover{
 
 .ui-widget{
     font: 10pt Arial, Verdana, Geneva, Helvetica, sans-serif;
+    -moz-border-radius-bottomleft: 4px;
+    -webkit-radius: 4px;
+    -khtml-radius: 4px;
+    border-radius: 4px;
 }
 .ui-layout-resizer-open-hover, /* hover-color to 'resize' */
 .ui-layout-resizer-dragging {
@@ -696,5 +700,25 @@ div.current_quotas ul{
 }
 
 i{
+	font-size:1.3em;
 	font-style:normal;
 }
+.ui-button-text-only .ui-button-text {
+  padding: .4em 0.2em;
+}
+.ui-button .ui-button-text {
+  display: block;
+  line-height: 0.9;
+  padding:0 0;
+}
+.top-button-font {
+  text-align: center;
+  font-size:12px
+}
+.ui-buttonset .ui-button{
+
+ margin-left : 0;
+ margin-right: 0;
+ margin-top:0;
+}
+

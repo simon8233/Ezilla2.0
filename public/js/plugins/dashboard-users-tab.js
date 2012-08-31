@@ -119,7 +119,7 @@ function dashboardQuotaRow(quota_json){
         row += '<tr><td class="padding1">'+tr("VMS")+'</td>';
 	row += '<td class="value_td">'+quota_json.VMS_USED+'</td><td class="value_td">/&nbsp;&nbsp;'+modify_zeroToNone(quota_json.VMS)+'</td></tr>';
 	row += '<tr><td class="padding1">'+tr("Memory")+'</td>';
-	row += '<td class="value_td">'+quota_json.MEMORY_USED+'</td><td class="value_td">/&nbsp;&nbsp;'+modify_zeroToNone(quota_json.MEMORY)+'&nbsp;'+tr("MB")+'</td></tr>';
+	row += '<td class="value_td">'+quota_json.MEMORY_USED+'</td><td class="value_td">/&nbsp;&nbsp;'+modify_zeroToNone(quota_json.MEMORY)+'</td></tr>';
 	row += '<tr><td class="padding1">'+tr("CPU")+'</td>'
         row += '<td class="value_td">'+quota_json.CPU_USED+'</td><td class="value_td">/&nbsp;&nbsp;'+modify_zeroToNone(quota_json.CPU)+'</td></tr>';
         break;
