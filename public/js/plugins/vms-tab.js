@@ -596,10 +596,11 @@ var vm_actions = {
                 var vm_name = vmname;
                 var user_passwd = $('#user_passwd',$create_vm_dialog).val();
 		var template_array=response.template.split("\n");
+		var username_array=username.split('%');
 		for (var i=0; i < template_array.length; i++){
 			if (template_array[i].match(/^CONTEXT/)){
                                 template_context+="CONTEXT=[\n";
-                                template_context+="  USERNAME=\""+username+"\",\n";
+                                template_context+="  USERNAME=\""+username_array[0]+"\",\n";
                                 template_context+="  HOSTNAME=\""+vm_name+"\",\n";
                                 template_context+="  USER_PASSWD=\""+user_passwd+"\",\n";
                                 template_context+="  ROOT_PASSWD=\""+user_passwd+"\",\n";

@@ -47,9 +47,9 @@ body {
 
 div#logo_sunstone {
     position: relative;
-    height: 100px;
-    width: 600px;
-    top: 80px;
+    height: 160px;
+    width: 400px;
+    top: 100px;
     margin-left: auto;
     margin-right: auto;
     background: url(../images/Ezilla_logo_all_big.png) no-repeat center;
