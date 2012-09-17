@@ -448,28 +448,28 @@ var user_actions = {
 var user_buttons = {
     "User.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large"></i> <br/> <font class="top-button-font">' +tr("Refresh")+'</font>',
+        text: '<i class="icon-refresh icon-large"></i> <br/> <span class="top-button-font">' +tr("Refresh")+'</span>',
         alwaysActive: true
     },
     "User.create_dialog" : {
         type: "create_dialog",
-        text: '<i class="icon-plus icon-large"></i> <br/> <font class="top-button-font">' +tr("New")+'</font>',
+        text: '<i class="icon-plus icon-large"></i> <br/> <span class="top-button-font">' +tr("New")+'</span>',
         condition: mustBeAdmin
     },
     "User.update_dialog" : {
         type: "action",
-        text: '<i class="icon-edit icon-large"></i> <br/> <font class="top-button-font">' +tr("Update properties")+'</font>',
+        text: '<i class="icon-edit icon-large"></i> <br/> <span class="top-button-font">' +tr("Update properties")+'</span>',
         alwaysActive: true
+    },
+    "User.update_password" : {
+        type : "action",
+        text : '<i class="icon-key icon-large"></i> <br/> <span class="top-button-font">' +tr("Change password")+'</span>' 
     },
 
     "action_list" : {
         type: "select",
         actions: {
 
-    "User.update_password" : {
-        type : "action",
-        text : tr("Change password")
-    },
     "User.quotas_dialog" : {
         type : "action",
         text : tr("Update quotas"),
@@ -514,12 +514,12 @@ var user_buttons = {
     // },
     "User.delete" : {
         type: "confirm",
-        text: '<i class="icon-trash icon-large"></i> <br/> <font class="top-button-font">' +tr("Delete")+'</font>',
+        text: '<i class="icon-trash icon-large"></i> <br/> <span class="top-button-font">' +tr("Delete")+'</span>',
         condition: mustBeAdmin
     },
     "User.help" : {
         type: "action",
-        text: '<i class="icon-question-sign icon-large"></i> <br/> <font class="top-button-font">' +tr("Help")+'</font>',
+        text: '<i class="icon-question-sign icon-large"></i> <br/> <span class="top-button-font">' +tr("Help")+'</span>',
         alwaysActive: true
     }
 

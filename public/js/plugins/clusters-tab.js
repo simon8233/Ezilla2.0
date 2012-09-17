@@ -212,21 +212,21 @@ var cluster_actions = {
 var cluster_buttons = {
     "Cluster.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large"></i> <br/> <font class="top-button-font">' +tr("Refresh")+'</font>',
+        text: '<i class="icon-refresh icon-large"></i> <br/> <span class="top-button-font">' +tr("Refresh")+'</span>',
         alwaysActive: true
     },
     "Cluster.create_dialog" : {
         type: "create_dialog",
-        text: '<i class="icon-plus icon-large"></i> <br/> <font class="top-button-font">' +tr("New")+'</font>',
+        text: '<i class="icon-plus icon-large"></i> <br/> <span class="top-button-font">' +tr("New")+'</span>',
     },
     "Cluster.update_dialog" : {
         type : "action",
-        text: '<i class="icon-edit icon-large"></i> <br/> <font class="top-button-font">' +tr("Update properties")+'</font>',
+        text: '<i class="icon-edit icon-large"></i> <br/> <span class="top-button-font">' +tr("Update properties")+'</span>',
         alwaysActive: true
     },
     "Cluster.delete" : {
         type: "confirm",
-        text: '<i class="icon-trash icon-large"></i> <br/> <font class="top-button-font">' +tr("Delete")+'</font>',
+        text: '<i class="icon-trash icon-large"></i> <br/> <span class="top-button-font">' +tr("Delete")+'</span>',
     }
 };
 

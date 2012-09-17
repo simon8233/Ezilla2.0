@@ -667,13 +667,13 @@ var vm_actions = {
 var vm_buttons = {
     "VM.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large"></i> <br/> <font class="top-button-font">'+tr("Refresh")+'</font>',
+        text: '<i class="icon-refresh icon-large"></i> <br/> <span class="top-button-font">'+tr("Refresh")+'</span>',
         alwaysActive: true
     },
 
     "VM.create_dialog" : {
         type: "action",
-        text: '<i class="icon-plus icon-large"/></i> <br/> <font class="top-button-font">'+tr("New")+'</font>',
+        text: '<i class="icon-plus icon-large"/></i> <br/> <span class="top-button-font">'+tr("New")+'</span>',
         alwaysActive: true
     },
 
@@ -684,27 +684,27 @@ var vm_buttons = {
             },*/
             "VM.resume" : {
                 type: "confirm",
-                text: '<i class="icon-play icon-large"/></i> <br/> <font class="top-button-font">'+tr("Resume")+'</font>',
+                text: '<i class="icon-play icon-large"/></i> <br/> <span class="top-button-font">'+tr("Resume")+'</span>',
                 tip: tr("This will resume selected stopped or suspended VMs")
             },
      	    "VM.stop" : {
                 type: "confirm",
-                text: '<i  class="icon-stop icon-large"/></i> <br/> <font class="top-button-font">'+tr("Stop")+'</font>',
+                text: '<i  class="icon-stop icon-large"/></i> <br/> <span class="top-button-font">'+tr("Stop")+'</span>',
                 tip: tr("This will stop selected VMs")
             },
 	    "VM.restart" : {
                 type: "confirm",
-                text: '<i class="icon-share-alt icon-large"></i> <br/> <font class="top-button-font">'+tr("Restart")+'</font>',
+                text: '<i class="icon-share-alt icon-large"></i> <br/> <span class="top-button-font">'+tr("Restart")+'</span>',
                 tip: tr("This will redeploy selected VMs (in UNKNOWN or BOOT state)")
             },
 	     "VM.reboot" : {
                 type : "confirm",
-                text: '<i class="icon-repeat icon-large"></i> <br/> <font class="top-button-font">'+tr("Reboot")+'</font>',
+                text: '<i class="icon-repeat icon-large"></i> <br/> <span class="top-button-font">'+tr("Reboot")+'</span>',
                 tip: tr("This will send a reboot action to running VMs")
             },
             "VM.reset" : {
                 type: "confirm",
-                text: '<i class="icon-off icon-large"></i> <br/> <font class="top-button-font">'+tr("Reset")+'</font>',
+                text: '<i class="icon-off icon-large"></i> <br/> <span class="top-button-font">'+tr("Reset")+'</span>',
                 tip: tr("This will perform a hard reboot on selected VMs")
             },
 /*            "VM.cancel" : {
@@ -814,7 +814,7 @@ var vm_buttons = {
 
     "VM.delete" : {
         type: "confirm",
-        text: '<i class="icon-trash icon-large"> </i> <br/> <font class="top-button-font"> '+tr("Delete")+'</font>',
+        text: '<i class="icon-trash icon-large"> </i> <br/> <span class="top-button-font"> '+tr("Delete")+'</span>',
         tip: tr("This will delete the selected VMs from the database")
     },
 
@@ -2122,16 +2122,6 @@ function setupVMStateChangeButtons(){
 			break;
                       
 		}
-/*		if( vm_state == "RUNNING" ){
-                        $(".top_button[value='VM.stop']").button("enable");
-                }
-                else if ( vm_state  ==  "STOPPED" ){
-                        $(".top_button[value='VM.resume']").button("enable");
-		}
-		
-		else{
-//			$('.top_button').button("disable");
-		};*/
 
 		// when click anyVM, to do thing.
 		$('.list_button',context).button("enable");
@@ -2187,7 +2177,7 @@ $(document).ready(function(){
     setVMAutorefresh();
     setupVNC();
     setupRedirectPort();
-    setupVMStateChangeButtons();
+    setupVMStateChangeButtons(); //processing top_button.
     hotpluggingOps();
     Sunstone.runAction("VM.TemplateList");
     Sunstone.runAction("VM.ImageList");

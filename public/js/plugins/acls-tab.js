@@ -156,20 +156,20 @@ var acl_actions = {
 var acl_buttons = {
     "Acl.refresh" : {
         type: "action",
-	text:'<i class="icon-refresh icon-large"></i> <br/> <font class="top-button-font">'+tr("Refresh")+'</font>',
+	text:'<i class="icon-refresh icon-large"></i> <br/> <span class="top-button-font">'+tr("Refresh")+'</span>',
         alwaysActive: true
     },
     "Acl.create_dialog" : {
         type: "create_dialog",
-        text: '<i class="icon-plus icon-large"></i> <br/> <font class="top-button-font">'+tr("New")+'</font>',
+        text: '<i class="icon-plus icon-large"></i> <br/> <span class="top-button-font">'+tr("New")+'</span>',
     },
     "Acl.delete" : {
         type: "confirm",
-        text: '<i class="icon-trash icon-large"></i> <br/> <font class="top-button-font">'+tr("Delete")+'</font>',
+        text: '<i class="icon-trash icon-large"></i> <br/> <span class="top-button-font">'+tr("Delete")+'</span>',
     },
     "Acl.help" : {
         type: "action",
-        text: '<i class="icon-question-sign icon-large"></i> <br/> <font class="top-button-font">'+tr("Help")+'</font>',
+        text: '<i class="icon-question-sign icon-large"></i> <br/> <span class="top-button-font">'+tr("Help")+'</span>',
         alwaysActive: true
     }
 }

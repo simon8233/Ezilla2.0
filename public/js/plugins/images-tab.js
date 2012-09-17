@@ -461,16 +461,16 @@ var image_actions = {
 var image_buttons = {
     "Image.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large"></i> <br/> <font class="top-button-font">'+tr("Refresh")+'</font>',
+        text: '<i class="icon-refresh icon-large"></i> <br/> <span class="top-button-font">'+tr("Refresh")+'</span>',
         alwaysActive: true
     },
     "Image.create_dialog" : {
         type: "create_dialog",
-        text: '<i class="icon-plus icon-large"></i> <br/> <font class="top-button-font">' +tr("New")+'</font>',
+        text: '<i class="icon-plus icon-large"></i> <br/> <span class="top-button-font">' +tr("New")+'</span>',
     },
     "Image.update_dialog" : {
         type: "action",
-        text: '<i class="icon-edit icon-large"> </i> <br/> <font class="top-button-font">' +tr("Update properties")+'</font>',
+        text: '<i class="icon-edit icon-large"> </i> <br/> <span class="top-button-font">' +tr("Update properties")+'</span>',
         alwaysActive: true
     },
 
@@ -521,11 +521,11 @@ var image_buttons = {
 
     "Image.delete" : {
         type: "confirm",
-        text: '<i class="icon-trash icon-large"> </i> <br/> <font class="top-button-font">' +tr("Delete")+'</font>',
+        text: '<i class="icon-trash icon-large"> </i> <br/> <span class="top-button-font">' +tr("Delete")+'</span>',
     },
     "Image.help" : {
         type: "action",
-        text: '<i class="icon-question-sign icon-large"></i> <br/> <font class="top-button-font">' +tr("Help")+'</font>',
+        text: '<i class="icon-question-sign icon-large"></i> <br/> <span class="top-button-font">' +tr("Help")+'</span>',
         alwaysActive: true
     }
 }

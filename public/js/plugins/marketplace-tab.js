@@ -79,7 +79,7 @@ var market_actions = {
 var market_buttons = {
     "Marketplace.refresh" : {
         type: "action",
-        text: '<i class="icon-refresh icon-large"></i> <br/> <font class="top-button-font">'+tr("Refresh")+'</font>',
+        text: '<i class="icon-refresh icon-large"></i> <br/> <span class="top-button-font">'+tr("Refresh")+'</span>',
         alwaysActive: true
     },
     "Marketplace.import" : {
