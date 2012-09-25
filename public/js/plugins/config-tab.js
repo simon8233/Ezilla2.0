@@ -40,12 +40,12 @@ var config_tab_content =
                    </select>\
               </td>\
             </tr>\
-            <tr>\
+<!----- disable  support Secure webscokets  connections            <tr>\
               <td class="key_td">' + tr("Secure websockets connection") + '</td>\
               <td class="value_td">\
                    <input id="wss_checkbox" type="checkbox" value="yes" />\
               </td>\
-            </tr>\
+            </tr>----->\
           </table>\
 \
         </div>\
@@ -58,9 +58,9 @@ var config_tab_content =
   <p class="legend_p">\
 '+tr("These options are stored in your OpenNebula user template.")+'\
   </p>\
-  <p class="legend_p">\
+<!----  <p class="legend_p">\
 '+tr("WSS connection requires additional configuration of Sunstone Server and that the SSL certificate is considered valid by your browser.")+'\
-  </p>\
+  </p>----->\
 </div>\
 </form>';
 

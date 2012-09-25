@@ -1949,7 +1949,13 @@ function setupRedirectPort(){
 function RedirectPortCallback(request,response){
    	setTimeout(function(){
         var srv_hostname = window.location.host;
-        srv_hostname = srv_hostname.substring(0,srv_hostname.indexOf(":"));
+
+	if ( srv_hostname.search(":") > 0 ){
+	        srv_hostname = srv_hostname.substring(0,srv_hostname.indexOf(":"));
+	}
+	else{
+		srv_hostname = srv_hostname;
+	}
 	var port;
 	var id = response["id"];
 	if ( response["loc"]  == "spice" ){
