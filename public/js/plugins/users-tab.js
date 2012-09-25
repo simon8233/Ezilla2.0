@@ -458,8 +458,8 @@ var user_buttons = {
     },
     "User.update_dialog" : {
         type: "action",
-        text: '<i class="icon-edit icon-large"></i> <br/> <span class="top-button-font">' +tr("Update properties")+'</span>',
-        alwaysActive: true
+        text: '<i class="icon-edit icon-large"></i> <br/> <span class="top-button-font">' +tr("Update properties")+'</span>',	
+	condition: mustBeAdmin
     },
     "User.update_password" : {
         type : "action",
@@ -468,6 +468,7 @@ var user_buttons = {
 
     "action_list" : {
         type: "select",
+	condition:mustBeAdmin,
         actions: {
 
     "User.quotas_dialog" : {

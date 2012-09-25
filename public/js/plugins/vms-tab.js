@@ -2065,75 +2065,108 @@ function setupVMStateChangeButtons(){
     $('.create_dialog_button',context).button("enable");
     $('.alwaysActive',context).button("enable");
 
-
-
     $('tbody input.check_item',dataTable_vMachines).live("change",function(){
 	
 	var table = $('tbody',dataTable_vMachines);          
 	var nodes = $ ('tr',table);          
-	
-
-	$('input.check_item:not(input.check_item:checked)').removeAttr('ischecked');
-	// check , options is not checked , remove 'custom Attr'.
-
-	var vm_id =   $("input.check_item:checked[ischecked!='true']",nodes).val();
-	// read user check options,id value.
-        $('input.check_item:checked',nodes).attr('ischecked','true');
-	// if click button done. attach attr to is option, 'is checked' custom attr.
-	
-	var vm_state = $("#vmstate"+vm_id+"",nodes).attr('vmstate');
-	//'after option is checked' read this option vmstate, 
-	var checked_length = $('input.check_item:checked',nodes).length;
-	var last_action_b = $('.last_action_button',context);
+	var vm_id = $(this).val();	
+        var vm_state = $("#vmstate"+vm_id+"",nodes).attr('vmstate');
+        var checked_length = $('input.check_item:checked',nodes).length;
+        var last_action_b = $('.last_action_button',context);
         var total_length = nodes.length;
+	if ($(this).attr("checked")){
+	        if (checked_length) {
+	                if (last_action_b.length && last_action_b.val().length){
+        	                last_action_b.button("enable");
+			}
+			if (total_length == checked_length){
+        	                $('.check_all',dataTable_vMachines).attr('checked','checked');
+	                }
+                	else {
+                        	$('.check_all',dataTable_vMachines).removeAttr('checked');
+	                };
+	                switch (vm_state){
 
-	if (checked_length) {
-	
-		if (last_action_b.length && last_action_b.val().length){
-            		last_action_b.button("enable");
-	         };		
-		 //enable checkall box
-	 	if (total_length == checked_length){
-            		$('.check_all',dataTable_vMachines).attr('checked','checked');
-       		} 
-		else {
-            		$('.check_all',dataTable_vMachines).removeAttr('checked');
-        	};
-		switch (vm_state){
-			case 'RUNNING' :
-			$(".top_button[value='VM.stop']").button("enable");
-			$(".top_button[value='VM.suspend']").button("enable");
-			$(".top_button[value='VM.reboot']").button("enable");
-			$(".top_button[value='VM.reset']").button("enable");
-			$(".top_button[value='VM.migrate']").button("enable");
-			$(".top_button[value='VM.shutdown']").button("enable");
-			
-			break;
-			case  'STOPPED' :
-			case  'SUSPENDED' :
-			$(".top_button[value='VM.resume']").button("enable");
-			break;
-			case  'UNKNOWN' :
-			case  'BOOT' :
-                        $(".top_button[value='VM.restart']").button("enable");
-			break;
-			default :
-	                $('.top_button').button("disable");
-			break;
-                      
+                        case 'RUNNING' :
+ 	               	        $(".top_button[value='VM.stop']").button("enable");
+                        	$(".top_button[value='VM.suspend']").button("enable");
+	                        $(".top_button[value='VM.reboot']").button("enable");
+        	                $(".top_button[value='VM.reset']").button("enable");
+                	        $(".top_button[value='VM.migrate']").button("enable");
+                        	$(".top_button[value='VM.shutdown']").button("enable");
+	                break;
+                        case  'STOPPED' :
+                        case  'SUSPENDED' :
+	                        $(".top_button[value='VM.resume']").button("enable");
+                        break;
+                        case  'UNKNOWN' :
+                        case  'BOOT' :
+	                        $(".top_button[value='VM.restart']").button("enable");
+                        break;
+                        default :
+	                        $('.top_button').button("disable");
+                        break;
+
+              		}
+	                // when click anyVM, to do thing.			                
+                	$('.list_button',context).button("enable");
+	                $(".top_button[value='VM.delete']").button("enable");			
+		}	
+	}	  		
+	else {
+		if (checked_length){
+			switch (vm_state){
+                        case 'RUNNING' :
+                                $(".top_button[value='VM.stop']").button("disable");
+	                        $(".top_button[value='VM.suspend']").button("disable");
+        	                $(".top_button[value='VM.reboot']").button("disable");
+                	        $(".top_button[value='VM.reset']").button("disable");
+                        	$(".top_button[value='VM.migrate']").button("disable");
+                                $(".top_button[value='VM.shutdown']").button("disable");
+                                token = $('input.check_item:checked',nodes).each(function(){
+                                        var vm_state = $("#vmstate"+$(this).val()+"",nodes).attr('vmstate');
+                                        if (vm_state == "RUNNING"){
+                                                $(".top_button[value='VM.stop']").button("enable");
+                                                $(".top_button[value='VM.suspend']").button("enable");
+                                                $(".top_button[value='VM.reboot']").button("enable");
+                                                $(".top_button[value='VM.reset']").button("enable");
+                                                $(".top_button[value='VM.migrate']").button("enable");
+                                                $(".top_button[value='VM.shutdown']").button("enable");
+					return false; // close .each function.  
+                                        }
+                               }); // if have any checked running state , then don't disable any buttons.
+                        break;
+                        case  'STOPPED' :
+                        case  'SUSPENDED' :								
+                                $(".top_button[value='VM.resume']").button("disable");
+				$('input.check_item:checked',nodes).each(function(){
+                                        var vm_state = $("#vmstate"+$(this).val()+"",nodes).attr('vmstate');
+                                        if (vm_state == "STOPPED" || vm_state == "SUSPENDED" ){
+                                                $(".top_button[value='VM.resume']").button("enable");
+					return  false;
+                                        }
+                               }); // if have any checked "STOPPED" or "SUSPENDED" state , then don't disable any buttons.
+                        break;
+                        case  'UNKNOWN' :
+                        case  'BOOT' :				
+                                $(".top_button[value='VM.restart']").button("disable");
+				$('input.check_item:checked',nodes).each(function(){
+                                        var vm_state = $("#vmstate"+$(this).val()+"",nodes).attr('vmstate');
+                                        if (vm_state == "UNKNOWN" || vm_state == "BOOT" ){
+                                                $(".top_button[value='VM.resume']").button("enable");
+					return false;
+                                        }
+                               });// if have any checked "UNKNOWN" or "BOOT" state , then don't disable any buttons.
+
+                        break;
+			}
 		}
-
-		// when click anyVM, to do thing.
-		$('.list_button',context).button("enable");
-        	$(".top_button[value='VM.delete']").button("enable");
-
+		else{
+             		$('.check_all',dataTable_vMachines).removeAttr('checked');
+	                $('.top_button, .list_button',context).button("disable");
+        	        last_action_b.button("disable");
+		};		
 	}
-	else { //no elements cheked
-        //disable action buttons, uncheck checkAll 
-		$('.check_all',dataTable_vMachines).removeAttr('checked');
-        	$('.top_button, .list_button',context).button("disable");
-        	last_action_b.button("disable");
-	};
     //any case the create dialog buttons should always be enabled.   
       $('.create_dialog_button',context).button("enable");
       $('.alwaysActive',context).button("enable");

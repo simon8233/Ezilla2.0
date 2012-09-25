@@ -423,7 +423,11 @@ function setLogin(){
     };
 
 
+    if ( username.lastIndexOf('%40') > 0 ){	
+	username = username.replace("%40",'@');	
+    };
     $("div#header span#user").html(username);
+    
 
     $("div#header a#logout").click(function(){
         redirect = function(){window.location.href = "login";};
