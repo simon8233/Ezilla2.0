@@ -121,6 +121,8 @@ var update_pw_tmpl = '<form id="update_user_pw_form" action="">\
                 <div>'+tr("This will change the password for the selected users")+':</div>\
                 <label for="new_password">'+tr("New password")+':</label>\
                 <input type="password" name="new_password" id="new_password" />\
+		<label for="pass_confirm">'+tr("Confirm password")+':</label>\
+		<input type="password"  name="pass_confirm" id="pass_confirm"  value="">\
         </div>\
         </fieldset>\
         <fieldset>\
@@ -832,11 +834,27 @@ function setupUpdatePasswordDialog(){
 
     $('#update_user_pw_form',dialog).submit(function(){
         var pw=$('#new_password',this).val();
+	var pw_confirm  = $('#pass_confirm',this).val();
+        var CheckData = /[|]|{|}|<|>|'|;|&|#|"|'|!| /;
 
-        if (!pw.length){
+	if (!pw.length){
             notifyError(tr("Fill in a new password"));
             return false;
         }
+	if (pw != pw_confirm){
+            notifyError(tr("These passwords don't match. Try again"));
+            return false;
+        };
+
+        if (pw.length < 6){
+            notifyError(tr("password must be at least 6 characters"));
+            return false;
+        };
+
+        if (CheckData.test(pw)){
+            notifyError(tr("Don't allow special characters in your password !"));
+            return false;
+        };
 
         Sunstone.runAction("User.passwd",getSelectedNodes(dataTable_users),pw);
         $update_pw_dialog.dialog('close');

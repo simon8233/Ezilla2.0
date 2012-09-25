@@ -422,11 +422,7 @@ function setLogin(){
         break;
     };
 
-
-    if ( username.lastIndexOf('%40') > 0 ){	
-	username = username.replace("%40",'@');	
-    };
-    $("div#header span#user").html(username);
+    $("div#header span#user").html(decodeURIComponent(username));
     
 
     $("div#header a#logout").click(function(){
