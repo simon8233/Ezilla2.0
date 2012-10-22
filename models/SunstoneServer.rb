@@ -174,7 +174,27 @@ class SunstoneServer < CloudServer
         if OpenNebula.is_error?(resource)
             return [404, resource.to_json]
         end
+        if resource.is_a?(VirtualMachineJSON)
+            ip=resource["TEMPLATE/NIC/IP"] if !resource["TEMPLATE/NIC/IP"].nil?
+            ostype=resource["TEMPLATE/CONTEXT/OSTYPE"] if  !resource["TEMPLATE/CONTEXT/OSTYPE"].nil?
+            if !ostype.nil?  &&  !ip.nil?
+                if ostype.eql?("WINDOWS")
+                    cport=3389
+                else
+                    cport=22
+                end
+                    File.delete("/tmp/redir/#{ip}:#{cport}") if File.exist?("/tmp/redir/#{ip}:#{cport}")
+                     
+                    redir_pid = %x{ps -ef | grep "caddr=#{ip} --cport=#{cport}" |grep -v grep | awk '{print $2}'}
+                    redir_pid =  redir_pid.split("\n")
 
+                    if redir_pid.length > 1
+                        %x{kill -9 `ps -ef | grep "caddr=#{ip} --cport=#{cport}" |grep -v grep | awk '{print $2}'`}
+                    else
+                        %x{kill -9 #{redir_pid[0]}}if !redir_pid[0].nil?
+                    end
+            end
+        end
         rc = resource.delete
         if OpenNebula.is_error?(rc)
             return [500, rc.to_json]
@@ -255,44 +275,55 @@ class SunstoneServer < CloudServer
     # Redirect Port 
     ############################################################################
     def redirect(id,cport,loc)
-	resource = retrieve_resource("vm", id)
+
+        resource = retrieve_resource("vm", id)
         if OpenNebula.is_error?(resource)
                 return [404,nil]
         end
-	if loc == "spice"
+    	if loc == "spice"
 		ip = resource['/VM/HISTORY_RECORDS/HISTORY[last()]/HOSTNAME']
-	else
+	    else
 	        ip = resource['TEMPLATE/NIC/IP']
-	end
-                redir_pid = %x{ps -ef | grep "caddr=#{ip} --cport=#{cport}" |grep -v grep | awk '{print $2}'}
-                redir_pid = Integer(redir_pid) if !redir_pid.empty?
-                file_redir_info = nil
+    	end
+
+        redir_pid = %x{ps -ef | grep "caddr=#{ip} --cport=#{cport}" |grep -v grep | awk '{print $2}'} 
+        redir_pid =  redir_pid.split("\n")
+        
+        if redir_pid.length > 1
+            File.delete("/tmp/redir/#{ip}:#{cport}") if File.exist?("/tmp/redir/#{ip}:#{cport}")
+            %x{kill -9 `ps -ef | grep "caddr=#{ip} --cport=#{cport}" |grep -v grep | awk '{print $2}'`}
+        else
+            redir_pid = Integer(redir_pid[0]) if !redir_pid.empty?
+        end
+        
+        file_redir_info = nil
+
 		if !File.directory?("/tmp/redir")
 			Dir.mkdir("/tmp/redir")
-                end
-                if !redir_pid.is_a?(Integer) ## "redirect ip proc" is not exist
-                        File.delete("/tmp/redir/#{ip}:#{cport}") if File.exist?("/tmp/redir/#{ip}:#{cport}")
-                end
+        end
+        if !redir_pid.is_a?(Integer) ## "redirect ip proc" is not exist
+            File.delete("/tmp/redir/#{ip}:#{cport}") if File.exist?("/tmp/redir/#{ip}:#{cport}")
+        end
+        if !File.exist?("/tmp/redir/#{ip}:#{cport}") ##
+            file_redir_info = File.open("/tmp/redir/#{ip}:#{cport}",'w+')        
+    	    if ONE_LOCATION.nil?
+    	        redir = "/usr/share/one/redir/redir"
+		    else
+                redir = ONE_LOCATION + "/share/redir/redir"
+            end
 
-                if !File.exist?("/tmp/redir/#{ip}:#{cport}") ##
-                        file_redir_info = File.open("/tmp/redir/#{ip}:#{cport}",'w+')
-			if ONE_LOCATION.nil?
-				redir = "/usr/share/one/redir/redir"
-			else
-                        	redir = ONE_LOCATION + "/share/redir/redir"
-			end
-                        pipe = open("|#{redir}  --lport=0 --caddr=#{ip} --cport=#{cport} &")
-                        redir_port = pipe.readline
-                        pipe.close
-                        file_redir_info.write(redir_port)
-                        file_redir_info.close
-                        sleep(1)
-                        info = {:info=>redir_port,:loc=>loc,:id=>id}
-                        return [200, info]
-                end
-                redir_port = File.new("/tmp/redir/#{ip}:#{cport}").read
-                info = {:info=>redir_port,:loc=>loc,:id=>id}
-            return [200,info]
+            pipe = open("|#{redir}  --lport=0 --caddr=#{ip} --cport=#{cport} &")
+            redir_port = pipe.readline
+            pipe.close
+            file_redir_info.write(redir_port)
+            file_redir_info.close
+            sleep(1)
+            info = {:info=>redir_port,:loc=>loc,:id=>id}
+            return [200, info]
+        end        
+        redir_port = File.new("/tmp/redir/#{ip}:#{cport}").read
+        info = {:info=>redir_port,:loc=>loc,:id=>id}
+        return [200,info]
     end
          
     ############################################################################
