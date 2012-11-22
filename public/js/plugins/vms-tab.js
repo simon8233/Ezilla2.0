@@ -1919,11 +1919,8 @@ function setupRedirectPort(){
                 closeOnEscape:true
         });
         dialog.bind("dialogclose",function(event, ui){
-
+            $('.disable_redir').addClass('redir');     
         });
-	
-
-
 	
 	$('.redir_spice').live("click",function(){
 
@@ -1936,14 +1933,15 @@ function setupRedirectPort(){
                 return false;
 	});
 
-        $('.redir').live("click",function(){
-                var id = $(this).attr('vm_id');
-		var port = $(this).attr('vm_port');
-		var loc = $(this).attr('vm_loc');
-                Sunstone.runAction("VM.redirect",id,port);
-		
-                return false;
-        });
+    $('.redir').live("click",function(){
+        var id = $(this).attr('vm_id');
+	    var port = $(this).attr('vm_port');
+    	var loc = $(this).attr('vm_loc');
+        Sunstone.runAction("VM.redirect",id,port);
+        $('.redir').addClass('disable_redir');
+        $('.redir').removeClass('redir');
+		return false;
+    });
 }
 
 function RedirectPortCallback(request,response){
@@ -1962,15 +1960,7 @@ function RedirectPortCallback(request,response){
 		port = $(".redir_spice").attr('vm_port');
 	}
 	else{
-	 	$(".redir").each(function(i){
-			if ($(this).attr('vm_id') == id){
-				port = $(this).attr('vm_port');
-				return false;
-				//"We can stop the loop from within the callback function by returning false."
-				// each api by Jquery
-				//
-			}
-	        });
+        port = response["cport"];
 	}
 	var connecting_tool_image ='<a class="connecting_info">';
 	var connecting_tool;
@@ -2020,27 +2010,27 @@ function RedirectPortProtocol(vm){
    return protocol;
 }
 function RedirectPortIcon(vm){
-   var redir_icon;
-   var ostype;
-   var state = OpenNebula.Helper.resource_state("vm_lcm",vm.LCM_STATE);
-   if (typeof(vm.TEMPLATE.CONTEXT) != "undefined"){
-   	if (typeof(vm.TEMPLATE.CONTEXT.OSTYPE) != "undefined"){
-        	ostype = vm.TEMPLATE.CONTEXT.OSTYPE;
-                	if ( ostype == "WINDOWS"  && state == tr("RUNNING") ){
-                        	redir_icon = '<a class="redir" href="#" vm_id="'+vm.ID+'" vm_port="3389">';
-                        	redir_icon += '<img src="images/rdp_icon.png" alt=\"'+tr("RDP Port")+'\" /></a>';
-		        }
-			else if ( ostype == "WINDOWS" && state != tr("RUNNING") ){
-                                redir_icon = '<img src="images/rdp_off.png" alt=\"'+tr("RDP Port")+'\" /></a>';
-			}
-                     	else if ( ostype != "WINDOWS" && state == tr("RUNNING") ) {
-                        	redir_icon = '<a class="redir" href="#" vm_id="'+vm.ID+'" vm_port="22">';
-                               	redir_icon += '<img src="images/ssh_icon.png" alt=\"'+tr("SSH Port")+'\" /></a>';
-                     	}
-			else {
-                                redir_icon = '<img src="images/ssh_off.png" alt=\"'+tr("SSH Port")+'\" /></a>';				
-			}
-	}
+    var redir_icon;
+    var ostype;
+    var state = OpenNebula.Helper.resource_state("vm_lcm",vm.LCM_STATE);
+    if (typeof(vm.TEMPLATE.CONTEXT) != "undefined"){
+        if (typeof(vm.TEMPLATE.CONTEXT.OSTYPE) != "undefined"){
+            ostype = vm.TEMPLATE.CONTEXT.OSTYPE;
+            if ( ostype == "WINDOWS"  && state == tr("RUNNING") ){
+                redir_icon = '<a class="redir" href="#" vm_id="'+vm.ID+'" vm_port="3389">';
+                redir_icon += '<img src="images/rdp_icon.png" alt=\"'+tr("RDP Port")+'\" /></a>';
+            }
+            else if ( ostype == "WINDOWS" && state != tr("RUNNING") ){
+                redir_icon = '<img src="images/rdp_off.png" alt=\"'+tr("RDP Port")+'\" /></a>';
+            }
+            else if ( ostype != "WINDOWS" && state == tr("RUNNING") ) {
+                redir_icon = '<a class="redir" href="#" vm_id="'+vm.ID+'" vm_port="22">';
+                redir_icon += '<img src="images/ssh_icon.png" alt=\"'+tr("SSH Port")+'\" /></a>';
+            }
+            else {
+                redir_icon = '<img src="images/ssh_off.png" alt=\"'+tr("SSH Port")+'\" /></a>';				
+            }
+    	}
         else{
         	redir_icon = "";
         }
