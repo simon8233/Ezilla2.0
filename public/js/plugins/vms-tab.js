@@ -1779,6 +1779,7 @@ function setupVNC(){
             </div></td>\
           </tr></table>\
         </div>\
+	<center>\
         <canvas id="VNC_canvas" width="640px" height="20px">\
             '+tr("Canvas not supported.")+'\
         </canvas>\
@@ -1786,9 +1787,9 @@ function setupVNC(){
 
     dialog.dialog({
         autoOpen:false,
-        width:1050,
+        width:$(window).width(),
         modal:true,
-        height:770,
+        height:$(window).height(),
         resizable:true,
         closeOnEscape: false
     });
