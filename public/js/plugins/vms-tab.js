@@ -596,10 +596,11 @@ var vm_actions = {
                 var vm_name = vmname;
                 var user_passwd = $('#user_passwd',$create_vm_dialog).val();
 		var template_array=response.template.split("\n");
+		var username_array=username.split('%');
 		for (var i=0; i < template_array.length; i++){
 			if (template_array[i].match(/^CONTEXT/)){
                                 template_context+="CONTEXT=[\n";
-                                template_context+="  USERNAME=\""+username+"\",\n";
+                                template_context+="  USERNAME=\""+username_array[0]+"\",\n";
                                 template_context+="  HOSTNAME=\""+vm_name+"\",\n";
                                 template_context+="  USER_PASSWD=\""+user_passwd+"\",\n";
                                 template_context+="  ROOT_PASSWD=\""+user_passwd+"\",\n";
@@ -615,25 +616,26 @@ var vm_actions = {
                                 template_org+=template_array[i].replace(/"/g, "\"")+"\n";
 			}else if (template_array[i].match(/^NAME/)){
 				template_org+="NAME=\""+vm_name+"\"\n";
-			}else if (template_array[i].match(/\s+NETWORK=/)){
-			    	if (template_array[i+1].match(/\s+NETWORK_UNAME=/)){
-                                	if (owner_network.length){
-						template_org+="  NETWORK=\""+owner_network+"\",\n";
-                                        	template_org+="  NETWORK_UNAME=\""+username+"\" ]\n";
-						i+=1
-                                	}else{
-                                        	template_org+=template_array[i].replace(/"/g, "\"")+" \n";
-                                        	template_org+=template_array[i+1].replace(/"/g, "\"")+" \n";
-						i+=1
-                                	}
-			    	}else{
-                                        if (owner_network.length){
-                                                template_org+="  NETWORK=\""+owner_network+"\",\n";
-                                                template_org+="  NETWORK_UNAME=\""+username+"\" ]\n";
-                                        }else{
-                                        	template_org+=template_array[i].replace(/"/g, "\"")+" \n";
-					}					
-				}
+		//Disable Network Auto Selection for EasyCloud 
+		//	}else if (template_array[i].match(/\s+NETWORK=/)){
+		//	    	if (template_array[i+1].match(/\s+NETWORK_UNAME=/)){
+                //                	if (owner_network.length){
+		//				template_org+="  NETWORK=\""+owner_network+"\",\n";
+                //                        	template_org+="  NETWORK_UNAME=\""+username+"\" ]\n";
+		//				i+=1
+                //                	}else{
+                //                        	template_org+=template_array[i].replace(/"/g, "\"")+" \n";
+                //                        	template_org+=template_array[i+1].replace(/"/g, "\"")+" \n";
+		//				i+=1
+                //                	}
+		//	    	}else{
+                //                        if (owner_network.length){
+                //                                template_org+="  NETWORK=\""+owner_network+"\",\n";
+                //                                template_org+="  NETWORK_UNAME=\""+username+"\" ]\n";
+                //                        }else{
+                //                        	template_org+=template_array[i].replace(/"/g, "\"")+" \n";
+		//			}					
+		//		}
 			}else if (template_array[i].match(/\s+PASSWD/)){
 				var d = new Date();
 				template_org+="  PASSWD=\""+d.getTime()+"\",\n";
@@ -2053,7 +2055,7 @@ function vmMonitorError(req,error_json){
     $('#vm_monitoring_tab '+id).html('<div style="padding-left:20px;">'+message+'</div>');
 }
 function setupVMStateChangeButtons(){
-
+    
     var context = dataTable_vMachines.parents('form');
 
     $('.last_action_button',context).button("disable");
@@ -2159,11 +2161,15 @@ function setupVMStateChangeButtons(){
 			}
 		}
 		else{
+        //no elements cheked
+        //disable action buttons, uncheck checkAll 
              		$('.check_all',dataTable_vMachines).removeAttr('checked');
 	                $('.top_button, .list_button',context).button("disable");
         	        last_action_b.button("disable");
 		};		
 	}
+	
+
     //any case the create dialog buttons should always be enabled.   
       $('.create_dialog_button',context).button("enable");
       $('.alwaysActive',context).button("enable");

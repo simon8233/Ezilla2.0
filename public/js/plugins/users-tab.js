@@ -461,11 +461,12 @@ var user_buttons = {
     "User.update_dialog" : {
         type: "action",
         text: '<i class="icon-edit icon-large"></i> <br/> <span class="top-button-font">' +tr("Update properties")+'</span>',	
-	condition: mustBeAdmin
+    	condition: mustBeAdmin
     },
     "User.update_password" : {
         type : "action",
-        text : '<i class="icon-key icon-large"></i> <br/> <span class="top-button-font">' +tr("Change password")+'</span>' 
+        text : '<i class="icon-key icon-large"></i> <br/> <span class="top-button-font">' +tr("Change password")+'</span>',
+        alwaysActive: true
     },
 
     "action_list" : {
@@ -811,7 +812,8 @@ function setupCreateUserDialog(){
                         };
         Sunstone.runAction("User.create",user_json);
         create_username=user_name;
-        Sunstone.runAction("User.NetworkList");
+	//Disable for EasyCloud
+        //Sunstone.runAction("User.NetworkList");
         $create_user_dialog.dialog('close');
         return false;
     });

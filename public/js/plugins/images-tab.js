@@ -471,9 +471,7 @@ var image_buttons = {
     "Image.update_dialog" : {
         type: "action",
         text: '<i class="icon-edit icon-large"> </i> <br/> <span class="top-button-font">' +tr("Update properties")+'</span>',
-        alwaysActive: true
     },
-
     "action_list" : {
         type: "select",
         actions: {
@@ -526,7 +524,6 @@ var image_buttons = {
     "Image.help" : {
         type: "action",
         text: '<i class="icon-question-sign icon-large"></i> <br/> <span class="top-button-font">' +tr("Help")+'</span>',
-        alwaysActive: true
     }
 }
 

@@ -825,14 +825,13 @@ var template_buttons = {
     "Template.update_dialog" : {
         type: "action",
         text: '<i class="icon-edit icon-large"></i> <br/> <span class="top-button-font">' +tr("Update properties")+'</span>',
-        alwaysActive: true
     },
     "Template.instantiate_vms" : {
         type: "action",
         text: '<i class="icon-cloud icon-large"></i> <br/> <span class="top-button-font">' +tr("Instantiate")+'</span>',
     },
 
-        "action_list" : {
+    "action_list" : {
         type: "select",
         actions: {
 
