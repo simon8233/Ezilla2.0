@@ -1894,6 +1894,8 @@ function setupCreateTemplateDialog(){
     var templ_type = "kvm";
     var opt_class=".kvm_opt";
     var man_class=".kvm";
+    //Template RAW sections
+    var template_raw="";
 
     vmTabChange(0,{index : 0}); //enable kvm
 
@@ -1989,9 +1991,47 @@ function setupCreateTemplateDialog(){
         addSectionJSON(vm_json,scope);
 
         //raw -> if value set type to driver and fetch
-        scope = section_raw;
-        vm_json["RAW"] = {};
-        addSectionJSON(vm_json["RAW"],scope);
+        template_raw += "     <devices>\n";
+        template_raw += "            <controller type=\'usb\' index=\'0\' model=\'ich9-ehci1\'>\n";
+        template_raw += "              <address type=\'pci\' domain=\'0x0000\' bus=\'0x00\' slot=\'0x08\' function=\'0x7\'/>\n";
+        template_raw += "            </controller>\n";
+        template_raw += "            <controller type=\'usb\' index=\'0\' model=\'ich9-uhci1\'>\n";
+        template_raw += "              <master startport=\'0\'/>\n";
+        template_raw += "              <address type=\'pci\' domain=\'0x0000\' bus=\'0x00\' slot=\'0x08\' function=\'0x0\' multifunction=\'on\'/>\n";
+        template_raw += "            </controller>\n";
+        template_raw += "            <controller type=\'usb\' index=\'0\' model=\'ich9-uhci2\'>\n";
+        template_raw += "              <master startport=\'2\'/>\n";
+        template_raw += "              <address type=\'pci\' domain=\'0x0000\' bus=\'0x00\' slot=\'0x08\' function=\'0x1\'/>\n";
+        template_raw += "            </controller>\n";
+        template_raw += "            <controller type=\'usb\' index=\'0\' model=\'ich9-uhci3\'>\n";
+        template_raw += "              <master startport=\'4\'/>\n";
+        template_raw += "              <address type=\'pci\' domain=\'0x0000\' bus=\'0x00\' slot=\'0x08\' function=\'0x2\'/>\n";
+        template_raw += "            </controller>\n";
+        template_raw += "            <redirdev bus=\'usb\' type=\'spicevmc\'>\n";
+        template_raw += "              <address type=\'usb\' bus=\'0\' port=\'3\'/>\n";
+        template_raw += "            </redirdev>\n";
+        template_raw += "            <redirdev bus=\'usb\' type=\'spicevmc\'>\n";
+        template_raw += "              <address type=\'usb\' bus=\'0\' port=\'4\'/>\n";
+        template_raw += "            </redirdev>\n";
+        template_raw += "            <redirdev bus=\'usb\' type=\'spicevmc\'>\n";
+        template_raw += "              <address type=\'usb\' bus=\'0\' port=\'5\'/>\n";
+        template_raw += "            </redirdev>\n";
+        template_raw += "            <redirdev bus=\'usb\' type=\'spicevmc\'>\n";
+        template_raw += "              <address type=\'usb\' bus=\'0\' port=\'6\'/>\n";
+        template_raw += "            </redirdev>\n";
+        template_raw += "        </devices>\n";
+	
+	//SPICE for usb redirction
+	if ($('select#TYPE',section_graphics).val() == "spice"){
+        	vm_json["RAW"] = {};
+		vm_json["RAW"]["TYPE"]="KVM";
+		vm_json["RAW"]["DATA"]=template_raw;
+	}else{
+        //raw -> if value set type to driver and fetch
+       		scope = section_raw;
+       		vm_json["RAW"] = {};
+       		addSectionJSON(vm_json["RAW"],scope);
+	}
 
         //custom vars
         scope = section_custom_var;
