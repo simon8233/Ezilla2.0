@@ -2,8 +2,8 @@
 
 NOVNC_TMP=/tmp/one/novnc-$(date "+%Y%m%d%H%M%S")
 PROXY_PATH=websockify/websocketproxy.py
-NOVNC_TAR=https://github.com/downloads/kanaka/noVNC/novnc-0.4.tar.gz
-WEBSOCKIFY_RAW_URL=https://raw.github.com/kanaka/websockify/ee2f269c067c27ef49d63ad11d9efec499423500/websockify
+NOVNC_TAR=http://sourceforge.net/projects/ezilla-nchc/files/noVNC/novnc-0.4-53.tar.gz
+WEBSOCKIFY_RAW_URL=http://sourceforge.net/projects/ezilla-nchc/files/noVNC/
 
 if [ -z "$ONE_LOCATION" ]; then
     ONE_SHARE=/usr/share/one
@@ -40,12 +40,12 @@ fi
 echo "Installing Sunstone client libraries in $ONE_PUBLIC_SUNSTONE..."
 rm -rf $ONE_PUBLIC_SUNSTONE/vendor/noVNC/
 mkdir -p $ONE_PUBLIC_SUNSTONE/vendor/noVNC
-cp -r $NOVNC_TMP/*novnc*/include/ $ONE_PUBLIC_SUNSTONE/vendor/noVNC/
+cp -r $NOVNC_TMP/*noVNC*/include/ $ONE_PUBLIC_SUNSTONE/vendor/noVNC/
 
 echo "Installing SelfService client libraries in $ONE_PUBLIC_SELFSERVICE..."
 rm -rf $ONE_PUBLIC_SELFSERVICE/vendor/noVNC/
 mkdir -p $ONE_PUBLIC_SELFSERVICE/vendor/noVNC
-cp -r $NOVNC_TMP/*novnc*/include/ $ONE_PUBLIC_SELFSERVICE/vendor/noVNC/
+cp -r $NOVNC_TMP/*noVNC*/include/ $ONE_PUBLIC_SELFSERVICE/vendor/noVNC/
 
 cd $ONE_SHARE
 rm -rf $NOVNC_TMP
@@ -65,6 +65,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 ln -s websocketproxy.py websockify
+chmod +x websocketproxy.py 
 
 echo "Backing up and updating $SUNSTONE_CONF with new VNC proxy path..."
 sed -i.bck "s%^\(:vnc_proxy_path:\).*$%\1 $ONE_SHARE/$PROXY_PATH%" $SUNSTONE_CONF
