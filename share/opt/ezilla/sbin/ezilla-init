@@ -1,0 +1,88 @@
+#!/bin/bash
+###
+### check ezilla.tar.gz , has already untared to /opt dir. 
+### if not , then untar to /opt.
+if [ ! -d /opt/ezilla/ ]; then
+        wget http://140.110.28.227/ks/ezilla.tar.gz -O /root/ezilla.tar.gz
+        tar zxvf /root/ezilla.tar.gz -C /opt/
+        chmod a+x /opt/ezilla/sbin/*.sh
+fi
+##check auto-installation directory
+###  pre-install
+###  opennebula installer depends on some package.
+###  
+/opt/ezilla/sbin/ezilla-pkg-install.sh
+###----------------------------------------------------------------
+## Install opennebula with ezilla insterface v2 
+if [ -e /etc/debian_version ] ;then
+	dpkg -i /root/Ubuntu-12.04-opennebula_3.6.0-1-ezilla_amd64.deb
+elif [ -e /etc/redhat-release ] ; then
+	rpm -ivh /root/opennebula-3.6.0-1.x86_64.rpm
+else
+	echo We don\'t support your operating system.
+	exit 0
+fi
+
+## ----------------------------------------------------------------
+## run env patch
+/opt/ezilla/sbin/ezilla-drbl-patch.sh
+/opt/ezilla/sbin/ezilla-libvirtd-patch.sh
+/opt/ezilla/sbin/ezilla-setup-opennebula-env.sh
+/opt/ezilla/sbin/ezilla-setup-one-user.sh
+
+chown -R oneadmin:oneadmin /usr/lib/one
+chown -R oneadmin:oneadmin /var/lib/one
+
+## Setup initial procedure of Ezilla
+cp /opt/ezilla/image/ezilla.png /usr/share/drbl/image/drblwp.png
+#chmod a+x /var/lib/one/tmp/config/addhost.sh
+## ----------------------------------------------------------------
+## Setup initialization procedure of DRBL (drblsrv-offline and drbl-live.sh)
+### ezilla script is modified from /opt/drbl/sbin/drbl-live.sh
+### It is aimed to run drblsrv-offline and drblpush 
+### for the first time booting in Eziila DRBL Server
+cp -p -f /opt/ezilla/sbin/ezilla_diskver /etc/init.d/ezilla_diskver
+chmod a+x /etc/init.d/ezilla_diskver
+
+# setup system process.  when system booting.
+
+if  [ -e /etc/debian_version ] ;then
+	update-rc.d ezilla_diskless defaults
+	mv /etc/rc2.d/S20ezilla_diskless /etc/rc2.d/S40ezilla_diskless
+	## ----------------------------------------------------------------
+	### add services to DRBL Server
+	update-rc.d opennebula defaults
+	## remove NIS service for the first time
+	## since it's not yet configured
+	update-rc.d -f nis disable 2345
+	## remove libvirt-bin service for the first time
+	## since it's not yet configured and only needed by DRBL client
+	update-rc.d -f libvirt-bin disable 2345
+	## remove DHCP and TFTP Server service for the first time 
+	## since we will not need it and it's not yet configured
+	update-rc.d -f dhcp3-server disable 2345
+	update-rc.d -f tftpd-hpa disable 2345
+	## disable exim4 service that we don't need now
+	update-rc.d -f exim4 disable 2345
+	update-rc.d -f dbus disable 2345
+fi
+
+chkconfig --add ezilla_diskver 
+# When Develop time, disable this function  
+#if [ -e /root/anaconda.log ] && [ -e /etc/redhat-release ]; then
+#	chkconfig --add ezilla_diskver
+#elif [ -e /etc/redhat-release ];then
+#	/etc/init.d/ezilla_diskless start
+#fi
+
+chown -R oneadmin:oneadmin /opt/ezilla
+
+if [ ! -d /srv/one/share/script ];then
+    mkdir -p /srv/one/share/script    
+    wget http://140.110.28.227/ks/init_script.tar.gz -O /root/init_script.tar.gz
+    tar zxvf /root/init_script.tar.gz -C /srv/one/share/script/
+fi
+
+## ----------------------------------------------------------------
+### clean up temp files
+rm /root/ezilla.tar.gz

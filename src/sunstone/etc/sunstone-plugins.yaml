@@ -22,10 +22,12 @@
     :ALL: true
     :user:
     :group:
+        oneadmin: true
 - plugins/groups-tab.js:
-    :ALL: true
+    :ALL: false
     :user:
     :group:
+       oneadmin: true
 - plugins/acls-tab.js:
     :ALL: false
     :user:
@@ -40,17 +42,20 @@
     :user:
     :group:
 - plugins/templates-tab.js:
-    :ALL: true
+    :ALL: false
     :user:
     :group:
+        oneadmin: true
 - plugins/images-tab.js:
-    :ALL: true
+    :ALL: false 
     :user:
     :group:
+        oneadmin: true
 - plugins/infra-tab.js:
-    :ALL: true
+    :ALL: false
     :user:
     :group:
+        oneadmin: true
 - plugins/clusters-tab.js:
     :ALL: false
     :user:
@@ -62,14 +67,23 @@
     :group:
         oneadmin: true
 - plugins/datastores-tab.js:
-    :ALL: true
+    :ALL: false
     :user:
     :group:
+        oneadmin: true
 - plugins/vnets-tab.js:
-    :ALL: true
+    :ALL: false
     :user:
     :group:
+        oneadmin: true
 - plugins/marketplace-tab.js:
-    :ALL: true
+    :ALL: false
     :user:
     :group:
+        oneadmin: true
+- user-plugins/diskver-tab.js:
+    :ALL: false
+    :user:
+    :group:
+        oneadmin: true
+

@@ -1,0 +1,3 @@
+NAME = os_raw2qcow2
+DS_MAD = fs
+TM_MAD = qcow2

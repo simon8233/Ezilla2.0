@@ -106,23 +106,24 @@ if [ -z "$ROOT" ] ; then
     INCLUDE_LOCATION="/usr/include"
     SHARE_LOCATION="/usr/share/one"
     MAN_LOCATION="/usr/share/man/man1"
+    OPT_LOCATION="/opt"
 
     if [ "$CLIENT" = "yes" ]; then
-        MAKE_DIRS="$BIN_LOCATION $LIB_LOCATION $ETC_LOCATION"
+        MAKE_DIRS="$BIN_LOCATION $LIB_LOCATION $ETC_LOCATION $OPT_LOCATION"
 
         DELETE_DIRS=""
 
         CHOWN_DIRS=""
     elif [ "$SUNSTONE" = "yes" ]; then
         MAKE_DIRS="$BIN_LOCATION $LIB_LOCATION $VAR_LOCATION \
-                   $SUNSTONE_LOCATION $ETC_LOCATION"
+                   $SUNSTONE_LOCATION $ETC_LOCATION $OPT_LOCATION"
 
         DELETE_DIRS="$MAKE_DIRS"
 
         CHOWN_DIRS=""
     elif [ "$OZONES" = "yes" ]; then
         MAKE_DIRS="$BIN_LOCATION $LIB_LOCATION $VAR_LOCATION $OZONES_LOCATION \
-                    $ETC_LOCATION"
+                    $ETC_LOCATION $OPT_LOCATION"
 
         DELETE_DIRS="$MAKE_DIRS"
 
@@ -131,10 +132,10 @@ if [ -z "$ROOT" ] ; then
         MAKE_DIRS="$BIN_LOCATION $LIB_LOCATION $ETC_LOCATION $VAR_LOCATION \
                    $INCLUDE_LOCATION $SHARE_LOCATION \
                    $LOG_LOCATION $RUN_LOCATION $LOCK_LOCATION \
-                   $SYSTEM_DS_LOCATION $DEFAULT_DS_LOCATION $MAN_LOCATION"
+                   $SYSTEM_DS_LOCATION $DEFAULT_DS_LOCATION $MAN_LOCATION $OPT_LOCATION"
 
         DELETE_DIRS="$LIB_LOCATION $ETC_LOCATION $LOG_LOCATION $VAR_LOCATION \
-                     $RUN_LOCATION $SHARE_DIRS"
+                     $RUN_LOCATION $SHARE_DIRS $INIT_DIRS $REDIR_DIRS $SLAVE_INSTALL_DIRS"
 
         CHOWN_DIRS="$LOG_LOCATION $VAR_LOCATION $RUN_LOCATION $LOCK_LOCATION"
     fi
@@ -151,25 +152,25 @@ else
     INCLUDE_LOCATION="$ROOT/include"
     SHARE_LOCATION="$ROOT/share"
     MAN_LOCATION="$ROOT/share/man/man1"
-
+    OPT_LOCATION="/opt"
     if [ "$CLIENT" = "yes" ]; then
-        MAKE_DIRS="$BIN_LOCATION $LIB_LOCATION $ETC_LOCATION"
+        MAKE_DIRS="$BIN_LOCATION $LIB_LOCATION $ETC_LOCATION $OPT_LOCATION"
 
         DELETE_DIRS="$MAKE_DIRS"
     elif [ "$SUNSTONE" = "yes" ]; then
         MAKE_DIRS="$BIN_LOCATION $LIB_LOCATION $VAR_LOCATION \
-                   $SUNSTONE_LOCATION $ETC_LOCATION"
+                   $SUNSTONE_LOCATION $ETC_LOCATION $OPT_LOCATION"
 
         DELETE_DIRS="$MAKE_DIRS"
     elif [ "$OZONES" = "yes" ]; then
         MAKE_DIRS="$BIN_LOCATION $LIB_LOCATION $VAR_LOCATION $OZONES_LOCATION \
-                   $ETC_LOCATION"
+                   $ETC_LOCATION $OPT_LOCATION"
 
         DELETE_DIRS="$MAKE_DIRS"
     else
         MAKE_DIRS="$BIN_LOCATION $LIB_LOCATION $ETC_LOCATION $VAR_LOCATION \
                    $INCLUDE_LOCATION $SHARE_LOCATION $SYSTEM_DS_LOCATION \
-                   $DEFAULT_DS_LOCATION $MAN_LOCATION $OZONES_LOCATION"
+                   $DEFAULT_DS_LOCATION $MAN_LOCATION $OZONES_LOCATION $OPT_LOCATION"
 
         DELETE_DIRS="$MAKE_DIRS"
 
@@ -180,6 +181,15 @@ else
 fi
 
 SHARE_DIRS="$SHARE_LOCATION/examples"
+REDIR_DIRS="$SHARE_LOCATION/redir"
+INIT_DIRS="$SHARE_LOCATION/script"
+SLAVE_INSTALL_DIRS="$SHARE_LOCATION/auto-installation"
+MASTER_INSTALL_DIRS="$OPT_LOCATION/ezilla/sbin \
+                     $OPT_LOCATION/ezilla/share \
+                     $OPT_LOCATION/ezilla/share/config \
+                     $OPT_LOCATION/ezilla/share/moosefs \
+                     $OPT_LOCATION/ezilla/share/vmimages \
+                     $OPT_LOCATION/ezilla/image"
 
 ETC_DIRS="$ETC_LOCATION/im_ec2 \
           $ETC_LOCATION/vmm_ec2 \
@@ -276,7 +286,10 @@ SUNSTONE_DIRS="$SUNSTONE_LOCATION/models \
                $SUNSTONE_LOCATION/public/vendor/FontAwesome \
                $SUNSTONE_LOCATION/public/vendor/FontAwesome/css \
                $SUNSTONE_LOCATION/public/vendor/FontAwesome/font \
+               $SUNSTONE_LOCATION/public/vendor/jquery.ibutton \
+               $SUNSTONE_LOCATION/public/vendor/smartwizard \
                $SUNSTONE_LOCATION/public/images \
+               $SUNSTONE_LOCATION/public/images/vncsnapshot \
                $SUNSTONE_LOCATION/templates \
                $SUNSTONE_LOCATION/views"
 
@@ -367,14 +380,14 @@ CONF_CLI_DIRS="$ETC_LOCATION/cli"
 if [ "$CLIENT" = "yes" ]; then
     MAKE_DIRS="$MAKE_DIRS $LIB_ECO_CLIENT_DIRS $LIB_OCCI_CLIENT_DIRS $LIB_MARKET_CLIENT_DIRS \
                $LIB_OCA_CLIENT_DIRS $LIB_CLI_CLIENT_DIRS $CONF_CLI_DIRS \
-               $ETC_LOCATION $OZONES_CLIENT_DIRS $SELF_SERVICE_DIRS"
+               $ETC_LOCATION $OZONES_CLIENT_DIRS $SELF_SERVICE_DIRS $MASTER_INSTALL_DIRS"
 elif [ "$SUNSTONE" = "yes" ]; then
-    MAKE_DIRS="$MAKE_DIRS $SUNSTONE_DIRS $LIB_OCA_CLIENT_DIRS"
+    MAKE_DIRS="$MAKE_DIRS $SUNSTONE_DIRS $LIB_OCA_CLIENT_DIRS $INIT_DIRS $REDIR_DIRS $SLAVE_INSTALL_DIRS $MASTER_INSTALL_DIRS"
 elif [ "$OZONES" = "yes" ]; then
-    MAKE_DIRS="$MAKE_DIRS $OZONES_DIRS $OZONES_CLIENT_DIRS $LIB_OCA_CLIENT_DIRS"
+    MAKE_DIRS="$MAKE_DIRS $OZONES_DIRS $OZONES_CLIENT_DIRS $LIB_OCA_CLIENT_DIRS $INIT_DIRS $REDIR_DIRS $SLAVE_INSTALL_DIRS $MASTER_INSTALL_DIRS"
 else
     MAKE_DIRS="$MAKE_DIRS $SHARE_DIRS $ETC_DIRS $LIB_DIRS $VAR_DIRS \
-                $OZONES_DIRS $OZONES_CLIENT_DIRS $SUNSTONE_DIRS $SELF_SERVICE_DIRS"
+                $OZONES_DIRS $OZONES_CLIENT_DIRS $SUNSTONE_DIRS $SELF_SERVICE_DIRS $INIT_DIRS $REDIR_DIRS $SLAVE_INSTALL_DIRS $MASTER_INSTALL_DIRS"
 fi
 
 #-------------------------------------------------------------------------------
@@ -431,6 +444,13 @@ INSTALL_FILES=(
     NETWORK_OVSWITCH_FILES:$VAR_LOCATION/remotes/vnm/ovswitch
     NETWORK_VMWARE_FILES:$VAR_LOCATION/remotes/vnm/vmware
     EXAMPLE_SHARE_FILES:$SHARE_LOCATION/examples
+    REDIR_SHARE_FILES:$SHARE_LOCATION/redir
+    SLAVE_INSTALL_SHARE_FILES:$SHARE_LOCATION/auto-installation
+    MASTER_INSTALL_SBIN_FILE:$OPT_LOCATION/ezilla/sbin
+    MASTER_INSTALL_SHARE_CONFIG_FILE:$OPT_LOCATION/ezilla/share/config
+    MASTER_INSTALL_SHARE_MOOSEFS_FILE:$OPT_LOCATION/ezilla/share/moosefs
+    MASTER_INSTALL_IMAGES_FILE:$OPT_LOCATION/ezilla/image
+    INIT_SHARE_FILES:$SHARE_LOCATION/script
     INSTALL_NOVNC_SHARE_FILE:$SHARE_LOCATION
     INSTALL_GEMS_SHARE_FILE:$SHARE_LOCATION
     HOOK_FT_FILES:$VAR_LOCATION/remotes/hooks/ft
@@ -485,6 +505,7 @@ INSTALL_SUNSTONE_FILES=(
     SUNSTONE_VIEWS_FILES:$SUNSTONE_LOCATION/views
     SUNSTONE_PUBLIC_JS_FILES:$SUNSTONE_LOCATION/public/js
     SUNSTONE_PUBLIC_JS_PLUGINS_FILES:$SUNSTONE_LOCATION/public/js/plugins
+    SUNSTONE_PUBLIC_JS_USER_PLUGINS_FILES:$SUNSTONE_LOCATION/public/js/user-plugins
     SUNSTONE_PUBLIC_CSS_FILES:$SUNSTONE_LOCATION/public/css
     SUNSTONE_PUBLIC_VENDOR_DATATABLES:$SUNSTONE_LOCATION/public/vendor/dataTables
     SUNSTONE_PUBLIC_VENDOR_JGROWL:$SUNSTONE_LOCATION/public/vendor/jGrowl
@@ -497,7 +518,10 @@ INSTALL_SUNSTONE_FILES=(
     SUNSTONE_PUBLIC_VENDOR_FONTAWESOME:$SUNSTONE_LOCATION/public/vendor/FontAwesome
     SUNSTONE_PUBLIC_VENDOR_FONTAWESOME_FONT:$SUNSTONE_LOCATION/public/vendor/FontAwesome/font
     SUNSTONE_PUBLIC_VENDOR_FONTAWESOME_CSS:$SUNSTONE_LOCATION/public/vendor/FontAwesome/css
+    SUNSTONE_PUBLIC_VENDOR_SMARTWIZARD:$SUNSTONE_LOCATION/public/vendor/smartwizard/
+    SUNSTONE_PUBLIC_VENDOR_IBUTTON:$SUNSTONE_LOCATION/public/vendor/jquery.ibutton/
     SUNSTONE_PUBLIC_IMAGES_FILES:$SUNSTONE_LOCATION/public/images
+    SUNSTONE_PUBLIC_VNCSNAPSHOT_FILES:$SUNSTONE_LOCATION/public/images/vncsnapshot
     SUNSTONE_PUBLIC_LOCALE_EN_US:$SUNSTONE_LOCATION/public/locale/en_US
     SUNSTONE_PUBLIC_LOCALE_FA_IR:$SUNSTONE_LOCATION/public/locale/fa_IR
     SUNSTONE_PUBLIC_LOCALE_FR_FR:$SUNSTONE_LOCATION/public/locale/fr_FR
@@ -1005,6 +1029,57 @@ EXAMPLE_SHARE_FILES="share/examples/vm.template \
                      share/examples/public.net"
 
 #-------------------------------------------------------------------------------
+# initialization files, to be installed under $SHARE_LOCATION/script
+#-------------------------------------------------------------------------------
+
+INIT_SHARE_FILES="share/script/init.ps1 \
+                     share/script/init.sh"
+
+#-------------------------------------------------------------------------------
+# Redir files, to be installed under $SHARE_LOCATION/redir
+#-------------------------------------------------------------------------------
+
+REDIR_SHARE_FILES="share/redir/redir"
+#-------------------------------------------------------------------------------
+# slave setup files ,to be installed under $SHARE_LOCATION/auto-installation 
+#-------------------------------------------------------------------------------
+SLAVE_INSTALL_SHARE_FILES="share/auto-installation/ezilla-master-setup.sh \
+                 share/auto-installation/ezilla-slave-config \
+                 share/auto-installation/ezilla-slave-disk.sh \
+                 share/auto-installation/ezilla-slave-filesystem.sh \
+                 share/auto-installation/ezilla-slave-init.sh \
+                 share/auto-installation/ezilla-slave-network.sh \
+                 share/auto-installation/ezilla-slave-setup.sh \
+                 share/auto-installation/ezilla-slave-variable \
+                 share/auto-installation/ks-cli-example.cfg"
+#-------------------------------------------------------------------------------
+# master setup files (sbin dir), to be installed under /opt/ezilla/sbin
+#-------------------------------------------------------------------------------
+MASTER_INSTALL_SBIN_FILE="share/opt/ezilla/sbin/ezilla_diskver \
+                          share/opt/ezilla/sbin/ezilla-drbl-patch.sh \
+                          share/opt/ezilla/sbin/ezilla-init \
+                          share/opt/ezilla/sbin/ezilla-libvirtd-patch.sh \
+                          share/opt/ezilla/sbin/ezilla-pkg-install.sh \
+                          share/opt/ezilla/sbin/ezilla-setup-one-user.sh \
+                          share/opt/ezilla/sbin/ezilla-setup-opennebula-env.sh \
+                          share/opt/ezilla/sbin/ezilla-upgrade"
+#-------------------------------------------------------------------------------
+# master setup files (share dir) , to be installed under /opt/ezilla/share
+#-------------------------------------------------------------------------------            
+MASTER_INSTALL_SHARE_CONFIG_FILE="share/opt/ezilla/share/config/addhost.sh \
+                           share/opt/ezilla/share/config/datastore.one \
+                           share/opt/ezilla/share/config/datastore_qcow.one \
+                           share/opt/ezilla/share/config/network_script.sh \
+                           share/opt/ezilla/share/config/vnet.one \
+                           share/opt/ezilla/share/config/vnc.js"
+
+                        
+MASTER_INSTALL_SHARE_MOOSEFS_FILE="share/opt/ezilla/share/moosefs/mfs-cgi.rpm \
+                           share/opt/ezilla/share/moosefs/mfs-client.rpm \
+                           share/opt/ezilla/share/moosefs/mfs.rpm"
+
+MASTER_INSTALL_IMAGES_FILE="share/opt/ezilla/image/ezilla.png"
+#-------------------------------------------------------------------------------
 # HOOK scripts, to be installed under $VAR_LOCATION/remotes/hooks
 #-------------------------------------------------------------------------------
 
@@ -1217,7 +1292,8 @@ ETC_CLIENT_FILES="src/cli/etc/group.default"
 #-----------------------------------------------------------------------------
 
 SUNSTONE_FILES="src/sunstone/sunstone-server.rb \
-                src/sunstone/OpenNebulaVNC.rb"
+                src/sunstone/OpenNebulaVNC.rb \
+                src/sunstone/web_socket.rb"
 
 SUNSTONE_BIN_FILES="src/sunstone/bin/sunstone-server"
 
@@ -1273,10 +1349,15 @@ SUNSTONE_PUBLIC_JS_PLUGINS_FILES="\
                         src/sunstone/public/js/plugins/vnets-tab.js \
                         src/sunstone/public/js/plugins/marketplace-tab.js \
                         src/sunstone/public/js/plugins/config-tab.js"
+SUNSTONE_PUBLIC_JS_USER_PLUGINS_FILES="\
+                        src/sunstone/public/js/user-plugins/diskver-tab.js"
 
+                        
 SUNSTONE_PUBLIC_CSS_FILES="src/sunstone/public/css/application.css \
                            src/sunstone/public/css/layout.css \
-                           src/sunstone/public/css/login.css"
+                           src/sunstone/public/css/login.css  \
+                           src/sunstone/public/css/jquery.ibutton.min.css  \
+                           src/sunstone/public/css/smart_wizard_vertical.css"
 
 SUNSTONE_PUBLIC_VENDOR_DATATABLES="\
                 src/sunstone/public/vendor/dataTables/jquery.dataTables.min.js \
@@ -1313,6 +1394,7 @@ src/sunstone/public/vendor/jQueryUI/images/ui-bg_glass_75_dadada_1x400.png  \
 src/sunstone/public/vendor/jQueryUI/images/ui-bg_glass_75_e6e6e6_1x400.png  \
 src/sunstone/public/vendor/jQueryUI/images/ui-bg_glass_95_fef1ec_1x400.png  \
 src/sunstone/public/vendor/jQueryUI/images/ui-bg_highlight-soft_75_cccccc_1x100.png  \
+src/sunstone/public/vendor/jQueryUI/images/ui-bg_highlight-soft_75_cccccc_1x100_purple.png \
 src/sunstone/public/vendor/jQueryUI/images/ui-icons_222222_256x240.png  \
 src/sunstone/public/vendor/jQueryUI/images/ui-icons_2e83ff_256x240.png  \
 src/sunstone/public/vendor/jQueryUI/images/ui-icons_454545_256x240.png  \
@@ -1360,25 +1442,58 @@ src/sunstone/public/vendor/FontAwesome/font/fontawesome-webfont.woff \
 src/sunstone/public/vendor/FontAwesome/font/fontawesome-webfont.ttf \
 src/sunstone/public/vendor/FontAwesome/font/fontawesome-webfont.svg \
 "
+SUNSTONE_PUBLIC_VENDOR_SMARTWIZARD="\
+src/sunstone/public/vendor/smartwizard/jquery.smartWizard-2.0.min.js"
+
+SUNSTONE_PUBLIC_VENDOR_IBUTTON="\
+src/sunstone/public/vendor/jquery.ibutton/jquery.ibutton.min.js"
+
+SUNSTONE_PUBLIC_VNCSNAPSHOT_FILES="src/sunstone/public/images/vncsnapshot/no_signal_m.jpg \
+src/sunstone/public/images/vncsnapshot/vncpwd.sh \
+src/sunstone/public/images/vncsnapshot/vncsnapshot \
+src/sunstone/public/images/vncsnapshot/vncsnapshot.sh \
+"
 
 SUNSTONE_PUBLIC_IMAGES_FILES="src/sunstone/public/images/ajax-loader.gif \
-                        src/sunstone/public/images/login_over.png \
-                        src/sunstone/public/images/login.png \
-                        src/sunstone/public/images/opennebula-sunstone-big.png \
-                        src/sunstone/public/images/opennebula-sunstone-small.png \
-                        src/sunstone/public/images/panel.png \
-                        src/sunstone/public/images/panel_short.png \
-                        src/sunstone/public/images/pbar.gif \
-                        src/sunstone/public/images/Refresh-icon.png \
-                        src/sunstone/public/images/red_bullet.png \
-                        src/sunstone/public/images/yellow_bullet.png \
-                        src/sunstone/public/images/green_bullet.png \
-                        src/sunstone/public/images/vnc_off.png \
-                        src/sunstone/public/images/vnc_on.png \
-                        src/sunstone/public/images/network_icon.png \
-                        src/sunstone/public/images/system_icon.png \
-                        src/sunstone/public/images/server_icon.png \
-"
+src/sunstone/public/images/Ezilla_logo_all_big.png \
+src/sunstone/public/images/Ezilla_logo_all_small.png \
+src/sunstone/public/images/failure.png \
+src/sunstone/public/images/favicon.ico \
+src/sunstone/public/images/green_bullet.png \
+src/sunstone/public/images/host_error.png \
+src/sunstone/public/images/host_off.png \
+src/sunstone/public/images/host_on.png \
+src/sunstone/public/images/ibutton-slider-default.png \
+src/sunstone/public/images/ibutton-slider-giva2.png \
+src/sunstone/public/images/ibutton-slider-giva-original.png \
+src/sunstone/public/images/loader.gif
+src/sunstone/public/images/login_over.png \
+src/sunstone/public/images/login.png \
+src/sunstone/public/images/network_icon.png \
+src/sunstone/public/images/opennebula-sunstone-big.png \
+src/sunstone/public/images/opennebula-sunstone-small.png \
+src/sunstone/public/images/panel.png \
+src/sunstone/public/images/panel_short.png \
+src/sunstone/public/images/pbar.gif \
+src/sunstone/public/images/rdp_icon_big.png \
+src/sunstone/public/images/rdp_icon.png \
+src/sunstone/public/images/rdp_off.png \
+src/sunstone/public/images/red_bullet.png \
+src/sunstone/public/images/Refresh-icon.png \
+src/sunstone/public/images/rest.png \
+src/sunstone/public/images/running.png \
+src/sunstone/public/images/server_icon.png \
+src/sunstone/public/images/spice.png \
+src/sunstone/public/images/spice_icon_big.png \
+src/sunstone/public/images/spice_off.png \
+src/sunstone/public/images/ssh_icon_big.png \
+src/sunstone/public/images/ssh_off.png \
+src/sunstone/public/images/ssh_icon.png \
+src/sunstone/public/images/system_icon.png \
+src/sunstone/public/images/unknown.png \
+src/sunstone/public/images/vnc_off.png \
+src/sunstone/public/images/vnc_on.png \
+src/sunstone/public/images/yellow_bullet.png"
 
 SUNSTONE_PUBLIC_LOCALE_EN_US="\
 src/sunstone/locale/languages/en_US.js \

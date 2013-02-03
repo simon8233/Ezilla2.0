@@ -1,0 +1,5 @@
+INSTALL_MODE=custom
+DISK_NUM=2
+DISK=sda,sdb
+FILESYSTEM=moosefs
+NETWORK=1

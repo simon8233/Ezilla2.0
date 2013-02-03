@@ -1,0 +1,17 @@
+#!/bin/bash
+# Author: Percomp Lab
+#	Jonathan Chi-Ming Chen <jonchen _at_ nchc narl org tw>
+#	Chang-Hsing Wu <hsing _at_ nchc narl org tw>
+#	Serean Yi-Lun Pan <serenapan _at_ nchc narl org tw>
+## automatic upgrade ezilla (User interface)
+
+# must be superuser.
+if [ `whoami` != "root" ]; then
+	echo "You must be 'root user' to run this program"
+	exit 0
+fi
+wget https://downloads.sourceforge.net/project/ezilla-nchc/Ezilla_Fast_Installer_CentOS/ezilla-version -O /tmp/ezilla-version
+# add check ezilla version
+
+chmod +x /tmp/ezilla-version
+exec /tmp/ezilla-version

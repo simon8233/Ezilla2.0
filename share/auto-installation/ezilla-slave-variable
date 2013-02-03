@@ -1,0 +1,65 @@
+#!/bin/bash
+# Author: Chang-Hsing Wu <hsing _at_ nchc narl org tw>
+#         Serena Yi-Lun Pan <serenapan _at_ nchc narl org tw>
+#         Jonathan CHI-Ming Chen <jonchen _at_ nchc narl org tw>
+# License:GPL
+# 
+#
+#################################################################
+# record  variable 
+#################################################################
+
+# Ezilla Client Installation script.
+SLAVE_SETUP="$AUTO_INSTALL_WORKSPACE/ezilla-slave-setup.sh"
+SLAVE_DISK="$AUTO_INSTALL_WORKSPACE/ezilla-slave-disk.sh"
+SLAVE_FILESYSTEM="$AUTO_INSTALL_WORKSPACE/ezilla-slave-filesystem.sh"
+SLAVE_NETWORK="$AUTO_INSTALL_WORKSPACE/ezilla-slave-network.sh"
+SLAVE_CONFIG="$AUTO_INSTALL_WORKSPACE/ezilla-slave-config"
+MASTER_SETUP="$AUTO_INSTALL_WORKSPACE/ezilla-master-setup.sh"
+
+
+# Ezilla Client setup is done , then execute this script.
+SLAVE_INIT_SCRIPT="/var/www/html/kickstart/ezilla-cli-init"
+
+
+# Kickstart file 
+SLAVE_EXAMPLE_KICKSTART="$AUTO_INSTALL_WORKSPACE/ks-cli-example.cfg"
+SLAVE_KICKSTART="$AUTO_INSTALL_WORKSPACE/ks-cli.cfg"
+SLAVE_WEB_KICKSTART="/var/www/html/kickstart/ks-cli.cfg"
+SLAVE_WEB_KICKSTART_DIR="/var/www/html/kickstart"
+
+# Server configure file.
+if  [ -z "$ONE_LOCATION" ];then
+    MASTER_ONED_CONF="/etc/one/oned.conf"
+else
+    MASTER_ONED_CONF="$ONE_LOCATION/etc/oned.conf"
+fi
+
+
+#Datestore configure file.
+MASTER_DATASTORE_CONFIG="/opt/ezilla/share/config/datastore.one"
+
+
+
+
+# MooseFileSystem rpm Location
+MASTER_MOOSEFS_RPM="/opt/ezilla/share/moosefs/mfs*.rpm"
+SLAVE_MOOSEFS_RPM_WEB_LOCATION="http://10.0.0.254/kickstart/"
+SLAVE_MOOSEFS_RPM_FOLDER="/opt/ezilla/share/moosefs"
+
+
+# Ezilla Slave script.
+SLAVE_ONE_SCRIPT_FOLDER="/opt/ezilla/share/config/"
+SLAVE_ONE_ADDHOST_SCRIPT="/opt/ezilla/share/config/addhost.sh"
+SLAVE_ONE_NETWORK_SCRIPT="/opt/ezilla/share/config/vnet.one"
+SLAVE_ONE_DATASTORE_SCRIPT="/opt/ezilla/share/config/datastore.one"
+SLAVE_ONE_SCRIPT_TAR="/opt/ezilla/share/config/ezilla_slave_script.tar.gz"
+SLAVE_NETWORK_SCRIPT="/opt/ezilla/share/config/network_script.sh"
+# Ezilla about MooseFileSystem config files
+if [ -z "$ONE_LOCATION" ];then
+    MASTER_TM_MODULE_DIR="/var/lib/one/remotes/tm"
+else
+    MASTER_TM_MODULE_DIR="$ONE_LOCATION/var/remotes/tm"
+fi
+
+    

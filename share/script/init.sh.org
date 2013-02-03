@@ -1,0 +1,122 @@
+#!/bin/bash
+REDHAT_ETH_FILE="/etc/sysconfig/network-scripts/ifcfg-eth0"
+REDHAT_NETWOEK_FILE="/etc/sysconfig/network"
+DEBIAN_ETH_FILE="/etc/network/interfaces"
+HOSTS_FILE="hosts"
+ROOT_PRIKEY="id_rsa"
+USER_PRIKEY="id_rsa"
+
+if [ -f /etc/init.d/iptables ]
+then
+	/etc/init.d/iptables stop
+fi
+
+if [ -f /mnt/context.sh ]
+then
+  . /mnt/context.sh
+fi
+
+if [ -n "$IP_PUBLIC" ]; then
+	NETWORK=`echo $IP_PUBLIC | awk 'BEGIN{FS="."}{ OFS="."}{ print $1, $2, $3,0 }'`
+	BROADCAST=`echo $IP_PUBLIC | awk 'BEGIN{FS="."}{ OFS="."}{ print $1, $2, $3,255 }'`
+	HOSTNAME_ID=`echo $IP_PUBLIC | awk 'BEGIN{FS="."}{ OFS="."}{ print $4 }'`
+	if [ -e "$REDHAT_ETH_FILE" ]; then
+		cp $REDHAT_ETH_FILE /etc/ifcfg-eth0.org
+        	echo "nameserver 140.110.4.1" >> /etc/resolv.conf
+
+        	# set network file
+        	echo "NETWORKING=yes" > $REDHAT_NETWOEK_FILE
+        	echo "NETWORKING_IPV6=no" >> $REDHAT_NETWOEK_FILE
+		if [ -n "$HOSTNAME" ]; then
+        		echo "HOSTNAME=NCHC-n$HOSTNAME_ID" >> $REDHAT_NETWOEK_FILE
+			hostname "NCHC-n$HOSTNAME_ID"
+		fi
+	
+		if [ -n "$DOMAINNAME" ]; then
+        		echo "DOMAINNAME=$DOMAINNAME" >> $REDHAT_NETWOEK_FILE
+		fi
+
+        	# set ifcfg-eth0
+        	echo "DEVICE=eth0" > $REDHAT_ETH_FILE
+        	echo "BOOTPROTO=static" >> $REDHAT_ETH_FILE
+        	echo "NETMASK=255.0.0.0" >> $REDHAT_ETH_FILE
+        	echo "IPADDR=$IP_PUBLIC" >> $REDHAT_ETH_FILE
+        	echo "NETWORK=$NETWORK" >> $REDHAT_ETH_FILE
+        	echo "BROADCAST=$BROADCAST" >> $REDHAT_ETH_FILE
+        	echo "GATEWAY=$GATEWAY" >> $REDHAT_ETH_FILE
+       		echo "TYPE=Ethernet" >> $REDHAT_ETH_FILE
+        	echo "ONBOOT=yes" >> $REDHAT_ETH_FILE
+        	echo "USERCTL=no" >> $REDHAT_ETH_FILE
+        	echo "IPV6INIT=no" >> $REDHAT_ETH_FILE
+
+        	ifconfig eth0 down
+        	ifconfig eth0 $IP_PUBLIC
+        	ifconfig eth0 netmask 255.0.0.0
+        	ifconfig eth0 up
+        	route add default gw $IP_PUBLIC
+        	route add default gw $GATEWAY
+        	route del default gw $IP_PUBLIC
+	fi
+fi
+
+if [ -f /mnt/$HOSTS_FILE ]; then
+        cp /mnt/$HOSTS_FILE /etc/
+fi
+
+if [ -f /mnt/$MPI_PACKAGE ]; then
+        tar zxvf /mnt/$MPI_PACKAGE -C /opt/
+fi
+
+if [ -f /mnt/$ROOT_PUBKEY ]; then
+	mkdir -p /root/.ssh
+	cat /mnt/$ROOT_PUBKEY >> /root/.ssh/authorized_keys
+        echo "Host *" > /root/.ssh/config
+        echo "StrictHostKeyChecking no" >> /root/.ssh/config
+	chmod -R 600 /root/.ssh
+fi
+
+if [ -f /mnt/$ROOT_PRIKEY ]; then
+        cp /mnt/$ROOT_PRIKEY /root/.ssh/
+        chmod -R 600 /root/.ssh
+fi
+
+if [ -n "$USERNAME" ]; then
+	if [ -e "$DEBIAN_ETH_FILE" ]; then
+                if [ -n "$USER_PASSWD" ]; then
+                        useradd -s /bin/bash -m $USERNAME -p "$USER_PASSWD"
+                        echo $USERNAME:"$USER_PASSWD" | chpasswd
+                        echo "root:$USER_PASSWD" | chpasswd
+                else
+                        useradd -s /bin/bash -m $USERNAME
+                fi
+		#install request packages for debian
+		#apt-get -y -f install sshfs
+		if [ -n "$DEBIAN_DEB" ]; then 
+			/usr/bin/dpkg -i /mnt/*.deb
+		fi
+	else
+		if [ -n "$USER_PASSWD" ]; then
+			useradd -s /bin/bash -m $USERNAME -p "$USER_PASSWD"
+			echo "$USER_PASSWD" | passwd $USERNAME --stdin
+			echo "$USER_PASSWD" | passwd root --stdin
+		else
+			useradd -s /bin/bash -m $USERNAME
+		fi
+	fi
+
+	if [ -f /mnt/$USER_PUBKEY ]; then
+		mkdir -p /home/$USERNAME/.ssh/
+		cat /mnt/$USER_PUBKEY >> /home/$USERNAME/.ssh/authorized_keys
+		echo "Host *" > /home/$USERNAME/.ssh/config
+  		echo "StrictHostKeyChecking no" >> /home/$USERNAME/.ssh/config
+		chown -R $USERNAME:$USERNAME /home/$USERNAME/.ssh
+		chmod -R 700 /home/$USERNAME/.ssh
+	fi
+
+        if [ -f /mnt/$USER_PRIKEY ]; then
+                cp /mnt/$USER_PRIKEY /home/$USERNAME/.ssh/
+                chown -R $USERNAME:$USERNAME /home/$USERNAME/.ssh
+                chmod -R 700 /home/$USERNAME/.ssh
+        fi
+	
+fi
