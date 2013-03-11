@@ -1,0 +1,11 @@
+#!/bin/bash
+# $1 accpet args{start  , stop }
+#
+#
+LANG=C
+/etc/init.d/dhcpd $1 >> /dev/null
+dhcpd_status=$?
+/etc/init.d/httpd $1 >> /dev/null
+httpd_status=$?
+status=`expr $dhcpd_status + $httpd_status`
+echo $status

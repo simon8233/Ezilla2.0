@@ -47,8 +47,11 @@ if [ -d /etc/sudoers.d ];then
 
     if [ -z $ONE_LOCATION ];then
         echo "oneadmin ALL=(ALL) NOPASSWD:/usr/share/one/auto-installation/ezilla-slave-init.sh" > /etc/sudoers.d/oneadmin
+        echo "oneadmin ALL=(ALL) NOPASSWD:/usr/share/one/auto-installation/ezilla-autoinstall-server" >> /etc/sudoers.d/oneadmin
     else
         echo "oneadmin ALL=(ALL) NOPASSWD:$ONE_LOCATION/share/auto-installation/ezilla-slave-init.sh" > /etc/sudoers.d/oneadmin
+        echo "oneadmin ALL=(ALL) NOPASSWD:$ONE_LOCATION/share/auto-installation/ezilla-autoinstall-server" >> /etc/sudoers.d/oneadmin
+
     fi
         chmod 0440 /etc/sudoers.d/oneadmin
     if [  -e  /etc/sudoers ];then

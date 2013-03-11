@@ -706,7 +706,7 @@ var vm_buttons = {
             },
             "VM.reset" : {
                 type: "confirm",
-                text: '<i class="icon-off icon-large"></i> <br/> <span class="top-button-font">'+tr("Reset")+'</span>',
+                text: '<i class="icon-off icon-large" style="color:red;"></i> <br/> <span class="top-button-font">'+tr("Reset")+'</span>',
                 tip: tr("This will perform a hard reboot on selected VMs")
             },
 /*            "VM.cancel" : {
@@ -715,15 +715,16 @@ var vm_buttons = {
                 tip: tr("This will cancel selected VMs")
             },*/
 
-/*    "VM.shutdown" : {
+    "VM.shutdown" : {
         type: "confirm",
-        text: tr("Shutdown"),
+        condition: mustBeAdmin,
+        text: '<i class="icon-off icon-large"></i> <br/> <span class="top-button-font">'+tr("Shutdown")+'</span>',
         tip: tr("This will initiate the shutdown process in the selected VMs")
-    },*/
+    },
 
     "action_list" : {
         type: "select",
-	condition: mustBeAdmin,
+    	condition: mustBeAdmin,
         actions: {
 
 /*    "VM.update_dialog" : {
@@ -2117,10 +2118,10 @@ function setupVMStateChangeButtons(){
 			switch (vm_state){
                         case 'RUNNING' :
                                 $(".top_button[value='VM.stop']").button("disable");
-	                        $(".top_button[value='VM.suspend']").button("disable");
-        	                $(".top_button[value='VM.reboot']").button("disable");
-                	        $(".top_button[value='VM.reset']").button("disable");
-                        	$(".top_button[value='VM.migrate']").button("disable");
+	                            $(".top_button[value='VM.suspend']").button("disable");
+            	                $(".top_button[value='VM.reboot']").button("disable");
+                    	        $(".top_button[value='VM.reset']").button("disable");
+                            	$(".top_button[value='VM.migrate']").button("disable");
                                 $(".top_button[value='VM.shutdown']").button("disable");
                                 token = $('input.check_item:checked',nodes).each(function(){
                                         var vm_state = $("#vmstate"+$(this).val()+"",nodes).attr('vmstate');

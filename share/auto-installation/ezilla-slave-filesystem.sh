@@ -28,12 +28,6 @@ function SetupMasterFileSystem(){
         sed -i 's/iscsi" ]/iscsi,moosefs" ]/g' "$MASTER_ONED_CONF" 
         echo "You Must Reboot oned process. To load Moose file system support "
 	fi
-	### mfsMasterServer
-	cat /etc/hosts | grep "mfsmaster" >> /dev/null
-    if [ $? != 0 ]; then
-		declare -i modify_line=$(cat -n /etc/hosts | grep '10.0.0.254' | awk 'NR==1 {print $1}')
-		sed -i -e "${modify_line}a 10.0.0.254 mfsmaster" /etc/hosts
-	fi
 
 	if [ ! -f /etc/mfs/mfsmaster.cfg ];then
     	/bin/cp /etc/mfs/mfsmaster.cfg.dist /etc/mfs/mfsmaster.cfg
@@ -49,14 +43,9 @@ function SetupMasterFileSystem(){
 		/bin/cp /var/mfs/metadata.mfs.empty /var/mfs/metadata.mfs
 	fi
 
-#	if [ ! -f /etc/mfs/mfsmetalogger.cfg ];then
-#  		/bin/cp /etc/mfs/mfsmetalogger.cfg.dist /etc/mfs/mfsmetalogger.cfg
-#		sed -i -e 's/# BACK_LOGS/  BACK_LOGS/g' -e 's/# META_DOWNLOAD_FREQ/  META_DOWNLOAD_FREQ/g' -e 's/# MASTER_HOST/  MASTER_HOST/g' -e 's/# MASTER_PORT/  MASTER_PORT/g' /etc/mfs/mfsmetalogger.cfg
-#	fi
-
 	if [ ! -f /etc/mfs/mfschunkserver.cfg ];then
     	/bin/cp /etc/mfs/mfschunkserver.cfg.dist /etc/mfs/mfschunkserver.cfg
-		sed -i -e 's/# MASTER_HOST/  MASTER_HOST/g' -e 's/# MASTER_PORT/  MASTER_PORT/g' -e 's/# HDD_CONF_FILENAME/  HDD_CONF_FILENAME/g' /etc/mfs/mfschunkserver.cfg
+        sed -i -e 's/# MASTER_HOST = mfsmaster/  MASTER_HOST = ezilla_masterfs/g' -e 's/# MASTER_PORT/  MASTER_PORT/g' -e 's/# HDD_CONF_FILENAME/  HDD_CONF_FILENAME/g' /etc/mfs/mfschunkserver.cfg
 	fi
 
 	if [ ! -f /etc/mfs/mfshdd.cfg ];then
@@ -64,8 +53,6 @@ function SetupMasterFileSystem(){
 		echo '/mnt/mfschunk1/' >> /etc/mfs/mfshdd.cfg
 		mkdir -p /mnt/mfschunk1/
 		chown -R daemon:daemon /mnt/mfschunk1	
-		mkdir -p /mfs
-		chown -R oneadmin:oneadmin /mfs
 	fi
 			
 	/etc/init.d/mfsmaster	restart
@@ -78,7 +65,6 @@ function SetupMasterFileSystem(){
 	sleep 10
     /usr/bin/mfsmount /mfs -H mfsmaster
 	sleep 1
-	cp -rp /var/lib/one/datastores/* /mfs
 	rm -rf /var/lib/one/datastores
 	mkdir -p /var/lib/one/datastores
 	/usr/bin/mfsmount /var/lib/one/datastores -H mfsmaster
@@ -120,8 +106,8 @@ function SetupSlaveFileSystem(){
      	sed -i "${start_line}i /bin/cp /etc/mfs/mfshdd.cfg.dist /etc/mfs/mfshdd.cfg " $SLAVE_KICKSTART
         start_line=`expr ${start_line} + 1`
 		sed -i "${start_line}i mkdir -p /mnt/mfschunk1/" $SLAVE_KICKSTART
-		start_line=`expr ${start_line} + 1`
-		sed -i "${start_line}i sed -i -e 's/# MASTER_HOST/  MASTER_HOST/g' -e 's/# MASTER_PORT/  MASTER_PORT/g' -e 's/# HDD_CONF_FILENAME/  HDD_CONF_FILENAME/g' /etc/mfs/mfschunkserver.cfg " $SLAVE_KICKSTART
+        start_line=`expr ${start_line} + 1`
+        sed -i "${start_line}i sed -i -e 's/# MASTER_HOST = mfsmaster/  MASTER_HOST = ezilla_masterfs/g' -e 's/# MASTER_PORT/  MASTER_PORT/g' -e 's/# HDD_CONF_FILENAME/  HDD_CONF_FILENAME/g' /etc/mfs/mfschunkserver.cfg " $SLAVE_KICKSTART
 		start_line=`expr ${start_line} + 1`
 		sed -i "${start_line}i echo '/mnt/mfschunk1/' >> /etc/mfs/mfshdd.cfg" $SLAVE_KICKSTART
         start_line=`expr ${start_line} + 1`
@@ -133,15 +119,14 @@ function SetupSlaveFileSystem(){
 		start_line=`expr ${start_line} + 1`
 		sed -i "${start_line}i chkconfig mfschunkserver on" $SLAVE_KICKSTART
 		start_line=`expr ${start_line} + 1`
-		sed -i "${start_line}i echo '10.0.0.254 mfsmaster' >> /etc/hosts " $SLAVE_KICKSTART
-		start_line=`expr ${start_line} + 1`
 		sed -i "${start_line}i rm -rf /var/lib/one/datastores" $SLAVE_KICKSTART
 		start_line=`expr ${start_line} + 1`
 		sed -i "${start_line}i mkdir -p /var/lib/one/datastores" $SLAVE_KICKSTART              
 		start_line=`expr ${start_line} + 1`                       
-		sed -i "${start_line}i echo '/usr/bin/mfsmount /var/lib/one/datastores/ -H mfsmaster' >> /etc/rc.local " $SLAVE_KICKSTART
+        sed -i "${start_line}i echo /usr/bin/mfsmount   /var/lib/one/datastores               fuse    mfsmaster=ezilla-masterfs,mfsport=9421,_netdev,nonempty,nosuid,nodev 0 0 >> /etc/fstab"  $SLAVE_KICKSTART
         start_line=`expr ${start_line} + 1`
-		sed -i "${start_line}i chown oneadmin:oneadmin /var/lib/one/datastores" $SLAVE_KICKSTART        
+		sed -i "${start_line}i chown oneadmin:oneadmin /var/lib/one/datastores" $SLAVE_KICKSTART
+         
         
     elif [ $FILESYSTEM == "nfs" ];then
 
@@ -151,7 +136,7 @@ function SetupSlaveFileSystem(){
         start_line=`expr ${start_line} + 1`
         sed -i "${start_line}i chown oneadmin:oneadmin /var/lib/one/.*" $SLAVE_KICKSTART
         start_line=`expr ${start_line} + 1`
-        sed -i "${start_line}i \echo \'mount -t nfs 10.0.0.254:/var/lib/one/datastores /var/lib/one/datastores \' >> /etc/rc.local " $SLAVE_KICKSTART
+        sed -i "${start_line}i \echo \'mount -t nfs ezilla-masterfs:/var/lib/one/datastores /var/lib/one/datastores \' >> /etc/rc.local " $SLAVE_KICKSTART
  
     fi
 
@@ -159,7 +144,6 @@ function SetupSlaveFileSystem(){
 function removeMasterFileSystem(){
     echo test
 }
-
 
 SetupMasterFileSystem
 SetupSlaveFileSystem

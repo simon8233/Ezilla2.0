@@ -66,12 +66,12 @@ var create_vn_tmpl =
                     <option value="802.1Q">'+tr("802.1Q")+'</option>\
                     <option value="ebtables">'+tr("ebtables")+'</option>\
                     <option value="openvswitch">'+tr("Open vSwitch")+'</option>\
-                    <option value="vmware">'+tr("VMware")+'</option>\
+                    <!-----<option value="vmware">'+tr("VMware")+'</option>---->\
                  </select><br />\
                  <label for="bridge">'+tr("Bridge")+':</label>\
-                 <input type="text" name="bridge" id="bridge" /><br />\
-                 <label for="phydev">'+tr("Physical device")+':</label>\
-                 <input type="text" name="phydev" id="phydev" />\
+                 <input type="text" name="bridge" id="bridge"/><br />\
+                 <!---- <label for="phydev">'+tr("Physical device")+':</label>\
+                 <input type="text" name="phydev" id="phydev" /> ---->\
                  <label for="vlan">'+tr("VLAN")+':</label>\
                  <select name="vlan" id="vlan">\
                     <option value="YES">'+tr("Yes")+'</option>\

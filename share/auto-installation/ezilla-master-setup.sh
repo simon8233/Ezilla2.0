@@ -23,10 +23,22 @@ function SetupMasterNFSService(){
     fi
 
 }
-#function SetupMasterHostFile(){
-    
+function SetupMasterHostFile(){
 
+# have 2 net card , so using split on 2 cards
+    if [ "$NETWORK" == "2"  ];then
+        echo "192.168.10.254 ezilla-masterfs " >> /etc/hosts
+        for ip in $(seq 1 100)
+        do
+            echo "192.168.10.$ip    ezilla-slavefs-$ip" >> /etc/hosts
+        done   
+# only 1 net card , so only using the card
+    elif [ "$NETWORK" == "1" ];then
+       sed -i "2a10.0.0.254 ezilla-masterfs " /etc/hosts 
+   fi
 
+    cp /etc/hosts $SLAVE_WEB_KICKSTART_DIR
 
-#}
+}
 SetupMasterNFSService
+SetupMasterHostFile

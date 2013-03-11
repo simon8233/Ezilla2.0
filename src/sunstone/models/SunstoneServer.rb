@@ -343,8 +343,82 @@ class SunstoneServer < CloudServer
             end
         end
     end
-    
     ############################################################################
+    #    Ezilla Auto-Installation Service for Slave Node
+    #############################################################################
+    def startInstallServ()
+        
+        if ONE_LOCATION.nil?
+            cmd = "sudo /usr/share/one/auto-installation/ezilla-autoinstall-server restart"
+        else
+            cmd = "sudo " +ONE_LOCATION + "/share/auto-installation/ezilla-autoinstall-server restart"
+        end
+        begin
+            %x{#{cmd}}
+            return [ 200 , "Everything will be ok!!!" ]
+        rescue Exception => e
+            return [ 500 , OpenNebula::Error.new(e.message).to_json ]
+        end
+    end
+    def stopInstallServ()
+        if ONE_LOCATION.nil?
+            cmd = "sudo /usr/share/one/auto-installation/ezilla-autoinstall-server stop"
+        else
+            cmd = "sudo " +ONE_LOCATION + "/share/auto-installation/ezilla-autoinstall-server stop"
+        end
+        begin
+            %x{#{cmd}}
+            return [ 200 , "Everything will be ok!!!" ]
+        rescue Exception => e
+            return [ 500 , OpenNebula::Error.new(e.message).to_json ]
+        end
+    end
+    def statusInstallServ()
+        if ONE_LOCATION.nil?
+            cmd = "sudo /usr/share/one/auto-installation/ezilla-autoinstall-server status"
+        else
+            cmd = "sudo " +ONE_LOCATION + "/share/auto-installation/ezilla-autoinstall-server status"
+        end
+        begin
+            status = %x{#{cmd}}
+            puts status
+            info = {:status=>status}
+            return [ 200 , info ]
+        rescue Exception => e
+            return [ 500 , OpenNebula::Error.new(e.message).to_json ]
+        end
+
+    end
+
+    #############################################################################
+    #     Setup Slave node environment 
+    #############################################################################   
+    def setup_slave_environment(diskver)
+        if ONE_LOCATION.nil?
+           diskver_config_file = "/usr/share/one/auto-installation/ezilla-slave-config"
+           cmd = "sudo /usr/share/one/auto-installation/ezilla-slave-init.sh"
+        else
+           diskver_config_file =  ONE_LOCATION + "/share/auto-installation/ezilla-slave-config"
+           cmd = "sudo " +ONE_LOCATION + "/share/auto-installation/ezilla-slave-init.sh"
+        end
+
+        File.open(diskver_config_file,"w+")  do |f|
+            f.write("INSTALL_MODE=#{diskver["install_mode"]}\n")
+            f.write("DISK_NUM=#{diskver["disk"].size}\n")
+            f.write("DISK=#{diskver["disk"].join(",")}\n")
+            f.write("FILESYSTEM=#{diskver["filesystem"]}\n")
+            f.write("NETWORK=#{diskver["net_card"]}\n")
+        end
+
+
+        begin
+            %x{#{cmd}}
+            return [ 200 , "Everything will be ok!!!" ]
+        rescue Exception => e
+            return [ 500 , OpenNebula::Error.new(e.message).to_json ]
+        end
+    end    
+    #############################################################################
     #
     ############################################################################
     def get_pool_monitoring(resource, meters)

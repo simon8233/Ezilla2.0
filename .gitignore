@@ -1,2 +1,3 @@
-public/vendor/noVNC/
-public/images/vncsnapshot/*.jpg
+src/sunstone/public/images/vncsnapshot/*.jpg
+src/sunstone/public/vendor/noVNC/
+src/sunstone/public/locale/

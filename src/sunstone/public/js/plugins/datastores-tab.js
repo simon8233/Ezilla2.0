@@ -63,10 +63,12 @@ var create_datastore_tmpl =
   <label for="ds_mad">' + tr("Datastore manager") + ':</label>\
   <select id="ds_mad" name="ds_mad">\
         <option value="fs">' + tr("Filesystem") + '</option>\
-        <option value="vmware">' + tr("VMware") + '</option>\
+        <!-----<option value="vmware">' + tr("VMware") + '</option>---->\
         <option value="iscsi">' + tr("iSCSI") + '</option>\
         <option value="lvm">' + tr("LVM") + '</option>\
   </select>\
+  <br />\
+  <br />\
   <label>' + tr("Transfer manager") + ':</label>\
   <select id="tm_mad" name="tm_mad">\
         <option value="shared">' + tr("Shared") + '</option>\

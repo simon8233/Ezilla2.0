@@ -37,6 +37,7 @@ var images_tab_content = '\
       <th>'+tr("Status")+'</th>\
       <th>'+tr("#VMS")+'</th>\
       <th>'+tr("Target")+'</th>\
+      <th>'+tr("Driver")+'</th>\
     </tr>\
   </thead>\
   <tbody id="tbodyimages">\
@@ -106,7 +107,7 @@ var create_image_tmpl =
                </div>\
                <div class="img_param">\
                   <label for="img_dev_prefix">'+tr("Device prefix")+':</label>\
-                  <input type="text" name="img_dev_prefix" id="img_dev_prefix" value="hd" />\
+                  <input type="text" name="img_dev_prefix" id="img_dev_prefix" value="vd" />\
                   <div class="tip">'+tr("Prefix for the emulated device this image will be mounted at. For instance, “hd”, “sd”. If omitted, the default value is the one defined in oned.conf (installation default is “hd”).")+'</div>\
                </div>\
                <div class="img_param">\
@@ -587,7 +588,8 @@ function imageElementArray(image_json){
             : '<input class="action_cb" id="cb_persistent_image" type="checkbox" elem_id="'+image.ID+'"/>',
         OpenNebula.Helper.resource_state("image",image.STATE),
         image.RUNNING_VMS,
-        image.TEMPLATE.TARGET ? image.TEMPLATE.TARGET : '--'
+        image.TEMPLATE.TARGET ? image.TEMPLATE.TARGET : '--',
+        image.TEMPLATE.DRIVER ? image.TEMPLATE.DRIVER : '--'
         ];
 }
 
@@ -1290,7 +1292,7 @@ $(document).ready(function(){
             { "bSortable": false, "aTargets": ["check"] },
             { "sWidth": "80px", "aTargets": [0] },
             { "sWidth": "60px", "aTargets": [2,3,9,10] },
-            { "sWidth": "35px", "aTargets": [1,6,11,12] },
+            { "sWidth": "35px", "aTargets": [1,6,11,12,13] },
             { "sWidth": "100px", "aTargets": [5,7] },
             { "sWidth": "150px", "aTargets": [8] },
             { "bVisible": false, "aTargets": [6,8,12]}
@@ -1304,7 +1306,7 @@ $(document).ready(function(){
     dataTable_images.fnClearTable();
     addElement([
         spinner,
-        '','','','','','','','','','','',''],dataTable_images);
+        '','','','','','','','','','','','',''],dataTable_images);
     Sunstone.runAction("Image.list");
 
     setupCreateImageDialog();

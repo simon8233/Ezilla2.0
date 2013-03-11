@@ -84,8 +84,8 @@ var create_host_tmpl =
           <label>' + tr("Virtualization Manager") + ':</label>\
           <select id="vmm_mad" name="vmm">\
                 <option value="vmm_kvm">' + tr("KVM") + '</option>\
-                <option value="vmm_xen">' + tr("XEN") + '</option>\
-                <option value="vmm_vmware">' + tr("VMware") + '</option>\
+<!----          <option value="vmm_xen">' + tr("XEN") + '</option>\
+                <option value="vmm_vmware">' + tr("VMware") + '</option>----->\
                 <option value="vmm_ec2">' + tr("EC2") + '</option>\
                 <option value="vmm_dummy">' + tr("Dummy") + '</option>\
                 <option value="custom">' + tr("Custom") + '</option>\
@@ -98,8 +98,8 @@ var create_host_tmpl =
       <label>' + tr("Information Manager") + ':</label>\
       <select id="im_mad" name="im">\
                <option value="im_kvm">' + tr("KVM") + '</option>\
-               <option value="im_xen">' + tr("XEN") + '</option>\
-               <option value="im_vmware">' + tr("VMware") + '</option>\
+<!----               <option value="im_xen">' + tr("XEN") + '</option>\
+               <option value="im_vmware">' + tr("VMware") + '</option>----->\
                <option value="im_ec2">' + tr("EC2") + '</option>\
                <option value="im_dummy">' + tr("Dummy") + '</option>\
                <option value="custom">' + tr("Custom") + '</option>\
@@ -117,7 +117,7 @@ var create_host_tmpl =
          <option value="802.1Q">'+tr("802.1Q")+'</option>\
          <option value="ebtables">'+tr("ebtables")+'</option>\
          <option value="ovswitch">'+tr("Open vSwitch")+'</option>\
-         <option value="vmware">'+tr("VMware")+'</option>\
+<!---         <option value="vmware">'+tr("VMware")+'</option>---->\
          <option value="custom">' + tr("Custom") + '</option>\
        </select>\
        <div>\

@@ -235,7 +235,7 @@ var create_template_tmpl = '<div id="template_create_tabs">\
                             </div>\
                             <div class="vm_param kvm_opt xen_opt vmware_opt">\
                                   <label for="DRIVER">'+tr("Driver")+':</label>\
-                                  <input type="text" id="DRIVER" name="driver" value="qcow2"/>\
+                                  <input type="text" id="DRIVER" name="driver"/>\
                                   <div class="tip">'+tr("Specific image mapping driver. KVM: raw, qcow2. Xen:tap:aio:, file:. VMware unsupported")+'</div>\
                             </div>\
                             <div class="vm_param kvm_opt xen_opt vmware_opt add_disk">\
@@ -351,9 +351,9 @@ var create_template_tmpl = '<div id="template_create_tabs">\
                                   <div class="tip">'+tr("Name of a shell script to be executed after creating the tun device for the VM")+'</div>\
                             </div>\
                             <div class="vm_param kvm_opt xen_opt vmware_opt niccfg network">\
-                                  <label for="MODEL">'+tr("Model")+':</label>\
-                                  <input type="text" id="MODEL" name="model" />\
-                                  <div class="tip">'+tr("Hardware that will emulate this network interface. With Xen this is the type attribute of the vif.")+'</div>\
+                                  <!----<label for="MODEL">'+tr("Model")+':</label>----->\
+                                  <input type="text" id="MODEL" name="model" value="virtio" style="display:none;"/>\
+                                  <!----<div class="tip">'+tr("Hardware that will emulate this network interface. With Xen this is the type attribute of the vif.")+'</div>---->\
                             </div>\
                             <div class="firewall_select">\
                                   <label for="black_white_tcp">'+tr("TCP firewall mode")+':</label>\
@@ -826,10 +826,10 @@ var template_buttons = {
         type: "action",
         text: '<i class="icon-edit icon-large"></i> <br/> <span class="top-button-font">' +tr("Update properties")+'</span>',
     },
-    "Template.instantiate_vms" : {
+/*    "Template.instantiate_vms" : {
         type: "action",
         text: '<i class="icon-cloud icon-large"></i> <br/> <span class="top-button-font">' +tr("Instantiate")+'</span>',
-    },
+    },*/
 
     "action_list" : {
         type: "select",
@@ -1049,7 +1049,7 @@ function setupCreateTemplateDialog(){
 
         //hide non common sections
         $(section_inputs).hide();
-
+        $(section_features).hide();
         switch(ui.index){
         case 0:
             enable_kvm();
@@ -1127,7 +1127,7 @@ function setupCreateTemplateDialog(){
 
         $('input#TYPE', section_raw).val("kvm");
 
-        $(section_inputs).show();
+//        $(section_inputs).show();
     };
 
     // Using XEN wizard.
@@ -1424,6 +1424,11 @@ function setupCreateTemplateDialog(){
                 $('input#TARGET',section_disks).val(target);
             else
                 $('input#TARGET',section_disks).val('');
+            var driver = getValue(option.attr('elem_id'),1,13,dataTable_images);
+            if (driver && driver != "--")
+                $('input#DRIVER',section_disks).val(driver);
+            else             
+                $('input#DRIVER',section_disks).val('');
         });
 
         //Depending on adding a disk or a image we need to show/hide
@@ -1593,7 +1598,10 @@ function setupCreateTemplateDialog(){
             //firewall
             $('.firewall',section_networks).hide();
             $('.firewall',section_networks).attr('disabled','disabled');
-            $('.firewall_select',section_networks).show();
+/*
+ *     ezilla 2.0 release  ,disable firewall function. waiting for next release.  will be opening.
+*/
+//            $('.firewall_select',section_networks).show();
             $('.firewall_select select option',section_networks).removeAttr('selected');
 
             select = $(this).val();
@@ -1680,6 +1688,7 @@ function setupCreateTemplateDialog(){
 
     //Sets up the input section - basicly enabling adding and removing from box
     var inputs_setup = function() {
+        
         $('fieldset',section_inputs).hide();
 
         $('#add_inputs',section_inputs).click(function(){
@@ -1962,7 +1971,8 @@ function setupCreateTemplateDialog(){
 
         //process inputs -> fetch from box
         scope = section_inputs;
-        vm_json["INPUT"] = addBoxJSON(scope,'#inputs_box');
+        vm_json["INPUT"] = [{"BUS":"usb", "TYPE":"tablet"}];
+        //addBoxJSON(scope,'#inputs_box');
 
         //process graphics -> fetch fields with value
         scope = section_graphics;
@@ -2070,7 +2080,7 @@ function setupCreateTemplateDialog(){
     $('button#reset_vm_form',dialog).click(function(){
         $('select#disks_box option',section_disks).remove();
         $('select#nics_box option',section_networks).remove();
-        $('select#inputs_box option',section_inputs).remove();
+//        $('select#inputs_box option',section_inputs).remove();
         $('select#custom_var_box option',section_custom_var).remove();
         return true;
     });

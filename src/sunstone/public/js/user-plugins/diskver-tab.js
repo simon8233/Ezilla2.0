@@ -71,37 +71,37 @@ var ezilla_diskver_wizard ='\
                 <div class="StepContext">\
                     '+tr("You can select Install mode on this section")+'<br>\
                     <form>\
-                    <input type="radio" name="install_mode" value="default" ><label>'+tr("Default")+'</label><br>\
-                    <input type="radio" name="install_mode" value="custom"  checked="checked" ><label>'+tr("Custom")+'</label><br>\
+<!-----             <input type="radio" name="install_mode" value="default" ><label>'+tr("Default")+'</label><br>---->\
+                    <input type="radio" name="install_mode" value="custom" checked ><label>'+tr("Custom")+'</label><br>\
                     </form>\
                 </div>\
             </div>\
             <div id="step-3" class="content" style="display: none; ">\
                 <h2 class="StepTitle">'+tr("Slave node Disk enviroment")+'</h2>\
                 <div class="StepContext">\
-                    '+tr("What kind of the disk is used to install ezilla project on your server?")+'<br>\
-                    <label>sda</label><input type="checkbox" name="disk" value="sda" checked="checked" ><br>\
+                    '+tr("What kind of the disk is used to install ezilla project on your server? MAX: 2 disks")+'<br>\
+                    <label>sda</label><input type="checkbox" name="disk" value="sda" checked ><br>\
                     <label>sdb</label><input type="checkbox" name="disk" value="sdb" ><br>\
-                    <label>hda</label><input type="checkbox" name="disk" value="hda" ><br>\
-                    <label>hdb</label><input type="checkbox" name="disk" value="hdb" ><br>\
-                    <label>'+tr("Other")+'</label><input id="disk_other" type="text" name="disk" value=""><br>\
+                    <label>sdc</label><input type="checkbox" name="disk" value="sdc" ><br>\
+                    <label>sdd</label><input type="checkbox" name="disk" value="sdd" ><br>\
+<!-----             <label>'+tr("Other")+'</label><input id="disk_other" type="text" name="disk" value=""><br> ---->\
                     <hr>\
                     '+tr("What kind of the file system is used to put VM images?")+'<br>\
-                    <label>SCP</label><input type="radio" name="filesystem" value="scp"><br>\
+<!-----             <label>SCP</label><input type="radio" name="filesystem" value="scp"><br>------>\
                     <label>NFS</label><input type="radio" name="filesystem" value="nfs"><br>\
-                    <label>MooseFS</label><input type="radio" name="filesystem" value="moosefs" checked="checked"><br>\
+                    <label>MooseFS</label><input type="radio" name="filesystem" value="moosefs" checked><br>\
                </div>\
             </div>\
             <div id="step-4" class="content" style="display: none; ">\
                 <h2 class="StepTitle">'+("Slave node Network enviroment")+'</h2>\
                 <div class="StepContext">\
-                    '+tr("How many network card of the machine in your environments?(1-2)")+'<br>\
+                    '+tr("How many network card of the machine in your environments?")+'<br>\
                     <label style="width:200px">1 Ethernet card</label><input type="radio" name="net_card" value="1" checked="checked" ><br>\
-                    <label style="width:200px">2 Ethernet card</label><input type="radio" name="net_card" value="2" ><br>\
+<!----                    <label style="width:200px">2 Ethernet card</label><input type="radio" name="net_card" value="2" ><br>----->\
                 </div>\
             </div>\
             <div id="step-5" class="content" style="display: none; ">\
-                <h2 class="StepTitle">'+("Installation Complete")+'</h2>\
+                <h2 class="StepTitle">'+("Complete")+'</h2>\
                 <div  class="StepContext">\
                     '+("Setup has finished")+'<br>\
                     '+("then Must boot your Slave Node")+'<br>\
@@ -124,11 +124,11 @@ var diskver_tab_content =
         <tr>\
             <td class="key_td">'+tr("Ezilla Auto-Installation Service for Slave node") +'</td>\
             <td class="value_td">\
-                <input type="checkbox" class="iButton" id="EzillaAutoInstallation" />\
+                <input type="checkbox" class="iButton" id="EzillaAutoInstallation"/>\
             </td>\
         </tr>\
         <tr id="SetupYourSlaveEnvironment" style="display:none;" >\
-            <td class="key_td">'+tr("Setup Your Slave environment") +'</td>\
+            <td class="key_td">'+tr("Set up Your Slave environment") +'</td>\
             <td class="value_td" style="text-align:left;"><button type="button" style="height:27px;width:89px;" id="setupSlaveEnv">'+tr("setup")+'</button>\
             </td>\
         </tr>\
@@ -143,14 +143,14 @@ var diskver_tab_content =
 var diskver_actions = {
     "Diskver.startInstallServ" :  {
         type : "single",
-        call : OpenNebula.Diskver.startInstallserv,
+        call : OpenNebula.Diskver.startInstallServ,
         callback : notifyError("OK"),
         error: onError,
         notify :true
     },
     "Diskver.stopInstallServ" : {
         type : "single",
-        call : OpenNebula.Diskver.stopInstallserv,
+        call : OpenNebula.Diskver.stopInstallServ,
         callback : notifyError("OK"),
         error: onError,
         notify: true        
@@ -161,26 +161,34 @@ var diskver_actions = {
         callback : notifyError("OK"),
         error:onError,
         notify: true
-    },/*
-    "Diskver.diskverlist":{
-        type: "list",
-        call: OpenNebula.Config.list
-        callback:notifyError("OK"),
-        error: oneError
-    },*/
+    },
+    "Diskver.statusInstallServ":{
+        type: "single",
+        call: OpenNebula.Diskver.statusInstallServ,
+        callback:button_with_ezilla_autoinstall_service,
+        error: onError
+        //notify: true
+    }
    
 };
 
 var diskver_tab = {
-    title: tr("Slave Node Setup"),
+    title: '<i class="icon-magic"></i>'+tr("Set up Slave Node"),
     content: diskver_tab_content,
-    tabClass: "subTab"
+    //tabClass: "subTab"
 };
 
 Sunstone.addActions(diskver_actions);
 Sunstone.addMainTab('diskver_tab',diskver_tab);
 
-
+function button_with_ezilla_autoinstall_service(response){
+    var status = response["status"];
+    if ( status == 0 ){
+     $('input#EzillaAutoInstallation').attr('checked',true);
+     $('input#EzillaAutoInstallation').iButton('repaint');
+     $('#diskver_table #SetupYourSlaveEnvironment').show();
+    }
+}
 
 // Update secure websockets configuration
 // First we perform a User.show(). In the callback we update the user template
@@ -192,12 +200,15 @@ Sunstone.addMainTab('diskver_tab',diskver_tab);
 
 // ezilla disk-ver setup .
 // dialog ver = diskver_dialog
+//
+
 function setupDiskVerSetting(){
-//    $('.setup_append').append('<div style="display:none;"title=\"'+tr("Setting Ezilla Disk-ver environment")+'\" id="diskver_dialog" class="diskver_class"></div>');
     dialogs_context.append('<div title=\"'+tr("Setting Ezilla Disk-ver environment")+'\" id="diskver_dialog" class="diskver_class"></div>');
     $diskver_dialog = $('#diskver_dialog');
     var dialog = $diskver_dialog;
     dialog.html(ezilla_diskver_wizard);
+    
+        Sunstone.runAction("Diskver.statusInstallServ");
    
     dialog.dialog({
         autoOpen:  false,
@@ -206,22 +217,24 @@ function setupDiskVerSetting(){
         resizeable:true,
         closeOnEscape:false
     });
-    $('#wizard').smartWizard({
+    $('div#wizard').smartWizard({
         onLeaveStep:leaveAStepCallback,
         onFinish:onFinishCallback
     });
     $('button#setupSlaveEnv').button("enable").click(function(){
         dialog.dialog('open');
     });
-   
+  
+
+ 
     $('input#EzillaAutoInstallation').iButton({
     change:function($input){
         if ( $input.is(":checked") ){
-            //Sunstone.runAction("Config.startInstallServ");
+            Sunstone.runAction("Diskver.startInstallServ");
             $('#diskver_table #SetupYourSlaveEnvironment').show();
         }
         else {
-            //Sunstone.runAction("Config.stopInstallServ");
+            Sunstone.runAction("Diskver.stopInstallServ");
             $('#diskver_table #SetupYourSlaveEnvironment').hide();
         }
     }
@@ -232,8 +245,7 @@ function leaveAStepCallback(obj){
         return validateSteps(step_num); // return false to stay on step and true to continue navigation 
 }
 function onFinishCallback(){
-        
-        diskver_wizard=$('div#wizard');
+        var  diskver_wizard = $('div#wizard');
         install_mode = $('input[name=install_mode]:checked',diskver_wizard).val();
         disk = new Array();
         $('input[name=disk]:checked',diskver_wizard).each(function(i){
@@ -241,7 +253,7 @@ function onFinishCallback(){
         });
         
         filesystem = $('input[name=filesystem]:checked',diskver_wizard).val();
-        net_card = $('input[name=net_card]:checked',diskver_wizard).val();        
+        net_card = $('input[name=net_card]:checked',diskver_wizard).val();
         var config_diskver = {
             "install_mode":install_mode, 
             "disk":disk,            
@@ -252,20 +264,107 @@ function onFinishCallback(){
         dialog = $('#diskver_dialog');
         dialog.dialog('close');
 }
+function validateSteps2(){
+    var isValid = true;
+    var install_mode =  $('input[name=install_mode]:checked','div#wizard').val();
+  
+    if ( install_mode == undefined ){
+            console.log("install_mode == undefined");
+            isValid = false;            
+    }
+    return isValid;
+}
+function validateSteps3(){
+    var isValid = true;
+    disk = new Array();
+    $('input[name=disk]:checked','div#wizard').each(function(i){
+            disk[i] = this.value;
+    });
+    if (disk.length <= 0 || disk.length > 2){
+            isValid = false;
+    }
+    var filesystem = $('input[name=filesystem]:checked','div#wizard').val();
+    
+    if ( filesystem == undefined  ){
+            isValid = false; 
+    }
+    return isValid;
+}
+function validateSteps4(){
+    var isValid = true;
+    var net_card = $('input[name=net_card]:checked','div#wizard').val();
+    if ( net_card == undefined ){
+            isValid = false;            
+    }
+    return isValid;
+}
 function validateSteps(stepnumber){
         var isStepValid = true;
         // validate step 1
-        if(stepnumber == 1){
-        // Your step validation logic
-        // set isStepValid = false if has errors
+        if(stepnumber == 2){
+            if (validateSteps2() == false){
+            isStepValid = false;
+                $('div#wizard').smartWizard('showMessage','Please correct the errors in step'+stepnumber+ ' and click next.');
+                $('div#wizard').smartWizard('setError',{stepnum:stepnumber,iserror:true});            
+            }
+            else{
+                $('div#wizard').smartWizard('setError',{stepnum:stepnumber,iserror:false});
+            }
         }
-        return true; 
+        if(stepnumber == 3){
+            if (validateSteps3() == false){
+            isStepValid = false;
+                $('div#wizard').smartWizard('showMessage','Please correct the errors in step'+stepnumber+ ' and click next.');
+ 
+                $('div#wizard').smartWizard('setError',{stepnum:stepnumber,iserror:true});            
+            }
+            else{
+                $('div#wizard').smartWizard('setError',{stepnum:stepnumber,iserror:false});
+            }
+        }
+        if(stepnumber == 4){
+            if (validateSteps4() == false){
+            isStepValid = false;
+                $('div#wizard').smartWizard('showMessage','Please correct the errors in step'+stepnumber+ ' and click next.'); 
+                $('div#wizard').smartWizard('setError',{stepnum:stepnumber,iserror:true});            
+            }
+            else{
+                $('div#wizard').smartWizard('setError',{stepnum:stepnumber,iserror:false});
+            }
+        }
+        if (!isStepValid){
+            $('div#wizard').smartWizard('showMessage','Please correct the errors in the steps and continue');
+        }
+        return isStepValid; 
 
 }
 function validateAllSteps(){
-        var isStepValid = true;
-        // all step validation logic     
-return isStepValid;
+
+    if(validateStep2() == false){
+        isStepValid = false;
+        $('div#wizard').smartWizard('setError',{stepnum:2,iserror:true});         
+   }else{
+        $('div#wizard').smartWizard('setError',{stepnum:2,iserror:false});
+   }
+       
+   if(validateStep3() == false){
+        isStepValid = false;
+        $('div#wizard').smartWizard('setError',{stepnum:3,iserror:true});         
+   }else{
+        $('div#wizard').smartWizard('setError',{stepnum:3,iserror:false});
+   }
+   if(validateStep4() == false){
+        isStepValid = false;
+        $('div#wizard').smartWizard('setError',{stepnum:3,iserror:true});
+   }else{
+        $('div#wizard').smartWizard('setError',{stepnum:3,iserror:false});
+   }
+
+   if(!isStepValid){
+        $('div#wizard').smartWizard('showMessage','Please correct the errors in the steps and continue');
+   }
+              
+   return isStepValid;
 }
 $(document).ready(function(){
 
