@@ -1905,6 +1905,7 @@ function setupCreateTemplateDialog(){
     var man_class=".kvm";
     //Template RAW sections
     var template_raw="";
+    var template_cpuraw="";
 
     vmTabChange(0,{index : 0}); //enable kvm
 
@@ -1989,6 +1990,7 @@ function setupCreateTemplateDialog(){
 
         scope = section_capacity;
         vm_json["CONTEXT"]["OSTYPE"]=$('#ostype option:selected',scope).val();
+        var vcpu_num=$('input#VCPU',scope).val();
 
         //placement -> fetch with value, escape double quotes
         scope = section_placement;
@@ -2000,7 +2002,12 @@ function setupCreateTemplateDialog(){
         $('input#RANK',scope).val(rank);
         addSectionJSON(vm_json,scope);
 
+        //for windows 7 vcpu cores
+        template_cpuraw += "     <cpu>\n";
+        template_cpuraw += "     	<topology sockets='1' cores='" + vcpu_num + "' threads='1'/>\n";
+        template_cpuraw += "     </cpu>\n";
         //raw -> if value set type to driver and fetch
+
         template_raw += "     <devices>\n";
         template_raw += "            <controller type=\'usb\' index=\'0\' model=\'ich9-ehci1\'>\n";
         template_raw += "              <address type=\'pci\' domain=\'0x0000\' bus=\'0x00\' slot=\'0x08\' function=\'0x7\'/>\n";
@@ -2031,16 +2038,19 @@ function setupCreateTemplateDialog(){
         template_raw += "            </redirdev>\n";
         template_raw += "        </devices>\n";
 	
+	scope = section_raw;
+	vm_json["RAW"] = {};
+        
 	//SPICE for usb redirction
 	if ($('select#TYPE',section_graphics).val() == "spice"){
-        	vm_json["RAW"] = {};
+       		addSectionJSON(vm_json["RAW"],scope);
 		vm_json["RAW"]["TYPE"]="KVM";
-		vm_json["RAW"]["DATA"]=template_raw;
+		vm_json["RAW"]["DATA"]=template_cpuraw+template_raw;
 	}else{
         //raw -> if value set type to driver and fetch
-       		scope = section_raw;
-       		vm_json["RAW"] = {};
        		addSectionJSON(vm_json["RAW"],scope);
+		vm_json["RAW"]["TYPE"]="KVM";
+                vm_json["RAW"]["DATA"]=template_cpuraw;
 	}
 
         //custom vars
