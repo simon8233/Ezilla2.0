@@ -112,7 +112,7 @@ var create_image_tmpl =
                </div>\
                <div class="img_param">\
                   <label for="img_driver">'+tr("Driver")+':</label>\
-                  <input type="text" name="img_driver" id="img_driver" value="qcow2" />\
+                  <input type="text" name="img_driver" id="img_driver" value="raw" />\
                   <div class="tip">'+tr("Specific image mapping driver. KVM: raw, qcow2. XEN: tap:aio, file:")+'</div>\
                </div>\
                <div class="img_param" style="display:none;>\
@@ -761,13 +761,13 @@ function setupCreateImageDialog(){
             break;
  	case "OS":
              $('#img_ostype',context).parent().show();
-             $('#img_dev_prefix',context).val('hd');
+             $('#img_dev_prefix',context).val('vd');
              $('#img_bus',context).children().each(function(){
      		if ($(this).text()=="Virtio (KVM)"){
          	        $(this).attr("selected","true");
                  }
              });
-             $('#img_driver',context).val('qcow2');
+             $('#img_driver',context).val('raw');
              $('#datablock_img',context).attr('disabled','disabled');
              $('#path_img',context).attr('checked','checked');
              $('#img_source,#img_fstype,#img_size,#file-uploader',context).parent().hide();

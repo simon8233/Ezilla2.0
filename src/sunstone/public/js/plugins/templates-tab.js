@@ -99,6 +99,11 @@ var create_template_tmpl = '<div id="template_create_tabs">\
                                         <option value="2048">2G</option>\
                                         <option value="4096">4G</option>\
                                         <option value="8192">8G</option>\
+                                        <option value="16384">16G</option>\
+                                        <option value="32768">32G</option>\
+                                        <option value="49152">48G</option>\
+                                        <option value="65536">64G</option>\
+                                        <option value="131072">128G</option>\
                                   </select>\
                                   <div class="tip">'+tr("Amount of RAM required for the VM, in Megabytes.")+'</div>\
                             </div>\
@@ -460,7 +465,7 @@ var create_template_tmpl = '<div id="template_create_tabs">\
                                   <select id="TYPE" name="">\
                     <option value="">'+tr("Please select")+'</option>\
                                         <option id="vnc" value="vnc">'+tr("VNC")+'</option>\
-                                        <option value="sdl">'+tr("SDL")+'</option>\
+                                    <!-- <option value="sdl">'+tr("SDL")+'</option> -->\
  					<option id="spice" value="spice">'+tr("SPICE")+'</option>\
                                   </select>\
                                   <div class="tip">'+tr("VMware supports VNC only")+'</div>\
@@ -477,7 +482,7 @@ var create_template_tmpl = '<div id="template_create_tabs">\
                             </div>\
                             <div class="vm_param kvm_opt xen_opt vmware_opt">\
                                   <label for="PASSWD">'+tr("Password")+':</label>\
-                                  <input type="text" id="PASSWD" name="graphics_pw" />\
+                                  <input type="text" id="PASSWD" name="graphics_pw" value="12333678"/>\
                                   <div class="tip">'+tr("Password for the VNC server")+'</div>\
                             </div>\
                             <div class="vm_param kvm_opt xen_opt vmware_opt">\
@@ -1725,7 +1730,7 @@ function setupCreateTemplateDialog(){
                 $('#LISTEN',section_graphics).parent().hide();
                 $('#LISTEN',section_graphics).val('0.0.0.0');
                 $('#PORT',section_graphics).parent().hide();
-                $('#PASSWD',section_graphics).parent().show();
+                //$('#PASSWD',section_graphics).parent().show();
                 $('#KEYMAP',section_graphics).parent().hide();
                 $('#PORT',section_graphics).parent().removeAttr('disabled');
                 $('#PASSWD',section_graphics).parent().removeAttr('disabled');
@@ -1745,7 +1750,7 @@ function setupCreateTemplateDialog(){
                 $('#LISTEN',section_graphics).parent().hide();
                 $('#LISTEN',section_graphics).val('0.0.0.0');
                 $('#PORT',section_graphics).parent().hide();
-                $('#PASSWD',section_graphics).parent().show();
+                //$('#PASSWD',section_graphics).parent().show();
                 $('#KEYMAP',section_graphics).parent().hide();
                 $('#PORT',section_graphics).parent().removeAttr('disabled');
                 $('#PASSWD',section_graphics).parent().removeAttr('disabled');
