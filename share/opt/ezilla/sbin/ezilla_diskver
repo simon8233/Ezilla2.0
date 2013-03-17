@@ -304,17 +304,19 @@ case "$switch" in
      su oneadmin -s /bin/bash -c "/usr/bin/one start"
      sleep 1
      su oneadmin -s /bin/bash -c "/usr/bin/onevnet create /opt/ezilla/share/config/vnet.one"
-     su oneadmin -s /bin/bash -c "/usr/bin/onedatastore create /var/lib/one/tmp/config/datastore_qcow.one"
-#    su oneadmin -s /bin/bash -c "/usr/bin/oneimage create /opt/ezilla/share/vmimages/ttylinux.one -d 1"
+
+     QCOW2_DATASTORE_FILE="/opt/ezilla/share/config/datastore_qcow.one"
+     if [ -e "$QCOW2_DATASTORE_FILE" ];then
+        su oneadmin -s /bin/bash -c "/usr/bin/onedatastore create $QCOW2_DATASTORE_FILE"
+     fi
+#    su oneadmin -s /bin/bash -c "/usr/bin/onedatastore create /opt/ezilla/share/config/datastore_qcow.one"
      #must exec one server , then modify password for oneadmin account.
      su oneadmin -s /bin/bash -c "/usr/bin/oneuser passwd 0 \"release_v2@ezilla\""
      su oneadmin -s /bin/bash -c "echo \"oneadmin:release_v2@ezilla\" > ~/.one/one_auth"
+     echo "release_v2@master" | passwd oneadmin --stdin
      chown -R oneadmin:oneadmin /usr/share/one
-     su oneadmin -s /bin/bash -c "/usr/share/one/install_novnc.sh"
+     su oneadmin -s /bin/bash -c "/usr/share/one/install_novnc_first.sh"
      su oneadmin -s /bin/bash -c "/usr/bin/sunstone-server stop"
-     #su oneadmin -s /bin/bash -c "rm -rf /usr/lib/one/sunstone"
-     #su oneadmin -s /bin/bash -c "tar zxvf sunstone_withdiskver.tar.gz -C /usr/lib/one/"
-     #tar zxf /root/sunstone_withdiskver.tar.gz -C /usr/lib/one/
      chown -R oneadmin:oneadmin /usr/lib/one/sunstone/
      #su oneadmin -s /bin/bash -c "chown -R oneadmin:oneadmin /usr/lib/one/sunstone/"
      su oneadmin -s /bin/bash -c "/usr/bin/one stop"

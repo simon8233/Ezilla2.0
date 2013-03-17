@@ -85,4 +85,4 @@ fi
 
 ## ----------------------------------------------------------------
 ### clean up temp files
-rm /root/ezilla.tar.gz
+#rm /root/ezilla.tar.gz

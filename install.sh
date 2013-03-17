@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # -------------------------------------------------------------------------- #
 # Copyright 2002-2012, OpenNebula Project Leads (OpenNebula.org)             #
 #                                                                            #
@@ -188,6 +187,7 @@ MASTER_INSTALL_DIRS="$OPT_LOCATION/ezilla/sbin \
                      $OPT_LOCATION/ezilla/share \
                      $OPT_LOCATION/ezilla/share/config \
                      $OPT_LOCATION/ezilla/share/moosefs \
+                     $OPT_LOCATION/ezilla/share/noVNC   \
                      $OPT_LOCATION/ezilla/share/vmimages \
                      $OPT_LOCATION/ezilla/image"
 
@@ -449,6 +449,7 @@ INSTALL_FILES=(
     MASTER_INSTALL_SBIN_FILE:$OPT_LOCATION/ezilla/sbin
     MASTER_INSTALL_SHARE_CONFIG_FILE:$OPT_LOCATION/ezilla/share/config
     MASTER_INSTALL_SHARE_MOOSEFS_FILE:$OPT_LOCATION/ezilla/share/moosefs
+    MASTER_INSTALL_SHARE_NOVNC_FILE:$OPT_LOCATION/ezilla/share/noVNC
     MASTER_INSTALL_IMAGES_FILE:$OPT_LOCATION/ezilla/image
     INIT_SHARE_FILES:$SHARE_LOCATION/script
     INSTALL_NOVNC_SHARE_FILE:$SHARE_LOCATION
@@ -1043,7 +1044,8 @@ REDIR_SHARE_FILES="share/redir/redir"
 #-------------------------------------------------------------------------------
 # slave setup files ,to be installed under $SHARE_LOCATION/auto-installation 
 #-------------------------------------------------------------------------------
-SLAVE_INSTALL_SHARE_FILES="share/auto-installation/ezilla-master-setup.sh \
+SLAVE_INSTALL_SHARE_FILES="share/auto-installation/ezilla-autoinstall-server \
+                 share/auto-installation/ezilla-master-setup.sh \
                  share/auto-installation/ezilla-slave-config \
                  share/auto-installation/ezilla-slave-disk.sh \
                  share/auto-installation/ezilla-slave-filesystem.sh \
@@ -1077,6 +1079,9 @@ MASTER_INSTALL_SHARE_CONFIG_FILE="share/opt/ezilla/share/config/addhost.sh \
 MASTER_INSTALL_SHARE_MOOSEFS_FILE="share/opt/ezilla/share/moosefs/mfs-cgi.rpm \
                            share/opt/ezilla/share/moosefs/mfs-client.rpm \
                            share/opt/ezilla/share/moosefs/mfs.rpm"
+MASTER_INSTALL_SHARE_NOVNC_FILE="share/opt/ezilla/share/noVNC/novnc-0.4-53.tar.gz \
+                                 share/opt/ezilla/share/noVNC/websocketproxy.py \
+                                 share/opt/ezilla/share/noVNC/websocket.py"
 
 MASTER_INSTALL_IMAGES_FILE="share/opt/ezilla/image/ezilla.png"
 #-------------------------------------------------------------------------------
@@ -1089,7 +1094,9 @@ HOOK_FT_FILES="share/hooks/host_error.rb"
 # Installation scripts, to be installed under $SHARE_LOCATION
 #-------------------------------------------------------------------------------
 
-INSTALL_NOVNC_SHARE_FILE="share/install_novnc.sh"
+INSTALL_NOVNC_SHARE_FILE="share/install_novnc.sh \  
+                          share/install_novnc_first.sh"
+
 INSTALL_GEMS_SHARE_FILE="share/install_gems/install_gems"
 
 #-------------------------------------------------------------------------------

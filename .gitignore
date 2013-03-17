@@ -1,3 +1,4 @@
 src/sunstone/public/images/vncsnapshot/*.jpg
 src/sunstone/public/vendor/noVNC/
 src/sunstone/public/locale/
+share/opt/ezilla/sbin/auto-installation/

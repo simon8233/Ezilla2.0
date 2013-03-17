@@ -40,9 +40,6 @@ fi
 # user identify 
 #if [ `whoami` == "oneadmin" ];then 
 #fi
-if [ ! -f $SLAVE_EXAMPLE_KICKSTART ]; then
-		wget -q http://astro.nchc.org.tw/simon/ks-cli-example.cfg -O $SLAVE_EXAMPLE_KICKSTART
-fi
 if [ -e $SLAVE_EXAMPLE_KICKSTART ]; then
     /bin/cp $SLAVE_EXAMPLE_KICKSTART $SLAVE_KICKSTART
 fi

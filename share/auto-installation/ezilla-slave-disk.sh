@@ -11,7 +11,7 @@ source "$AUTO_INSTALL_WORKSPACE/ezilla-slave-config"
 
 if [ -e $SLAVE_KICKSTART ];then
 
-    if [ $DISK_NUM == "2" ];then
+    if [ "$DISK_NUM" -eq "2" ];then
         partition=$DISK
         part_A=`echo $DISK | awk -F "," '{print $1}'` # format disk idA
         part_B=`echo $DISK | awk -F "," '{print $2}'` # format disk idB

@@ -118,7 +118,6 @@ else
     MASTER_ONED_CONF="$ONE_LOCATION/etc/oned.conf"
     
 fi
-QCOW2_DATASTORE_FILE="/opt/ezilla/share/config/datastore_qcow.one"
 
 # prepare support moosefs , To avoid reload oned process.
 if [ ! -d "$MASTER_TM_MODULE_DIR/moosefs" ];then
@@ -127,9 +126,5 @@ if [ ! -d "$MASTER_TM_MODULE_DIR/moosefs" ];then
      sed -i 's/cp -r/\/usr\/bin\/mfsmakesnapshot -o/g' "$MASTER_TM_MODULE_DIR/moosefs/clone"
      sed -i 's/cp -R/\/usr\/bin\/mfsmakesnapshot -o/g' "$MASTER_TM_MODULE_DIR/moosefs/context"
      sed -i 's/iscsi" ]/iscsi,moosefs" ]/g' "$MASTER_ONED_CONF"
-fi
-# support qcow images, create os_raw2qcow2_datastore
-if [ -e "$QCOW2_DATASTORE_FILE" ];then
-        su oneadmin -s /bin/bash -c "/usr/bin/onedatastore create $QCOW2_DATASTORE_FILE" 
 fi
 
