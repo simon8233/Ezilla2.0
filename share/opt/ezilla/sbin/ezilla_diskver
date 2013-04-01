@@ -1,9 +1,31 @@
 #!/bin/bash
-# Author: Steven Shiau <steven _at_ nchc org tw>
-#         Jazz Yao-Tsung Wang <jazz _at_ nchc org tw>
-#         Chang-Hsing Wu <hsing _at_ nchc narl org tw>
-#         Serena Yi-Lun Pan <serenapan _at_ nchc narl org tw>
-# License: GPL
+
+#-------------------------------------------------------------------------------
+# Copyright (C) 2013
+#
+# This file is part of ezilla.
+#
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License
+# for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see <http://www.gnu.org/licenses/>
+#
+# Author: Chang-Hsing Wu <hsing _at_ nchc narl org tw>
+#         Serena Yi-Lun Pan <serenapan _at_ nchc narl org tw>
+#         Hsi-En Yu <yun _at_  nchc narl org tw>
+#         Hui-Shan Chen  <chwhs _at_ nchc narl org tw>
+#         Kuo-Yang Cheng  <kycheng _at_ nchc narl org tw>
+#         CHI-MING Chen <jonchen _at_ nchc narl org tw>
+#-------------------------------------------------------------------------------
+
 
 ### BEGIN INIT INFO
 # Provides:          ezilla
@@ -279,12 +301,31 @@ case "$switch" in
      #netinstall
      echo "" | /usr/sbin/drbl-netinstall -q -i centos
      sed "s/# MENU HIDE/MENU HIDE/g" /tftpboot/nbi_img/pxelinux.cfg/default > /tftpboot/nbi_img/pxelinux.cfg/default.fix
-     declare -i modify_line=$(cat -n /tftpboot/nbi_img/pxelinux.cfg/default | grep 'label netinstall-CentOS-6-x86_64' | awk 'NR==1 {print $1}')
-     start_line=`expr ${modify_line} + 1`
-     end_line=`expr ${start_line} + 1`
-     sed -i "${start_line},${end_line}c \  MENU DEFAULT\n  # MENU HIDE" /tftpboot/nbi_img/pxelinux.cfg/default.fix 
-     declare -i modify_line1=$(cat -n /tftpboot/nbi_img/pxelinux.cfg/default | grep 'append initrd=initrd-netinstall-CentOS-6-x86_64.img ramdisk_size=65535' | awk 'NR==1 {print $1}')
-     sed -i "${modify_line1},${modify_line1}c \  IPAPPEND 2\n  append initrd=initrd-netinstall-CentOS-6-x86_64.img ramdisk_size=65535 ks=http://10.0.0.254/kickstart/ks-cli.cfg ksdevice=bootif" /tftpboot/nbi_img/pxelinux.cfg/default.fix
+
+     cat /tftpboot/nbi_img/pxelinux.cfg/default.fix | grep 'label netinstall-CentOS-6-x86_64'
+     if [ "$?" -eq "0" ];then
+         declare -i modify_line=$(cat -n /tftpboot/nbi_img/pxelinux.cfg/default | grep 'label netinstall-CentOS-6-x86_64' | awk 'NR==1 {print $1}')
+         start_line=`expr ${modify_line} + 1`
+         end_line=`expr ${start_line} + 1`
+         sed -i "${start_line},${end_line}c \  MENU DEFAULT\n  # MENU HIDE" /tftpboot/nbi_img/pxelinux.cfg/default.fix 
+         declare -i modify_line1=$(cat -n /tftpboot/nbi_img/pxelinux.cfg/default | grep 'append initrd=initrd-netinstall-CentOS-6-x86_64.img ramdisk_size=65535' | awk 'NR==1 {print $1}')
+         sed -i "${modify_line1},${modify_line1}c \  IPAPPEND 2\n  append initrd=initrd-netinstall-CentOS-6-x86_64.img ramdisk_size=65535 ks=http://10.0.0.254/kickstart/ks-cli.cfg ksdevice=bootif" /tftpboot/nbi_img/pxelinux.cfg/default.fix
+     else
+         bootmenu=/tftpboot/nbi_img/pxelinux.cfg/default.fix
+         cp -f /var/www/html/ezilla.iso/isolinux/vmlinuz /tftpboot/nbi_img/vmlinuz-netinstall-CentOS-6-x86_64
+         cp -f /var/www/html/ezilla.iso/isolinux/initrd.img /tftpboot/nbi_img/initrd-netinstall-CentOS-6-x86_64.img
+         echo "label Ezilla2.0 Slave installation via network" >> $bootmenu
+         echo "MENU DEFAULT" >> $bootmenu
+         echo "MENU LABEL Ezilla2.0 Slave installation via network" >> $bootmenu
+         echo "kernel vmlinuz-netinstall-CentOS-6-x86_64" >> $bootmenu
+         echo "IPAPPEND 2" >> $bootmenu
+         echo "append initrd=initrd-netinstall-CentOS-6-x86_64.img ramdisk_size=65535 ks=http://10.0.0.254/kickstart/ks-cli.cfg ksdevice=bootif" >> $bootmenu
+         echo "TEXT HELP" >> $bootmenu
+         echo "Ezilla2.0 Slave installation via network" >> $bootmenu
+         echo "ENDTEXT" >> $bootmenu
+
+     fi
+
      cp /tftpboot/nbi_img/pxelinux.cfg/default /tftpboot/nbi_img/pxelinux.cfg/default.ezilla_bak
      cp -f /tftpboot/nbi_img/pxelinux.cfg/default.fix /tftpboot/nbi_img/pxelinux.cfg/default
      mv /tftpboot/*.* /tftpboot/nbi_img/
@@ -311,8 +352,8 @@ case "$switch" in
      fi
 #    su oneadmin -s /bin/bash -c "/usr/bin/onedatastore create /opt/ezilla/share/config/datastore_qcow.one"
      #must exec one server , then modify password for oneadmin account.
-     su oneadmin -s /bin/bash -c "/usr/bin/oneuser passwd 0 \"release_v2@ezilla\""
-     su oneadmin -s /bin/bash -c "echo \"oneadmin:release_v2@ezilla\" > ~/.one/one_auth"
+     su oneadmin -s /bin/bash -c "/usr/bin/oneuser passwd 0 \"release_v2_ezilla\""
+     su oneadmin -s /bin/bash -c "echo \"oneadmin:release_v2_ezilla\" > ~/.one/one_auth"
      echo "release_v2@master" | passwd oneadmin --stdin
      chown -R oneadmin:oneadmin /usr/share/one
      su oneadmin -s /bin/bash -c "/usr/share/one/install_novnc_first.sh"

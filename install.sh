@@ -1,19 +1,30 @@
 #!/bin/bash
-# -------------------------------------------------------------------------- #
-# Copyright 2002-2012, OpenNebula Project Leads (OpenNebula.org)             #
-#                                                                            #
-# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
-# not use this file except in compliance with the License. You may obtain    #
-# a copy of the License at                                                   #
-#                                                                            #
-# http://www.apache.org/licenses/LICENSE-2.0                                 #
-#                                                                            #
-# Unless required by applicable law or agreed to in writing, software        #
-# distributed under the License is distributed on an "AS IS" BASIS,          #
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   #
-# See the License for the specific language governing permissions and        #
-# limitations under the License.                                             #
-#--------------------------------------------------------------------------- #
+
+#-------------------------------------------------------------------------------
+# Copyright (C) 2013
+#
+# This file is part of ezilla.
+#
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License
+# for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see <http://www.gnu.org/licenses/>
+#
+# Author: Chang-Hsing Wu <hsing _at_ nchc narl org tw>
+#         Serena Yi-Lun Pan <serenapan _at_ nchc narl org tw>
+#         Hsi-En Yu <yun _at_  nchc narl org tw>
+#         Hui-Shan Chen  <chwhs _at_ nchc narl org tw>
+#         Kuo-Yang Cheng  <kycheng _at_ nchc narl org tw>
+#         CHI-MING Chen <jonchen _at_ nchc narl org tw>
+#-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # Install program for OpenNebula. It will install it relative to
@@ -189,6 +200,7 @@ MASTER_INSTALL_DIRS="$OPT_LOCATION/ezilla/sbin \
                      $OPT_LOCATION/ezilla/share/moosefs \
                      $OPT_LOCATION/ezilla/share/noVNC   \
                      $OPT_LOCATION/ezilla/share/vmimages \
+                     $OPT_LOCATION/ezilla/share/ruby_gem \
                      $OPT_LOCATION/ezilla/image"
 
 ETC_DIRS="$ETC_LOCATION/im_ec2 \
@@ -450,9 +462,11 @@ INSTALL_FILES=(
     MASTER_INSTALL_SHARE_CONFIG_FILE:$OPT_LOCATION/ezilla/share/config
     MASTER_INSTALL_SHARE_MOOSEFS_FILE:$OPT_LOCATION/ezilla/share/moosefs
     MASTER_INSTALL_SHARE_NOVNC_FILE:$OPT_LOCATION/ezilla/share/noVNC
+    MASTER_INSTALL_SHARE_RUBYGEM_FILE:$OPT_LOCATION/ezilla/share/ruby_gem
     MASTER_INSTALL_IMAGES_FILE:$OPT_LOCATION/ezilla/image
     INIT_SHARE_FILES:$SHARE_LOCATION/script
     INSTALL_NOVNC_SHARE_FILE:$SHARE_LOCATION
+    INSTALL_LICENCE_FILES:$SHARE_LOCATION
     INSTALL_GEMS_SHARE_FILE:$SHARE_LOCATION
     HOOK_FT_FILES:$VAR_LOCATION/remotes/hooks/ft
     COMMON_CLOUD_LIB_FILES:$LIB_LOCATION/ruby/cloud
@@ -1074,7 +1088,6 @@ MASTER_INSTALL_SHARE_CONFIG_FILE="share/opt/ezilla/share/config/addhost.sh \
                            share/opt/ezilla/share/config/network_script.sh \
                            share/opt/ezilla/share/config/vnet.one \
                            share/opt/ezilla/share/config/vnc.js"
-
                         
 MASTER_INSTALL_SHARE_MOOSEFS_FILE="share/opt/ezilla/share/moosefs/mfs-cgi.rpm \
                            share/opt/ezilla/share/moosefs/mfs-client.rpm \
@@ -1082,6 +1095,20 @@ MASTER_INSTALL_SHARE_MOOSEFS_FILE="share/opt/ezilla/share/moosefs/mfs-cgi.rpm \
 MASTER_INSTALL_SHARE_NOVNC_FILE="share/opt/ezilla/share/noVNC/novnc-0.4-53.tar.gz \
                                  share/opt/ezilla/share/noVNC/websocketproxy.py \
                                  share/opt/ezilla/share/noVNC/websocket.py"
+
+MASTER_INSTALL_SHARE_RUBYGEM_FILE="share/opt/ezilla/share/ruby_gem/daemons-1.1.9.gem \
+                           share/opt/ezilla/share/ruby_gem/eventmachine-1.0.3.gem \
+                           share/opt/ezilla/share/ruby_gem/json-1.7.7.gem \
+                           share/opt/ezilla/share/ruby_gem/nokogiri-1.5.9.gem \
+                           share/opt/ezilla/share/ruby_gem/rack-1.5.2.gem \
+                           share/opt/ezilla/share/ruby_gem/rack-protection-1.5.0.gem \
+                           share/opt/ezilla/share/ruby_gem/sequel-3.45.0.gem  \
+                           share/opt/ezilla/share/ruby_gem/sinatra-1.4.2.gem \
+                           share/opt/ezilla/share/ruby_gem/sqlite3-1.3.7.gem \
+                           share/opt/ezilla/share/ruby_gem/thin-1.5.1.gem \
+                           share/opt/ezilla/share/ruby_gem/tilt-1.3.6.gem"
+
+
 
 MASTER_INSTALL_IMAGES_FILE="share/opt/ezilla/image/ezilla.png"
 #-------------------------------------------------------------------------------
@@ -1093,7 +1120,9 @@ HOOK_FT_FILES="share/hooks/host_error.rb"
 #-------------------------------------------------------------------------------
 # Installation scripts, to be installed under $SHARE_LOCATION
 #-------------------------------------------------------------------------------
-
+INSTALL_LICENCE_FILES="share/LICENSE \ 
+                        share/README.txt" 
+                        
 INSTALL_NOVNC_SHARE_FILE="share/install_novnc.sh \  
                           share/install_novnc_first.sh"
 
