@@ -162,10 +162,25 @@ function ip_toHostname(){
     fi
 }
 
+function multi_network_card_support (){
+
+drbl_func="/usr/share/drbl/sbin/drbl-functions"
+    if [ -e $drbl_func ]; then
+        cat $drbl_func | grep '# modified by ezilla' >> /dev/null
+        if [  $? != 0 ]; then
+        cp $drbl_func "$drbl_func".dpkg
+        declare -i modify_line=$(cat -n $drbl_func | grep 'while \[ "$configured_ip_no" -lt "$eth_port_no" \]; do' | awk 'NR==1 {print $1}')
+        sed -i "${modify_line}i\# modified by ezilla" $drbl_func
+                sed -i -e "s/\"\$configured_ip_no\" -lt \"\$eth_port_no\"/\"\$configured_ip_no\" -lt \"\$configured_ip_no\"/g" $drbl_func
+        fi
+    fi
+}
+
 
 if [ -d /usr/share/one/auto-installation ];then
     patchOcs_live_netcfg
     ip_toHostname
+    multi_network_card_support
 else
     patchLinuxrc_or_init
     patchMkpxeinitrdi_net

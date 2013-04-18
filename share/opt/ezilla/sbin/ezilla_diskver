@@ -354,7 +354,7 @@ case "$switch" in
      #must exec one server , then modify password for oneadmin account.
      su oneadmin -s /bin/bash -c "/usr/bin/oneuser passwd 0 \"release_v2_ezilla\""
      su oneadmin -s /bin/bash -c "echo \"oneadmin:release_v2_ezilla\" > ~/.one/one_auth"
-     echo "release_v2@master" | passwd oneadmin --stdin
+     echo "release_v2_master" | passwd oneadmin --stdin
      chown -R oneadmin:oneadmin /usr/share/one
      su oneadmin -s /bin/bash -c "/usr/share/one/install_novnc_first.sh"
      su oneadmin -s /bin/bash -c "/usr/bin/sunstone-server stop"
@@ -364,6 +364,7 @@ case "$switch" in
      su oneadmin -s /bin/bash -c "/usr/bin/one start"
      sleep 2
      su oneadmin -s /bin/bash -c "/usr/bin/sunstone-server start"
+     echo "su oneadmin -s /bin/bash -c \"/usr/bin/sunstone-server start  \""  >> /etc/rc.local
 
 # Setup NAT for VMs
 #     /sbin/iptables -t nat -A POSTROUTING -s 10.0.0.0/255.0.0.0 -o eth0  -j MASQUERADE

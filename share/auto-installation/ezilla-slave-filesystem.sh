@@ -86,21 +86,25 @@ function SetupMasterFileSystem(){
 	sleep 10
 	rm -rf /var/lib/one/datastores
 	mkdir -p /var/lib/one/datastores
-	/usr/bin/mfsmount /var/lib/one/datastores -H ezilla-masterfs
-	sleep 1
     chown -R oneadmin:oneadmin /var/lib/one
 	chmod 755 /var/lib/one/datastores
 
 ### master mount 
     cat /etc/hosts |grep "ezilla-masterfs" >> /dev/null
-    if [ $? -ne 0 ];then   
+    if [ $? -eq "0" ];then   
         echo "/usr/bin/mfsmount   /var/lib/one/datastores               fuse    mfsmaster=ezilla-masterfs,mfsport=9421,_netdev,nonempty,nosuid,nodev 0 0" >> /etc/fstab
+        /bin/mount -a
     fi
+    /usr/bin/mfssetgoal -r 3 /var/lib/one/datastores/
 # modify on default datastore , using moosefs TM mad.
     if [ -e $MASTER_DATASTORE_CONFIG ];then
         sed -i -e 's/NAME =/NAME = moosefs/g' -e 's/TM_MAD =/TM_MAD = moosefs/g' $MASTER_DATASTORE_CONFIG  
     fi
     su oneadmin -s /bin/bash -c "/usr/bin/onedatastore update 1 /opt/ezilla/share/config/datastore.one"
+#master automount , because boot sequence,add 'mount -a' command to /etc/rc.local
+    echo "sleep 5" >> /etc/rc.local
+    echo "/bin/mount -a" >> /etc/rc.local
+
 
     elif [ $FILESYSTEM == "nfs" ];then
         declare -i modify_line=$(cat -n /etc/exports | grep '###Export /var/lib/one/datastores' | awk 'NR==1 {print $1}')
