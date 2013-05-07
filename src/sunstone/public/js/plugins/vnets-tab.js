@@ -91,9 +91,18 @@ var create_vn_tmpl =
                  <input type="text" name="vlan_id" id="vlan_id" /><br />\
               </fieldset>\
               <fieldset>\
-                 <label style="height:2em;">'+tr("Network type")+':</label>\
-                 <input type="radio" name="fixed_ranged" id="fixed_check" value="fixed" checked="checked">'+tr("Fixed network")+'</input><br />\
+                <label style="height:2em;">'+tr("Network type")+':</label>\
+                <input type="radio" name="fixed_ranged" id="fixed_check" value="fixed" checked="checked">'+tr("Fixed network")+'</input><br />\
                 <input type="radio" name="fixed_ranged" id="ranged_check" value="ranged">'+tr("Ranged network")+'</input><br />\
+                <!--- Network Contextualization --->\
+                <label for="net_address">'+tr("Network Address")+':</label>\
+                <input type="text" name="net_address" id="net_address" /><br />\
+                <label for="net_mask">'+tr("Network Mask")+':</label>\
+                <input type="text" name="net_mask" id="net_mask" /><br />\
+                <label for="dns_nameserver">'+tr("DNS")+':</label>\
+                <input type="text" name="dns_nameserver" id="dns_nameserver" /><br />\
+                <label for="gateway">'+tr("Gateway")+':</label>\
+                <input type="text" name="gateway" id="gateway" /><br />\
               </fieldset>\
               <div class="clear"></div>\
               <div id="easy_tabs">\
@@ -118,10 +127,6 @@ var create_vn_tmpl =
               </div>\
               <div id="ranged">\
                  <fieldset>\
-                    <label for="net_address">'+tr("Network Address")+':</label>\
-                    <input type="text" name="net_address" id="net_address" /><br />\
-                    <label for="net_mask">'+tr("Network Mask")+':</label>\
-                    <input type="text" name="net_mask" id="net_mask" /><br />\
                     <label for="custom_pool" style="height:2em;">'+tr("Define a subnet by IP range")+':</label>\
                     <input type="checkbox" name="custom_pool" id="custom_pool" style="margin-bottom:2em;" value="yes" /><br />\
                     <label for="ip_start">'+tr("IP Start")+':</label>\
@@ -978,8 +983,6 @@ function setupCreateVNetDialog() {
         }
         else { //type ranged
 
-            var network_addr = $('#net_address',this).val();
-            var network_mask = $('#net_mask',this).val();
             var custom = $('#custom_pool',this).is(':checked');
             var ip_start = $('#ip_start',this).val();
             var ip_end = $('#ip_end',this).val();
@@ -988,13 +991,6 @@ function setupCreateVNetDialog() {
                 notifyError(tr("There are missing network parameters"));
                 return false;
             };
-
-            if (network_addr.length)
-                network_json["network_address"]=network_addr;
-
-            if (network_mask.length)
-                network_json["network_mask"]=network_mask;
-
             if (custom){
                 if (ip_start.length)
                     network_json["ip_start"] = ip_start;
@@ -1002,6 +998,20 @@ function setupCreateVNetDialog() {
                     network_json["ip_end"] = ip_end;
             };
         };
+        var network_addr = $('#net_address',this).val();
+        var network_mask = $('#net_mask',this).val();
+        var dns_nameserver = $('#dns_nameserver',this).val();
+        var gateway = $('#gateway',this).val();
+       
+        if (network_addr.length)
+            network_json["NETWORK_ADDRESS"]=network_addr;
+        console.log(network_addr);
+        if (network_mask.length)
+            network_json["NETWORK_MASK"]=network_mask;
+        if (dns_nameserver.length)
+            network_json["DNS"]=dns_nameserver;
+        if (gateway.length)
+            network_json["GATEWAY"]=gateway;
 
         //Time to add custom attributes
         $('#custom_var_vnet_box option',$create_vn_dialog).each(function(){

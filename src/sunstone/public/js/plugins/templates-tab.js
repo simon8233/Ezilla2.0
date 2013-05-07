@@ -1995,6 +1995,9 @@ function setupCreateTemplateDialog(){
         	vm_json["GRAPHICS"] = {};
         	addSectionJSON(vm_json["GRAPHICS"],scope);
         //context
+        //
+        
+
         scope = section_context;
         vm_json["CONTEXT"] = {};
         $('#context_box option',scope).each(function(){
@@ -2002,6 +2005,20 @@ function setupCreateTemplateDialog(){
             value = $(this).val();
             vm_json["CONTEXT"][name]=value;
         });
+        var nic_id = 0;
+        $.each(vm_json["NIC"],function(){
+        var vnet_id = this["NETWORK"]
+        var eth_str = "ETH"+nic_id+"_"
+        var net_str = 'NETWORK=\\"'+ vnet_id +'\\"'
+
+        vm_json["CONTEXT"][eth_str+"IP"] = "$NIC[IP,"+ net_str +"]";
+        vm_json["CONTEXT"][eth_str+"NETOWRK"] = "$NETWORK[NETWORK_ADDRESS,"+ net_str +"]";
+        vm_json["CONTEXT"][eth_str+"MASK"] = "$NETWORK[NETWORK_MASK,"+ net_str +"]";
+        vm_json["CONTEXT"][eth_str+"GATEWAY"] = "$NETWORK[GATEWAY,"+ net_str +"]";
+        vm_json["CONTEXT"][eth_str+"DNS"] = "$NETWORK[DNS,"+ net_str +"]";
+        nic_id++;
+       });        
+
 
         scope = section_capacity;
         vm_json["CONTEXT"]["OSTYPE"]=$('#ostype option:selected',scope).val();
