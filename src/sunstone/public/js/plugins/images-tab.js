@@ -122,7 +122,7 @@ var create_image_tmpl =
                </div>\
                <div class="img_param">\
                   <label for="img_driver">'+tr("Driver")+':</label>\
-                  <input type="text" name="img_driver" id="img_driver" value="raw" />\
+                  <input type="text" name="img_driver" id="img_driver" value="" />\
                   <div class="tip">'+tr("Specific image mapping driver. KVM: raw, qcow2. XEN: tap:aio, file:")+'</div>\
                </div>\
                <div class="img_param" style="display:none;>\
@@ -754,6 +754,16 @@ function setupCreateImageDialog(){
     $('#img_type option',dialog).first().attr('selected','selected');
     $('#datablock_img',dialog).attr('disabled','disabled');
 
+    $('select#img_datastore',dialog).change(function(){
+        var value = $(this).val();
+        var option = $('option:selected',this);
+        var tm_mad  = getValue(option.attr('elem_id'),1,7,dataTable_datastores);        
+        if (tm_mad == 'qcow2')
+               $('input#img_driver',dialog).val(tm_mad);
+        else
+               $('input#img_driver',dialog).val('raw');     
+
+    });
     $('select#img_type',dialog).change(function(){
         var value = $(this).val();
         var context = $create_image_dialog;
@@ -1049,7 +1059,7 @@ function popUpCreateImageDialog(){
 
     $('#img_datastore',$create_image_dialog).html(datastores_sel());
     $('#img_datastore_raw',$create_image_dialog).html(datastores_sel());
-
+    $('#img_datastore',$create_image_dialog).trigger('change');//force refresh relationship datastores with Driver filed.
     $create_image_dialog.dialog('open');
 }
 
