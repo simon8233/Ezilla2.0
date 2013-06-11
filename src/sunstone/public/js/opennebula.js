@@ -276,13 +276,18 @@ var OpenNebula = {
         },
 
         //Subresource examples: "fetch_template", "log"...
-        "show": function(params,resource,subresource){
+        "show": function(params,resource,subresource){            
             var callback = params.success;
-            var callback_error = params.error;
+            var callback_error = params.error;            
             var id = params.data.id;
+            var extra_param  = params.data.extra_param;
+            
             var request = subresource ?
                 OpenNebula.Helper.request(resource,subresource,id) :
                 OpenNebula.Helper.request(resource,"show", id);
+            if (resource == "VMTEMPLATE"){
+                request["vm_name"] = extra_param;
+            }
 
             var url = resource.toLowerCase() + "/" + id;
             url = subresource? url + "/" + subresource : url;
@@ -930,6 +935,7 @@ var OpenNebula = {
                                      action_obj);
         },
         "fetch_template" : function(params){
+            var vm_name = params.data.extra_param ? params.data.extra_param : "";
             OpenNebula.Action.show(params,OpenNebula.Template.resource,"template");
         },
         "publish" : function(params){

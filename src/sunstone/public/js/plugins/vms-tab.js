@@ -597,14 +597,15 @@ var vm_actions = {
     "VM.Fetch_template" : {
         type: "single",
         call: OpenNebula.Template.fetch_template,
-        callback: function (request,response) {
+        callback: function (request,response,other) {
 		var template_org="";
 		var template_context="";
 		var context="true";
 		var files_list="/srv/one/share/script/init";
 		var create_vm_dialog = $('#create_vm_dialog')
-                var vm_name = vmname;
-                var user_passwd = $('#user_passwd',$create_vm_dialog).val();
+        var vm_name = request.vm_name;
+       
+        var user_passwd = $('#user_passwd',$create_vm_dialog).val();
 		var template_array=response.template.split("\n");
 		var username_array=username.split('%');
 		for (var i=0; i < template_array.length; i++){
@@ -1441,7 +1442,7 @@ function printDisks(vm_info){
          </tr>\
          <tr class="at_volatile at_image"><td class="key_td"><label>'+tr("Device prefix")+':</label></td>\
              <td class="value_td">\
-                <input type="text" name="DEV_PREFIX" value="sd" style="width:8em;"></input>\
+                <input type="text" name="DEV_PREFIX" value="vda" style="width:8em;"></input>\
              </td>\
          </tr>\
 <!--\
@@ -1611,15 +1612,13 @@ function setupCreateVMDialog(){
 
         if (vm_name.indexOf("%i") == -1){ //no wildcard
             for (var i=0; i< n_times_int; i++){
-                //Sunstone.runAction("VM.TemplateInstantiate",template_id,vm_name);
-                vmname = vm_name;
-                Sunstone.runAction("VM.Fetch_template",template_id);
+                Sunstone.runAction("VM.Fetch_template",template_id,vm_name);
             };
         } else { //wildcard present: replace wildcard
-            for (var i=0; i< n_times_int; i++){
-                vmname = vm_name.replace(/%i/gi,i);
-                //Sunstone.runAction("VM.TemplateInstantiate",template_id,vm_name);
-                Sunstone.runAction("VM.Fetch_template",template_id);
+                var name = "";
+            for (var i=0; i< n_times_int; i++ ){
+                name = vm_name.replace(/%i/g,i);
+                Sunstone.runAction("VM.Fetch_template",template_id,name);
             };
         };
 
